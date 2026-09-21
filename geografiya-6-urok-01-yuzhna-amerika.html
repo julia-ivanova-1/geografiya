@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F5257">
+<title>Урок 1 · Южна Америка: положение, брегове, опознаване</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&display=swap&subset=cyrillic" rel="stylesheet">
+<style>
+:root{
+  --teal:#0F5257; --teal-2:#1B6F75; --teal-soft:#E3EFEE;
+  --amber:#F2A541; --amber-soft:#FDEFD8; --amber-ink:#8A5300;
+  --paper:#FBF7EF; --card:#FFFFFF; --ink:#1F2A30; --muted:#5B6870; --line:#E6DFD1;
+  --ok:#2E9E5B; --ok-soft:#E3F5EA; --bad:#D64545; --bad-soft:#FBE6E6;
+  --sea:#CFE6EE; --land:#E9D9A6; --land-edge:#A8894A;
+  --r:16px; --shadow:0 2px 0 rgba(15,82,87,.10), 0 6px 18px rgba(31,42,48,.06);
+  --head:"Rubik", system-ui, "Roboto", "Segoe UI", sans-serif;
+  --body:system-ui, "Roboto", "Segoe UI", Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.6 var(--body);overflow-x:hidden}
+h1,h2,h3{font-family:var(--head);line-height:1.2;margin:0 0 .5em;color:var(--teal)}
+h1{font-size:1.75rem;font-weight:800}
+h2{font-size:1.35rem;font-weight:700}
+h3{font-size:1.1rem;font-weight:700}
+p{margin:.5em 0 .8em}
+a{color:var(--teal-2)}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 120px}
+
+/* ---------- Top bar ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:var(--teal);color:#fff;padding:8px 16px 10px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.topbar-in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:10px}
+.xp{display:flex;align-items:center;gap:6px;font-family:var(--head);font-weight:800;font-size:1.05rem;background:rgba(255,255,255,.12);padding:4px 10px;border-radius:999px;white-space:nowrap}
+.xp .gem{color:var(--amber)}
+.xp.bump{animation:bump .5s}
+@keyframes bump{30%{transform:scale(1.25)}}
+.prog{flex:1;height:12px;background:rgba(255,255,255,.2);border-radius:999px;overflow:hidden}
+.prog>i{display:block;height:100%;width:0;background:var(--amber);border-radius:999px;transition:width .6s}
+.badgecount{font-size:.95rem;white-space:nowrap;background:rgba(255,255,255,.12);padding:4px 10px;border-radius:999px}
+.toast{position:fixed;left:50%;top:64px;transform:translateX(-50%) translateY(-20px);opacity:0;background:var(--amber);color:#3A2600;font-family:var(--head);font-weight:700;padding:8px 16px;border-radius:999px;z-index:60;transition:.3s;pointer-events:none;box-shadow:var(--shadow);max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- Hero ---------- */
+.hero{padding:22px 0 6px}
+.kicker{font-family:var(--head);font-weight:700;color:var(--amber-ink);letter-spacing:.04em;text-transform:uppercase;font-size:.85rem}
+.case{background:var(--card);border:2px dashed var(--teal-2);border-radius:var(--r);padding:16px;margin:14px 0;position:relative;box-shadow:var(--shadow)}
+.case h2{display:flex;align-items:center;gap:8px}
+.clues{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.clue{border-radius:12px;padding:10px;font-size:.9rem;line-height:1.4;background:#F1EEE7;color:var(--muted);min-height:74px}
+.clue b{display:block;font-family:var(--head);color:var(--muted);font-size:.8rem;margin-bottom:2px}
+.clue.on{background:var(--amber-soft);color:var(--ink);animation:pop .4s}
+.clue.on b{color:var(--amber-ink)}
+@keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.05)}}
+
+/* ---------- Cards / dossiers ---------- */
+.card{background:var(--card);border-radius:var(--r);padding:18px 16px;margin:18px 0;box-shadow:var(--shadow);border:1px solid var(--line)}
+.dossier-tag{display:inline-block;font-family:var(--head);font-weight:700;font-size:.8rem;color:#fff;background:var(--teal);padding:3px 10px;border-radius:6px;margin-bottom:8px;letter-spacing:.05em}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{border:0;border-radius:14px;padding:12px 16px;min-height:48px;font-family:var(--head);font-weight:700;font-size:1rem;background:var(--teal);color:#fff;box-shadow:0 4px 0 #0A3A3E;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0A3A3E}
+.btn.ghost{background:var(--teal-soft);color:var(--teal);box-shadow:0 4px 0 #C4DAD8}
+.btn.amber{background:var(--amber);color:#3A2600;box-shadow:0 4px 0 #C98422}
+.btn.done{background:var(--ok);box-shadow:0 4px 0 #1F7040}
+.btn[disabled]{opacity:.55;cursor:default}
+.btn.small{min-height:40px;padding:8px 12px;font-size:.9rem}
+.readbtn{margin-top:6px}
+.listen{display:inline-flex;align-items:center;gap:6px}
+.term{background:none;border:0;padding:0 2px;color:var(--teal);font-weight:700;border-bottom:2px dotted var(--amber);font-size:inherit;line-height:inherit}
+.hl{background:var(--amber-soft);padding:0 4px;border-radius:4px}
+.fact-num{font-family:var(--head);font-weight:800;color:var(--teal);font-size:1.5rem;line-height:1}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.stat{background:var(--teal-soft);border-radius:12px;padding:12px}
+.stat small{display:block;color:var(--muted);font-size:.85rem;margin-top:4px;line-height:1.35}
+.cmp{width:100%;border-collapse:collapse;font-size:.95rem;margin:10px 0}
+.cmp th,.cmp td{padding:8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+.cmp th{font-family:var(--head);color:var(--teal);font-size:.9rem}
+.coast{display:grid;gap:10px;margin:12px 0}
+.coast div{border-left:6px solid var(--teal-2);background:#F7F4EC;border-radius:10px;padding:10px 12px}
+.coast b{font-family:var(--head);color:var(--teal)}
+.lib{background:#EAF3EC;border:1px solid #CFE3D3}
+.lib .dossier-tag{background:#2F6B3F}
+
+/* timeline */
+.tl{list-style:none;padding:0;margin:12px 0;position:relative}
+.tl:before{content:"";position:absolute;left:20px;top:6px;bottom:6px;width:3px;background:var(--teal-soft)}
+.tl li{position:relative;padding:0 0 14px 52px}
+.tl .yr{position:absolute;left:0;top:0;width:42px;height:42px;border-radius:50%;background:var(--teal);color:#fff;font-family:var(--head);font-weight:700;font-size:.72rem;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.05}
+.tl b{font-family:var(--head);color:var(--teal)}
+
+/* ---------- Map ---------- */
+.mapbox{background:var(--sea);border-radius:14px;overflow:hidden;border:1px solid #B8D6E0}
+.mapbox svg{display:block;width:100%;height:auto}
+.land{fill:var(--land);stroke:var(--land-edge);stroke-width:1;stroke-linejoin:round}
+.gridline{stroke:#E0554F;stroke-width:1.4}
+.tropic{stroke:#7A5BA8;stroke-width:1.2;stroke-dasharray:6 4}
+.maplabel{font:600 9px var(--body);fill:#2C5D73;letter-spacing:.12em}
+.linelabel{font:600 8px var(--body)}
+.mk{cursor:pointer}
+.mk circle.dot{stroke:#fff;stroke-width:1.6}
+.mk .halo{fill:none;stroke-width:2;opacity:0}
+.mk.active .halo{opacity:1;animation:ring 1.2s infinite}
+@keyframes ring{0%{r:6;opacity:1}100%{r:16;opacity:0}}
+.mk.seen circle.dot{stroke:#1F2A30}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.chip{border:0;border-radius:999px;padding:8px 12px;min-height:40px;font-size:.9rem;background:#F1EEE7;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.chip.seen{background:var(--teal-soft)}
+.chip.active{background:var(--teal);color:#fff}
+.infobox{background:var(--amber-soft);border-radius:12px;padding:12px;min-height:84px;margin-top:6px}
+.infobox h3{margin:0 0 4px;color:var(--amber-ink)}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:.85rem;color:var(--muted);margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+
+/* ---------- Animation ---------- */
+.odo{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.odo div{background:var(--teal-soft);border-radius:12px;padding:10px;text-align:center}
+.odo .n{font-family:var(--head);font-weight:800;font-size:1.4rem;color:var(--teal)}
+.odo small{display:block;color:var(--muted);font-size:.8rem}
+.route-old{fill:none;stroke:#D64545;stroke-width:2.5;stroke-dasharray:6 5}
+.route-new{fill:none;stroke:#2E9E5B;stroke-width:2.5;stroke-dasharray:6 5}
+
+/* ---------- Gallery ---------- */
+.gallery{display:grid;gap:14px}
+figure{margin:0;background:var(--card);border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+figure img{display:block;width:100%;height:220px;object-fit:cover;background:#E8E2D4}
+figure .noimg{height:120px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.9rem;padding:12px;text-align:center;background:#EFE9DC}
+figcaption{padding:10px 12px;font-size:.95rem;line-height:1.45}
+figcaption small{display:block;color:var(--muted);font-size:.78rem;margin-top:4px}
+
+/* ---------- Did you know ---------- */
+.dyk{display:grid;gap:10px}
+.dyk div{background:#F7F4EC;border-radius:12px;padding:12px 12px 12px 48px;position:relative}
+.dyk div:before{content:attr(data-i);position:absolute;left:12px;top:10px;font-size:1.4rem}
+
+/* ---------- Links ---------- */
+.linkcard{display:block;text-decoration:none;color:var(--ink);background:#F7F4EC;border-radius:12px;padding:12px;margin:8px 0;border:1px solid var(--line)}
+.linkcard b{font-family:var(--head);color:var(--teal);display:block}
+.linkcard small{color:var(--muted)}
+.note{font-size:.88rem;color:var(--muted);background:#F1EEE7;border-radius:10px;padding:8px 10px}
+
+/* ---------- Pilot / quiz ---------- */
+.stage{background:#F7F4EC;border-radius:14px;padding:14px;margin-top:10px}
+.stepdots{display:flex;gap:4px;margin-bottom:10px}
+.stepdots i{flex:1;height:6px;border-radius:3px;background:#E0D8C6}
+.stepdots i.ok{background:var(--ok)}
+.stepdots i.cur{background:var(--amber)}
+.opts{display:grid;gap:10px;margin-top:10px}
+.opt{border:2px solid var(--line);border-bottom-width:4px;background:#fff;border-radius:14px;padding:12px 14px;min-height:52px;text-align:left;font-size:1rem;color:var(--ink)}
+.opt:active{transform:translateY(2px)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt[disabled]{cursor:default}
+.fb{border-radius:14px;padding:12px 14px;margin-top:12px;display:none}
+.fb.ok{display:block;background:var(--ok-soft);border:2px solid var(--ok)}
+.fb.bad{display:block;background:var(--bad-soft);border:2px solid var(--bad)}
+.fb b{font-family:var(--head)}
+.fb.ok b{color:#1F7040}.fb.bad b{color:#A42F2F}
+.path{display:flex;flex-direction:column;align-items:center;gap:6px;margin:14px 0}
+.node{width:84px;height:84px;border-radius:50%;border:0;font-family:var(--head);font-weight:800;font-size:1.6rem;color:#fff;background:var(--teal);box-shadow:0 6px 0 #0A3A3E;position:relative}
+.node:nth-child(2){margin-left:90px}.node:nth-child(3){margin-right:90px}
+.node[disabled]{background:#C9C3B5;box-shadow:0 6px 0 #A39D8F;cursor:default}
+.node.done{background:var(--amber);box-shadow:0 6px 0 #C98422;color:#3A2600}
+.node span{position:absolute;top:92px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:.8rem;color:var(--muted);font-weight:700}
+.pathwrap{padding-bottom:26px}
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.9rem;color:var(--muted)}
+.qprog{height:14px;background:#E0D8C6;border-radius:999px;overflow:hidden;margin:8px 0 12px}
+.qprog i{display:block;height:100%;width:0;background:var(--ok);transition:width .4s}
+.qtext{font-family:var(--head);font-weight:700;font-size:1.15rem;color:var(--ink)}
+
+/* flashcards */
+.flash{perspective:900px;margin:12px 0}
+.flash-in{position:relative;height:190px;transition:transform .5s;transform-style:preserve-3d;cursor:pointer}
+.flash.flip .flash-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px}
+.front{background:var(--teal);color:#fff;font-family:var(--head);font-weight:800;font-size:1.5rem}
+.back{background:var(--amber-soft);color:var(--ink);transform:rotateY(180deg);font-size:1rem;line-height:1.45}
+
+/* vocab */
+.vocab{display:grid;gap:8px}
+.word{display:flex;align-items:center;gap:10px;background:#F7F4EC;border-radius:12px;padding:10px 12px}
+.word .w{font-family:var(--head);font-weight:700;color:var(--teal);min-width:88px}
+.word .ex{font-size:.92rem;color:var(--muted);line-height:1.4}
+.word button{margin-left:auto;flex:none;border:0;background:var(--teal-soft);border-radius:10px;width:44px;height:44px;font-size:1.1rem}
+.hola .word .w{color:#B0452E}
+
+/* reveal / badges */
+.reveal{text-align:center;position:relative}
+.stamp{display:none;margin:12px auto;width:max-content;max-width:100%;border:4px solid var(--bad);color:var(--bad);font-family:var(--head);font-weight:800;font-size:1.8rem;padding:6px 18px;border-radius:10px;transform:rotate(-8deg);letter-spacing:.08em}
+.stamp.show{display:block;animation:stamp .5s}
+@keyframes stamp{0%{transform:rotate(-8deg) scale(2.2);opacity:0}100%{transform:rotate(-8deg) scale(1);opacity:1}}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;margin-top:12px}
+.badge{background:#F1EEE7;border-radius:14px;padding:10px 6px;text-align:center;font-size:.8rem;color:var(--muted);filter:grayscale(1);opacity:.6}
+.badge .ic{font-size:2rem;display:block}
+.badge.on{filter:none;opacity:1;background:var(--amber-soft);color:var(--ink);animation:pop .4s}
+.badge b{display:block;font-family:var(--head);font-size:.85rem}
+
+/* summary */
+.sum li{margin-bottom:6px}
+textarea.plain{width:100%;min-height:200px;font:15px/1.5 var(--body);border:1px solid var(--line);border-radius:12px;padding:10px;background:#FFFDF8;color:var(--ink)}
+
+/* glossary sheet */
+.sheet-bg{position:fixed;inset:0;background:rgba(31,42,48,.4);z-index:70;display:none}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:71;background:#fff;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .25s;max-width:760px;margin:0 auto;box-shadow:0 -6px 24px rgba(0,0,0,.15)}
+.sheet.open{transform:translateY(0)}
+.sheet h3{margin-bottom:6px}
+
+/* audio panel */
+.audiobar{position:fixed;left:0;right:0;bottom:0;z-index:55;background:#fff;border-top:1px solid var(--line);padding:8px 16px calc(8px + env(safe-area-inset-bottom));display:none;box-shadow:0 -4px 16px rgba(0,0,0,.08)}
+.audiobar.show{display:block}
+.audiobar-in{max-width:760px;margin:0 auto;display:flex;gap:8px;align-items:center}
+.audiobar .t{flex:1;font-size:.85rem;color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.audiobar select{font:inherit;font-size:.9rem;padding:6px;border-radius:10px;border:1px solid var(--line);background:#fff;min-height:40px}
+.voicewarn{display:none;margin-top:8px}
+
+details{background:#F7F4EC;border-radius:12px;padding:10px 12px;margin:10px 0}
+summary{font-family:var(--head);font-weight:700;color:var(--teal);cursor:pointer;min-height:32px}
+.src li{font-size:.88rem;margin-bottom:4px;word-break:break-word}
+@media (min-width:600px){ .gallery{grid-template-columns:1fr 1fr} figure img{height:240px} }
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="xp" id="xpBox"><span class="gem">◆</span><span id="xp">0</span> XP</div>
+    <div class="prog" aria-label="Напредък"><i id="progBar"></i></div>
+    <div class="badgecount">🏅 <span id="bCount">0</span>/6</div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<main class="wrap">
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="kicker">География и икономика · 6. клас · Урок 1</div>
+  <h1>Южна Америка: къде е, колко е голяма, какви са бреговете ѝ и кой я опознава</h1>
+</header>
+
+<section class="case" id="case">
+  <div class="dossier-tag">🔍 СЛУЧАЯТ НА ДЕНЯ</div>
+  <h2>„Откраднатото име“</h2>
+  <p>Христофор Колумб стига пръв до тези земи. Но континентът не носи неговото име, а името на друг човек! Как е станало това? Кой е „виновникът“?</p>
+  <p><b>Твоята задача, детективе:</b> прочети досиетата, събери 4 улики и накрая разкрий случая.</p>
+  <div class="clues" id="clues">
+    <div class="clue" data-clue="1"><b>УЛИКА 1</b>🔒 Досие №1</div>
+    <div class="clue" data-clue="2"><b>УЛИКА 2</b>🔒 Досие №2</div>
+    <div class="clue" data-clue="3"><b>УЛИКА 3</b>🔒 Досие №3</div>
+    <div class="clue" data-clue="4"><b>УЛИКА 4</b>🔒 „Знаеш ли, че…“</div>
+  </div>
+</section>
+
+<div class="card" style="padding:12px 16px">
+  <div class="row">
+    <span style="flex:1;font-size:.95rem">🔊 Всяко досие има бутон <b>„Чуй“</b>, а думите с <span class="term" style="pointer-events:none">точки отдолу</span> показват обяснение при докосване.</span>
+  </div>
+  <div class="note voicewarn" id="voiceWarn">
+    Телефонът няма български глас за четене. Можеш да го добавиш от настройките на телефона: <i>Език → Преобразуване на текст в говор → Услуги на Google → Инсталиране на гласови данни → Български</i> (пътят може да е малко различен).
+  </div>
+</div>
+
+<!-- ===== DOSSIER 1 ===== -->
+<section class="card" id="s1">
+  <div class="dossier-tag">ДОСИЕ №1</div>
+  <h2>Къде се крие Южна Америка?</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s1-text">🔊 Чуй</button></div>
+  <div id="s1-text">
+    <p>Представи си глобуса. Ако го разделиш по <button class="term" data-t="green">Гринуичкия меридиан</button>, Южна Америка е изцяло в <button class="term" data-t="west">Западното полукълбо</button>. Две важни линии я пресичат. <button class="term" data-t="eq">Екваторът</button> минава през северната ѝ част, а <button class="term" data-t="trop">Южната тропична окръжност</button> минава през средата ѝ.</p>
+    <p>Континентът се простира далеч на юг. Южният му край е само на около <span class="hl">1000 км от Антарктида</span>, почти колкото е от Бургас до Виена по права линия.</p>
+    <p><b>Кой е около нея?</b> На север е <b>Карибско море</b>, на изток е <b>Атлантическият океан</b>, а на запад е <b>Тихият океан</b>.</p>
+    <p><b>Мостът към Северна Америка.</b> Двете Америки са свързани от тясна ивица суша, <button class="term" data-t="isthmus">Панамския провлак</button>. През него хората са прокопали <button class="term" data-t="canal">плавателен канал</button>, Панамския канал. Той свързва Атлантическия с Тихия океан. Преди да го има, корабите е трябвало да обикалят целия континент откъм юг, което отнемало седмици.</p>
+    <p>Заради това положение Южна Америка има най-тесни връзки със Северна Америка.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="fact-num">17,8 млн. км²</div><small>площ на континента</small></div>
+    <div class="stat"><div class="fact-num">4-то място</div><small>по големина сред континентите</small></div>
+    <div class="stat"><div class="fact-num">≈ 160</div><small>Българии биха се побрали в нея</small></div>
+  </div>
+  <h3>🕵️ Сравни с Африка (задача 1)</h3>
+  <table class="cmp">
+    <tr><th></th><th>Южна Америка</th><th>Африка</th></tr>
+    <tr><td>Полукълба</td><td>Цялата е в Западното</td><td>Екваторът и Гринуичкият меридиан я пресичат, затова е и в четирите полукълба</td></tr>
+    <tr><td>Екватор</td><td>През северната част</td><td>Почти през средата</td></tr>
+    <tr><td>„Мост“ към друг континент</td><td>Панамски провлак (канал) → Северна Америка</td><td>Суецки провлак (канал) → Азия</td></tr>
+    <tr><td>Общ океан</td><td colspan="2">И двата континента имат брегове на Атлантическия океан, един срещу друг</td></tr>
+  </table>
+  <button class="btn readbtn" data-done="s1" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== MAP ===== -->
+<section class="card" id="map">
+  <div class="dossier-tag">КАРТА НА ДЕТЕКТИВА</div>
+  <h2>Интерактивна карта</h2>
+  <p>Докосни точка на картата или бутон под нея. Открий и <b>4-те крайни точки</b> (◆), за да получиш значката „Картограф“.</p>
+  <div class="mapbox"><svg id="mapSvg" viewBox="0 0 400 450" role="img" aria-label="Карта на Южна Америка"></svg></div>
+  <div class="legend">
+    <span><i style="background:#E0554F"></i>Екватор</span>
+    <span><i style="background:#7A5BA8"></i>Южна тропична окръжност</span>
+    <span><i style="background:#D64545"></i>крайна точка</span>
+    <span><i style="background:#1B6F75"></i>вода, залив, проток</span>
+    <span><i style="background:#2F6B3F"></i>остров, суша</span>
+  </div>
+  <div class="infobox" id="info"><h3>Избери точка</h3><p style="margin:0">Тук ще се появи досието на мястото.</p></div>
+  <div class="chips" id="chips"></div>
+</section>
+
+<!-- ===== ANIMATION ===== -->
+<section class="card" id="anim">
+  <div class="dossier-tag">ЕКСПЕРИМЕНТ</div>
+  <h2>Кораб от Ню Йорк до Сан Франциско</h2>
+  <p>И двата града са в САЩ, но единият е на Атлантическия океан, а другият на Тихия. Пусни кораба по двата пътя и сравни.</p>
+  <div class="mapbox"><svg id="animSvg" viewBox="0 0 400 450" role="img" aria-label="Анимация на двата морски пътя"></svg></div>
+  <div class="odo">
+    <div><div class="n" id="odoOld">0</div><small>км по стария път<br>(около нос Хорн)</small></div>
+    <div><div class="n" id="odoNew">0</div><small>км по новия път<br>(през Панамския канал)</small></div>
+  </div>
+  <div class="row">
+    <button class="btn" id="goOld" style="background:#D64545;box-shadow:0 4px 0 #9E2F2F">⛵ Стар път</button>
+    <button class="btn done" id="goNew">🚢 Нов път</button>
+  </div>
+  <p id="animMsg" class="note" style="margin-top:12px">Числата са закръглени. Около нос Хорн пътят е над 20 000 км, а през канала е под 10 000 км. Каналът е отворен през 1914 г. и е дълъг 82 км.</p>
+</section>
+
+<!-- ===== DOSSIER 2 ===== -->
+<section class="card" id="s2">
+  <div class="dossier-tag">ДОСИЕ №2</div>
+  <h2>Бреговете: къде е стръмно, къде е блатисто</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s2-text">🔊 Чуй</button></div>
+  <div id="s2-text">
+    <p>Бреговете на Южна Америка са предимно <b>високи и стръмни</b>. Бреговата линия е <button class="term" data-t="indent">слабо разчленена</button>, тоест няма големи <button class="term" data-t="pen">полуострови</button> и дълбоко врязани <button class="term" data-t="bay">заливи</button>. Ако я очертаеш с молив, ще получиш доста гладка линия, не назъбена като тази на Европа.</p>
+    <p>Всяка част от брега обаче има свой характер:</p>
+  </div>
+  <div class="coast">
+    <div><b>🏝 Карибско крайбрежие (север)</b><br>Малки заливи и полуострови с красиви плажове.</div>
+    <div><b>🌿 Североизток</b><br>Ниски и заблатени брегове около <button class="term" data-t="mouth">устията</button> на големите реки. Затова там е трудно да се строят големи пристанища.</div>
+    <div><b>🌊 Южно атлантическо крайбрежие</b><br>Тук има по-големи заливи. Най-големият е <b>Ла Плата</b>, където реките носят толкова кал, че водата е кафява.</div>
+    <div><b>⛰ Тихоокеанско крайбрежие (запад)</b><br>Високо, стръмно и скалисто. Заливът <b>Арика</b> е широко отворен към океана.</div>
+    <div><b>🧊 Далечният юг</b><br>Много малки острови, дълбоки заливи и скалисти полуострови, като парчета от счупена чиния.</div>
+  </div>
+  <p><b>Острови край континента:</b></p>
+  <ul>
+    <li><b>Огнена земя</b> е на юг. Отделена е от континента чрез <button class="term" data-t="strait">Магелановия проток</button>.</li>
+    <li><b>Галапагоските острови</b> са в Тихия океан, близо до Екватора.</li>
+    <li><b>Фолклендските острови</b> са в Атлантическия океан, на около 500 км от югоизточните брегове.</li>
+  </ul>
+  <button class="btn readbtn" data-done="s2" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== LIBRARY ===== -->
+<section class="card lib" id="lib">
+  <div class="dossier-tag">📚 ГЕОГРАФСКА БИБЛИОТЕКА</div>
+  <h2>Галапагос: островите на редките животни</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="lib-text">🔊 Чуй</button></div>
+  <div id="lib-text">
+    <p>Галапагоските острови са далеч в Тихия океан, на почти <b>1000 км</b> от западния бряг на континента. Те са <button class="term" data-t="arch">архипелаг</button> от <b>18 големи и 3 малки острова</b>, както и над <b>100 скали</b>, които стърчат от водата. Всичката суша заедно е почти <b>8 хил. км²</b>.</p>
+    <p>На островите и във водите около тях живеят редки животни, които не се срещат никъде другаде. За да ги пазят, през <b>1959 г.</b> там е създаден <button class="term" data-t="np">национален парк</button>.</p>
+  </div>
+  <button class="btn readbtn" data-done="lib" data-xp="10">✓ Прочетох · +10 XP</button>
+</section>
+
+<!-- ===== DOSSIER 3 ===== -->
+<section class="card" id="s3">
+  <div class="dossier-tag">ДОСИЕ №3</div>
+  <h2>Заподозрените: кой опознава континента?</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s3-text">🔊 Чуй</button></div>
+  <div id="s3-text">
+    <ul class="tl">
+      <li><span class="yr">1492</span><b>Христофор Колумб</b><br>Пръв стига до новите земи. Той е сигурен, че е стигнал до Индия, затова ги нарича <b>„Западна Индия“</b>. Грешката му остава: жителите на Америка и досега понякога наричат „индианци“.</li>
+      <li><span class="yr">~1500</span><b>Америго Веспучи</b><br>Участва в няколко плавания до новите брегове и пръв ги описва. Най-важното е, че <b>пръв доказва</b>, че това не е Индия, а <b>непознат за европейците континент</b>. Днес континентът носи неговото име.</li>
+      <li><span class="yr">1519–<br>1522</span><b>Фернандо Магелан</b><br>По време на първото околосветско плаване опознава <b>източните и южните брегове</b> на континента. Открива протока, който днес носи името му.</li>
+      <li><span class="yr">XIX в.</span><b>Александър фон Хумболт</b><br>Германски географ, който в началото на XIX век изследва подробно природата на Южна Америка: планини, реки, растения и животни. Съвременниците му го наричат <b>„втори откривател на Америка“</b>.</li>
+      <li><span class="yr">днес</span><b>Учените днес</b><br>Изследват природните богатства на континента, растенията и животните и търсят начини да ги опазят.</li>
+    </ul>
+  </div>
+  <button class="btn readbtn" data-done="s3" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== GALLERY ===== -->
+<section class="card" id="photos">
+  <div class="dossier-tag">📷 СНИМКИ ОТ ТЕРЕНА</div>
+  <h2>Веществени доказателства</h2>
+  <div class="gallery">
+    <figure>
+      <img loading="lazy" src="https://commons.wikimedia.org/wiki/Special:FilePath/Waldseemuller_map_closeup_with_America.jpg?width=900" alt="Част от картата на Валдзеемюлер с надпис America">
+      <figcaption>Картата от 1507 г. Потърси думата <b>America</b>: тук тя е написана за първи път, върху Южна Америка.<small>Мартин Валдзеемюлер, 1507 г. · обществено достояние · <a href="https://commons.wikimedia.org/wiki/File:Waldseemuller_map_closeup_with_America.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="https://commons.wikimedia.org/wiki/Special:FilePath/Panamax_ship_exiting_the_Miraflores_locks.jpg?width=900" alt="Кораб излиза от шлюзовете Мирафлорес на Панамския канал">
+      <figcaption>Кораб в Панамския канал. Шлюзовете работят като „водни асансьори“: вдигат и спускат корабите.<small>Автор и лиценз: на <a href="https://commons.wikimedia.org/wiki/File:Panamax_ship_exiting_the_Miraflores_locks.jpg" target="_blank" rel="noopener">страницата на снимката в Wikimedia Commons</a></small></figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="https://commons.wikimedia.org/wiki/Special:FilePath/Marine_Iguana_-_Galapagos_(32940568808).jpg?width=900" alt="Морска игуана на Галапагоските острови">
+      <figcaption>Морска игуана от Галапагос, единственият гущер в света, който плува и се храни в морето.<small>Автор и лиценз: на <a href="https://commons.wikimedia.org/wiki/File:Marine_Iguana_-_Galapagos_(32940568808).jpg" target="_blank" rel="noopener">страницата на снимката в Wikimedia Commons</a></small></figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="https://commons.wikimedia.org/wiki/Special:FilePath/Alexander_von_Humboldt,_by_Friedrich_Georg_Weitsch.jpg?width=900" alt="Портрет на Александър фон Хумболт">
+      <figcaption>Александър фон Хумболт, „вторият откривател на Америка“. На портрета държи растения, които е събрал.<small>Фридрих Георг Вайч, 1806 г. · обществено достояние · <a href="https://commons.wikimedia.org/wiki/File:Alexander_von_Humboldt,_by_Friedrich_Georg_Weitsch.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+    </figure>
+    <figure>
+      <img loading="lazy" src="https://commons.wikimedia.org/wiki/Special:FilePath/The_First_Map_of_the_Strait_of_Magellan,_1520_WDL3972.png?width=900" alt="Първата карта на Магелановия проток">
+      <figcaption>Първата карта на Магелановия проток, нарисувана по пътя на експедицията. Югът на картата е горе!<small>Антонио Пигафета, XVI в. · обществено достояние · <a href="https://commons.wikimedia.org/wiki/File:The_First_Map_of_the_Strait_of_Magellan,_1520_WDL3972.png" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- ===== DID YOU KNOW ===== -->
+<section class="card" id="dyk">
+  <div class="dossier-tag">💡 ЗНАЕШ ЛИ, ЧЕ…</div>
+  <h2>Тайни от архива</h2>
+  <div class="dyk" id="dyk-text">
+    <div data-i="🗺️">Името <b>„Америка“</b> се появява за първи път на карта от <b>1507 г.</b> Германският картограф Мартин Валдзеемюлер го пише в чест на Америго Веспучи. Избира женска форма, „Америка“, за да звучи като Азия, Африка и Европа. От 1000-те отпечатани карти е оцеляла само една.</div>
+    <div data-i="⛵">Магелан тръгва с <b>5 кораба</b> и около 270 моряци. Три години по-късно у дома се връща само корабът <b>„Виктория“</b> с 18 души. Самият Магелан загива по пътя, във Филипините. Той кръщава океана „Тихи“, защото след бурния проток водата му изглежда спокойна.</div>
+    <div data-i="🌊">Ла Плата е широк около <b>220 км</b> там, където се влива в океана. Това е колкото от Бургас до Пловдив по права линия!</div>
+    <div data-i="🦎">На Галапагос живее <b>морската игуана</b>, единственият гущер в света, който плува в морето. През 1835 г. тук идва младият Чарлз Дарвин и животните на островите го вдъхновяват за прочутата му теория. Галапагос е <b>обект №1</b> в списъка на ЮНЕСКО за световно наследство (1978 г.).</div>
+    <div data-i="🐧">На Хумболт са кръстени пингвин (<b>Хумболтов пингвин</b>) и студено морско течение край бреговете на Перу и Чили. През 1802 г. той се изкачва високо по вулкана Чимборасо, който тогава смятали за най-високия връх на света.</div>
+  </div>
+  <button class="btn readbtn" data-done="dyk" data-xp="10">✓ Прочетох · +10 XP</button>
+</section>
+
+<!-- ===== VIDEO & MUSIC ===== -->
+<section class="card" id="media">
+  <div class="dossier-tag">🎬 ВИДЕО И МУЗИКА</div>
+  <h2>Гледай и слушай</h2>
+  <a class="linkcard" href="https://www.youtube.com/watch?v=D6B35DqijCQ" target="_blank" rel="noopener"><b>▶ Опознаване на Южна Америка: положение, големина и брегове</b><small>academico · на български · YouTube</small></a>
+  <a class="linkcard" href="https://www.youtube.com/watch?v=KgsxapE27NU" target="_blank" rel="noopener"><b>▶ The World's Shortcut: How the Panama Canal Works</b><small>на английски · как шлюзовете вдигат корабите · YouTube</small></a>
+  <a class="linkcard" href="https://www.youtube.com/watch?v=T7Fv5EQwfOE" target="_blank" rel="noopener"><b>🎵 „El Cóndor Pasa“ на андски флейти</b><small>Музика от Андите · YouTube</small></a>
+  <p class="note">🎵 <b>Докато слушаш:</b> „El Cóndor Pasa“ означава „Кондорът прелита“. Кондорът е огромна птица от Андите. Флейтите, които чуваш, са от сноп тръбички с различна дължина: колкото е по-къса тръбичката, толкова по-висок е тонът.</p>
+</section>
+
+<!-- ===== ROLE: PILOT ===== -->
+<section class="card" id="pilot">
+  <div class="dossier-tag">🛩 РОЛЯ: ПИЛОТ</div>
+  <h2>Ти си пилот на хидроплан</h2>
+  <p>Мисията ти е да обиколиш целия континент (задача 4 от учебника). Излиташ от <b>Панамския провлак</b> и летиш <b>на изток</b>, покрай брега. На всяка спирка разпознай какво виждаш под себе си.</p>
+  <div class="stage" id="pilotStage"></div>
+  <p class="note" style="margin-top:12px">✍️ <b>Бордови дневник (на хартия):</b> след полета запиши 3 изречения. Кой бряг ти хареса най-много и защо? Какво би снимал(а) от хидроплана?</p>
+</section>
+
+<!-- ===== DRAW ===== -->
+<section class="card" id="draw">
+  <div class="dossier-tag">🎨 ТВОРЧЕСКА ЗАДАЧА</div>
+  <h2>Нарисувай по памет</h2>
+  <p>Затвори картата и на лист нарисувай контура на Южна Америка. После добави:</p>
+  <ul>
+    <li>червена линия за <b>Екватора</b> и лилава пунктирна линия за <b>Южната тропична окръжност</b>;</li>
+    <li>имената на <b>Карибско море, Атлантическия и Тихия океан</b>;</li>
+    <li>точки за <b>Панамския провлак, Ла Плата, Огнена земя и Галапагос</b>.</li>
+  </ul>
+  <p>Накрая сравни рисунката си с картата горе. <b>По желание:</b> нарисувай морска игуана или гигантска костенурка от Галапагос.</p>
+  <button class="btn ghost readbtn" data-done="draw" data-xp="10">✓ Нарисувах · +10 XP</button>
+</section>
+
+<!-- ===== ENGLISH ===== -->
+<section class="card" id="eng">
+  <div class="dossier-tag">🇬🇧 ENGLISH CORNER</div>
+  <h2>Words of the day</h2>
+  <p style="font-size:.95rem">Докосни 🔊, за да чуеш думата и изречението.</p>
+  <div class="vocab" id="vocabEn"></div>
+  <div class="hola" style="margin-top:18px">
+    <h3 style="color:#B0452E">¡Hola! 🇪🇸 Бонус на испански</h3>
+    <p style="font-size:.95rem;margin-top:0">В почти цяла Южна Америка се говори испански (а в Бразилия — португалски).</p>
+    <div class="vocab" id="vocabEs"></div>
+  </div>
+</section>
+
+<!-- ===== QUIZ ===== -->
+<section class="card" id="quiz">
+  <div class="dossier-tag">🎯 ПРОВЕРИ СЕ</div>
+  <h2>Изпитът на детектива</h2>
+  <p>3 нива по 3 въпроса. Всяко ниво отключва следващото. Грешните въпроси се връщат в края на нивото.</p>
+  <div class="pathwrap"><div class="path" id="path">
+    <button class="node" data-lvl="0">1<span>Новобранец</span></button>
+    <button class="node" data-lvl="1" disabled>2<span>Следовател</span></button>
+    <button class="node" data-lvl="2" disabled>3<span>Главен детектив</span></button>
+  </div></div>
+  <div id="qArea"></div>
+
+  <h3 style="margin-top:18px">🃏 Флашкарти</h3>
+  <p style="font-size:.95rem;margin-top:0">Докосни картата, за да я обърнеш.</p>
+  <div class="flash" id="flash"><div class="flash-in"><div class="face front" id="fFront"></div><div class="face back" id="fBack"></div></div></div>
+  <div class="row"><button class="btn ghost small" id="fPrev">← Назад</button><span id="fNum" style="flex:1;text-align:center;color:var(--muted)"></span><button class="btn ghost small" id="fNext">Напред →</button></div>
+</section>
+
+<!-- ===== REVEAL ===== -->
+<section class="card reveal" id="reveal">
+  <div class="dossier-tag">🔓 РАЗКРИВАНЕ</div>
+  <h2>Кой „открадна“ името?</h2>
+  <p id="revealLock">Събери 4-те улики, за да отключиш разкриването.</p>
+  <div id="revealBody" style="display:none;text-align:left">
+    <p>Погледни уликите. Кой е истинският „виновник“ за името „Америка“?</p>
+    <div class="opts" id="suspects"></div>
+    <div class="fb" id="revealFb"></div>
+  </div>
+  <div class="stamp" id="stamp">РАЗКРИТО</div>
+  <h3 style="margin-top:14px">Твоите значки</h3>
+  <div class="badges" id="badges"></div>
+  <p id="finalXp" style="margin-top:12px;font-family:var(--head);font-weight:700;color:var(--teal)"></p>
+</section>
+
+<!-- ===== SUMMARY ===== -->
+<section class="card" id="sum">
+  <div class="dossier-tag">📌 ЗАПОМНИ</div>
+  <h2>Най-важното от урока</h2>
+  <div class="row" style="margin-bottom:8px"><button class="btn ghost small listen" data-read="sumList">🔊 Чуй</button></div>
+  <ol class="sum" id="sumList">
+    <li>Южна Америка е изцяло в <b>Западното полукълбо</b>. Екваторът минава през северната ѝ част, а Южната тропична окръжност минава през средата ѝ. Южният ѝ край е на около 1000 км от Антарктида.</li>
+    <li>На север граничи с <b>Карибско море</b>, на изток с <b>Атлантическия океан</b>, а на запад с <b>Тихия океан</b>.</li>
+    <li>Със Северна Америка е свързана чрез <b>Панамския провлак</b>. През него минава <b>Панамският канал</b>, който свързва Атлантическия и Тихия океан.</li>
+    <li>Южна Америка е <b>4-тият по големина</b> континент, с площ <b>17,8 млн. км²</b>.</li>
+    <li>Бреговете са предимно високи и стръмни, а бреговата линия е слабо разчленена. Най-големият залив е <b>Ла Плата</b> (на Атлантическия океан). На Тихия океан е заливът <b>Арика</b>.</li>
+    <li>Острови: <b>Огнена земя</b> (отделена чрез Магелановия проток), <b>Галапагоските острови</b> (Тихи океан) и <b>Фолклендските острови</b> (Атлантически океан).</li>
+    <li>Опознаване: <b>Колумб</b> (нарича земите „Западна Индия“), <b>Веспучи</b> (доказва, че е нов континент, и оттам идва името), <b>Магелан</b> (източните и южните брегове), <b>Хумболт</b> („втори откривател на Америка“).</li>
+  </ol>
+  <details>
+    <summary>Крайни точки (от задача 2)</summary>
+    <p style="margin-bottom:0">Север: <b>нос Галинас</b> (Колумбия) · Юг: <b>нос Фроуърд</b> (Чили) · Изток: <b>нос Кабу Бранку</b> (Бразилия; самата най-източна точка е Понта ду Сейшас, съвсем до него) · Запад: <b>нос Париняс</b> (Перу).</p>
+  </details>
+  <details>
+    <summary>📄 Текст за копиране (Google Docs / печат)</summary>
+    <textarea class="plain" id="plain" readonly></textarea>
+    <button class="btn small" id="copyBtn" style="margin-top:8px">📋 Копирай текста</button>
+  </details>
+</section>
+
+<!-- ===== PARENT ===== -->
+<section class="card" id="parent">
+  <details>
+    <summary>👤 За родителя: какво е добавено и източници</summary>
+    <p style="font-size:.92rem">Извън учебника са добавени: крайните точки, 1492 г. за Колумб, годините на Магелан и Хумболт, картата на Валдзеемюлер (1507 г.), разстоянията по стария и новия морски път, данни за Панамския канал, ширината на Ла Плата, морската игуана, Дарвин и ЮНЕСКО, Хумболтовият пингвин и течение, сравнението с Африка. Разстоянията до Виена и Пловдив са изчислени по права линия.</p>
+    <ul class="src">
+      <li><a href="https://en.wikipedia.org/wiki/Extreme_points_of_South_America" target="_blank" rel="noopener">Extreme points of South America (Wikipedia)</a></li>
+      <li><a href="https://www.britannica.com/topic/Panama-Canal" target="_blank" rel="noopener">Panama Canal (Britannica)</a> · <a href="https://en.wikipedia.org/wiki/Panama_Canal" target="_blank" rel="noopener">Panama Canal (Wikipedia)</a></li>
+      <li><a href="https://americanhistory.si.edu/explore/stories/its-your-birthday-panama-canal" target="_blank" rel="noopener">Smithsonian: It's your birthday, Panama Canal!</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Naming_of_the_Americas" target="_blank" rel="noopener">Naming of the Americas (Wikipedia)</a> · <a href="https://www.cabinet.ox.ac.uk/first-map-america-waldseem-ller-map-1507" target="_blank" rel="noopener">The first map of 'America' (Oxford)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Magellan_expedition" target="_blank" rel="noopener">Magellan expedition (Wikipedia)</a> · <a href="https://www.rmg.co.uk/stories/topics/ferdinand-magellan" target="_blank" rel="noopener">Royal Museums Greenwich</a></li>
+      <li><a href="https://whc.unesco.org/en/list/1/" target="_blank" rel="noopener">UNESCO: Galápagos Islands</a> · <a href="https://galapagosconservation.org.uk/species/marine-iguana/" target="_blank" rel="noopener">Galapagos Conservation Trust: marine iguana</a></li>
+      <li><a href="https://plato.stanford.edu/archives/sum2026/entries/alexander-humboldt/" target="_blank" rel="noopener">Alexander von Humboldt (Stanford Encyclopedia)</a> · <a href="https://en.wikipedia.org/wiki/Humboldt_penguin" target="_blank" rel="noopener">Humboldt penguin</a></li>
+      <li><a href="https://www.britannica.com/place/Rio-de-la-Plata" target="_blank" rel="noopener">Río de la Plata (Britannica)</a></li>
+    </ul>
+  </details>
+</section>
+
+</main>
+
+<div class="audiobar" id="audiobar">
+  <div class="audiobar-in">
+    <button class="btn small" id="aPause">⏸</button>
+    <button class="btn ghost small" id="aStop">⏹</button>
+    <span class="t" id="aText">Чета…</span>
+    <select id="aRate" aria-label="Скорост"><option value="0.8">0.8×</option><option value="1" selected>1×</option><option value="1.2">1.2×</option></select>
+  </div>
+</div>
+
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet"><h3 id="sheetT"></h3><p id="sheetD" style="margin:0 0 12px"></p><button class="btn ghost small" id="sheetClose">Разбрах</button></div>
+
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+
+/* ================= STATE ================= */
+var S={xp:0,done:{},badges:{},seen:{},routes:{},clues:{},quizDone:[false,false,false],quizFirst:0,pilotDone:false,solved:false};
+
+function progress(){
+  var n=0;['s1','s2','lib','s3','dyk','draw'].forEach(function(k){if(S.done[k])n++});
+  if(S.badges.carto)n++; if(S.badges.captain)n++; if(S.pilotDone)n++;
+  S.quizDone.forEach(function(d){if(d)n++}); if(S.solved)n++;
+  $('#progBar').style.width=Math.min(100,Math.round(n/13*100))+'%';
+}
+function toast(msg){var t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('show')},1800)}
+function addXP(n,msg){S.xp+=n;$('#xp').textContent=S.xp;var b=$('#xpBox');b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump');if(msg)toast('+'+n+' XP · '+msg);else toast('+'+n+' XP');progress()}
+
+/* ================= BADGES ================= */
+var BADGES=[
+  {id:'detective',ic:'🕵️',n:'Детектив',d:'Прочети всички досиета'},
+  {id:'carto',ic:'🗺️',n:'Картограф',d:'Открий 4-те крайни точки'},
+  {id:'captain',ic:'⚓',n:'Капитан',d:'Пусни кораба по двата пътя'},
+  {id:'pilot',ic:'🛩',n:'Пилот',d:'Обиколи континента'},
+  {id:'polyglot',ic:'💬',n:'Полиглот',d:'Чуй 5 думи'},
+  {id:'chief',ic:'👑',n:'Главен детектив',d:'Поне 8 от 9 верни от първи опит'}
+];
+function renderBadges(){
+  $('#badges').innerHTML=BADGES.map(function(b){return '<div class="badge'+(S.badges[b.id]?' on':'')+'"><span class="ic">'+b.ic+'</span><b>'+b.n+'</b>'+b.d+'</div>'}).join('');
+  $('#bCount').textContent=Object.keys(S.badges).length;
+}
+function award(id){if(S.badges[id])return;S.badges[id]=true;var b=BADGES.filter(function(x){return x.id===id})[0];renderBadges();setTimeout(function(){toast('🏅 Нова значка: '+b.n)},900);progress()}
+
+/* ================= CLUES ================= */
+var CLUES={
+  1:'Континентът е изцяло в Западното полукълбо, на хиляди километри от Индия. Колумб е сгрешил!',
+  2:'Протокът на юг носи името на мореплавател. Изследователите оставят имената си по картата…',
+  3:'Колумб вярва, че е в Индия. Веспучи пръв доказва, че това е НОВ континент.',
+  4:'1507 г.: германски картограф отпечатва карта и пише върху новите земи едно ново име.'
+};
+function giveClue(n){if(S.clues[n])return;S.clues[n]=true;var el=$('.clue[data-clue="'+n+'"]');el.classList.add('on');el.innerHTML='<b>УЛИКА '+n+' ✓</b>'+CLUES[n];toast('🔎 Нова улика!');checkReveal()}
+var CLUE_FOR={s1:1,s2:2,s3:3,dyk:4};
+
+/* ================= READ BUTTONS ================= */
+$$('[data-done]').forEach(function(b){
+  b.addEventListener('click',function(){
+    var k=b.getAttribute('data-done'); if(S.done[k])return;
+    S.done[k]=true; b.classList.add('done'); b.disabled=true; b.textContent='✓ Готово';
+    addXP(+b.getAttribute('data-xp'));
+    if(CLUE_FOR[k])setTimeout(function(){giveClue(CLUE_FOR[k])},700);
+    if(S.done.s1&&S.done.s2&&S.done.s3&&S.done.lib&&S.done.dyk)award('detective');
+  });
+});
+
+/* ================= GLOSSARY ================= */
+var G={
+  green:['Гринуички меридиан','Началният меридиан (0°). Минава през Гринуич, част от Лондон. На запад от него е Западното полукълбо, а на изток е Източното.'],
+  west:['Западно полукълбо','Половината от Земята на запад от Гринуичкия меридиан (0°) до 180° меридиан. В нея са двете Америки.'],
+  eq:['Екватор','Въображаема линия около Земята на 0° географска ширина. Дели я на Северно и Южно полукълбо. Край Екватора е топло през цялата година.'],
+  trop:['Южна тропична окръжност','Паралел на около 23,5° южна ширина. Това е най-южната линия, над която слънцето може да застане точно над главата ти, в зенита.'],
+  isthmus:['Провлак','Тясна ивица суша, която свързва две по-големи части суша. Например Панамският провлак свързва Северна и Южна Америка.'],
+  canal:['Плавателен канал','Изкуствен воден път, прокопан от хората, по който минават кораби. Реката е създадена от природата, а каналът от човека.'],
+  strait:['Проток','Тясна ивица вода между две части суша. Тя свързва два водни басейна, например два океана. Магелановият проток свързва Атлантическия и Тихия океан.'],
+  bay:['Залив','Част от морето или океана, която навлиза навътре в сушата.'],
+  pen:['Полуостров','Суша, която е заобиколена от вода от три страни, а с четвъртата е свързана със сушата. Например Балканският полуостров.'],
+  mouth:['Устие','Мястото, където река се влива в море, океан, езеро или в друга река.'],
+  indent:['Слабо разчленена брегова линия','Бряг с малко и неголеми заливи и полуострови. На картата изглежда почти гладък, без дълбоки „зъбци“.'],
+  arch:['Архипелаг','Група от острови, разположени близо един до друг.'],
+  np:['Национален парк','Голяма защитена територия, в която природата се пази от човешка намеса. В България има 3 национални парка: Рила, Пирин и Централен Балкан.']
+};
+var sheet=$('#sheet'),sbg=$('#sheetBg');
+function openSheet(k){$('#sheetT').textContent=G[k][0];$('#sheetD').textContent=G[k][1];sbg.style.display='block';requestAnimationFrame(function(){sheet.classList.add('open')})}
+function closeSheet(){sheet.classList.remove('open');setTimeout(function(){sbg.style.display='none'},250)}
+$$('.term[data-t]').forEach(function(t){t.addEventListener('click',function(){openSheet(t.getAttribute('data-t'))})});
+sbg.addEventListener('click',closeSheet);$('#sheetClose').addEventListener('click',closeSheet);
+
+/* ================= SPEECH ================= */
+var synth=window.speechSynthesis, voices=[], queue=[], qi=0, speaking=false, paused=false, curLang='bg-BG', gen=0;
+function loadVoices(){if(!synth)return;voices=synth.getVoices()||[];
+  if(voices.length&&!pickVoice('bg'))$('#voiceWarn').style.display='block'; else $('#voiceWarn').style.display='none';}
+function pickVoice(lang){var l=lang.toLowerCase();var v=voices.filter(function(x){return x.lang&&x.lang.toLowerCase().replace('_','-').indexOf(l)===0});
+  var g=v.filter(function(x){return /google/i.test(x.name)});return g[0]||v[0]||null}
+if(synth){loadVoices();if(typeof synth.onvoiceschanged!=='undefined')synth.onvoiceschanged=loadVoices;}
+function splitText(t){t=t.replace(/\s+/g,' ').trim();var parts=t.match(/[^.!?…]+[.!?…]*/g)||[t];var out=[];
+  parts.forEach(function(p){p=p.trim();if(!p)return;while(p.length>180){var i=p.lastIndexOf(',',180);if(i<60)i=180;out.push(p.slice(0,i+1));p=p.slice(i+1).trim()}if(p)out.push(p)});return out}
+function speakNext(){
+  if(qi>=queue.length){stopSpeech();return}
+  var my=gen;var u=new SpeechSynthesisUtterance(queue[qi]);var v=pickVoice(curLang.slice(0,2));if(v)u.voice=v;u.lang=curLang;u.rate=+$('#aRate').value;
+  u.onend=u.onerror=function(){if(my!==gen||!speaking||paused)return;qi++;speakNext()};
+  $('#aText').textContent=queue[qi];synth.speak(u);
+}
+function speak(text,lang,showBar){
+  if(!synth){toast('Този браузър не може да чете на глас');return}
+  gen++;synth.cancel();queue=splitText(text);qi=0;speaking=true;paused=false;curLang=lang||'bg-BG';
+  $('#aPause').textContent='⏸';if(showBar!==false)$('#audiobar').classList.add('show');
+  var g0=gen;setTimeout(function(){if(g0===gen)speakNext()},60);
+}
+function stopSpeech(){gen++;speaking=false;paused=false;if(synth)synth.cancel();$('#audiobar').classList.remove('show')}
+$('#aPause').addEventListener('click',function(){
+  if(!speaking)return;
+  if(!paused){paused=true;gen++;synth.cancel();this.textContent='▶'}  // cancel + resume from sentence: works reliably on Android
+  else{paused=false;gen++;this.textContent='⏸';speakNext()}
+});
+$('#aStop').addEventListener('click',stopSpeech);
+$('#aRate').addEventListener('change',function(){if(speaking&&!paused){gen++;synth.cancel();setTimeout(speakNext,60)}});
+$$('[data-read]').forEach(function(b){b.addEventListener('click',function(){speak($('#'+b.getAttribute('data-read')).innerText,'bg-BG')})});
+
+/* ================= MAP ================= */
+var K=6;function P(lon,lat){return [((lon+95)*K).toFixed(1),((15-lat)*K).toFixed(1)]}
+function poly(pts){return 'M'+pts.map(function(p){return P(p[0],p[1]).join(',')}).join(' L')+' Z'}
+var SA=[[-77.4,8.7],[-76,9.4],[-75.5,10.5],[-74.8,11],[-73.5,11.3],[-72.2,11.9],[-71.67,12.46],[-71.1,12],[-71.5,10.9],[-71,10.9],[-70.2,11.6],[-70,12.1],[-68.4,10.8],[-66,10.6],[-64,10.7],[-62,10.7],[-61,9.5],[-59.8,8.3],[-58,6.8],[-55,5.9],[-52,4.9],[-51,4],[-50,1.8],[-50.5,.2],[-48.5,-1],[-46,-1],[-44,-2.5],[-41.5,-2.9],[-39,-3.5],[-37.2,-4.9],[-35.3,-5.3],[-34.79,-7.15],[-35,-9],[-36.5,-10.5],[-38.5,-13],[-39,-16],[-39.7,-19.5],[-41,-22],[-43.2,-23],[-45,-23.8],[-48.5,-26.5],[-48.7,-28.5],[-50.2,-30.5],[-52.5,-33],[-53.5,-34],[-54.9,-34.9],[-56.3,-34.9],[-57.8,-34.4],[-58.5,-34.3],[-57.3,-35.5],[-56.7,-36.4],[-57.5,-38],[-59,-38.8],[-62,-39],[-62.3,-40.6],[-65,-41],[-64.2,-42.3],[-65,-43.3],[-65.5,-45],[-67.5,-46],[-66,-47.5],[-67.8,-49.5],[-68.9,-51.6],[-68.4,-52.3],[-69.5,-52.5],[-70.9,-53],[-71.3,-53.9],[-72.5,-53.5],[-73.5,-53],[-74.7,-52.7],[-75.2,-51],[-75.5,-48.5],[-74.5,-46.5],[-73.8,-44],[-73.9,-41.8],[-73.5,-40],[-73.6,-37.5],[-72.5,-35.5],[-71.7,-33],[-71.5,-30],[-71.3,-27],[-70.6,-24],[-70.2,-20],[-70.3,-18.5],[-71.5,-17.3],[-74,-15.8],[-76.3,-13.5],[-77.2,-12],[-78.5,-9.5],[-79.9,-7],[-81.33,-4.68],[-80.4,-3.4],[-80.2,-2.2],[-81,-2.2],[-80.5,-.5],[-80,.8],[-79,1.5],[-78.8,2.5],[-77.5,3.8],[-77.3,5.5],[-77.9,7.2]];
+var CA=[[-77.4,8.7],[-78.4,9.4],[-79.6,9.6],[-80.6,9],[-81.8,8.9],[-82.9,9.6],[-83.6,10.8],[-83.5,12.5],[-83.3,15],[-88,15],[-87.5,13.2],[-86,11.8],[-85.7,10.5],[-85,9.9],[-84,9.3],[-83,8.3],[-81.5,7.6],[-80.4,7.4],[-80,8.1],[-79,8.9],[-78.2,8.3],[-77.9,7.2]];
+var TDF=[[-68.5,-52.7],[-69.6,-52.8],[-70.3,-53.5],[-70.8,-54.3],[-72,-54.6],[-70.5,-55.1],[-68.5,-55.4],[-67.3,-55.9],[-66.5,-55.2],[-65.2,-54.8],[-66.5,-54.4],[-67.8,-53.6]];
+var FALK=[[-61.2,-51.3],[-60,-51.2],[-58.5,-51.4],[-57.8,-51.6],[-58.4,-52.2],[-59.7,-52.3],[-61,-52]];
+function baseMap(svg,labels){
+  var s='<rect width="400" height="450" fill="#CFE6EE"/>';
+  s+='<path class="land" d="'+poly(CA)+'"/><path class="land" d="'+poly(SA)+'"/><path class="land" d="'+poly(TDF)+'"/><path class="land" d="'+poly(FALK)+'"/>';
+  // Galapagos
+  [[-91.1,-.8,7],[-90.4,-.6,4],[-89.5,-.9,4],[-90.8,-.3,3],[-90.2,-1.3,3],[-90.5,.2,2.5]].forEach(function(g){var p=P(g[0],g[1]);s+='<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+(g[2]/2.2)+'" class="land"/>'});
+  // lines
+  var e=P(0,0)[1],tr=P(0,-23.44)[1];
+  s+='<line x1="0" x2="400" y1="'+e+'" y2="'+e+'" class="gridline"/>';
+  s+='<line x1="0" x2="400" y1="'+tr+'" y2="'+tr+'" class="tropic"/>';
+  if(labels){
+    s+='<text x="396" y="'+(e-4)+'" text-anchor="end" class="linelabel" fill="#C23B35">Екватор 0°</text>';
+    s+='<text x="396" y="'+(tr-4)+'" text-anchor="end" class="linelabel" fill="#6A4A98">Южна тропична окръжност</text>';
+    s+='<text x="160" y="42" class="maplabel">КАРИБСКО МОРЕ</text>';
+    s+='<text x="300" y="300" class="maplabel" transform="rotate(-60 300 300)">АТЛАНТИЧЕСКИ ОКЕАН</text>';
+    s+='<text x="40" y="250" class="maplabel" transform="rotate(-70 40 250)">ТИХИ ОКЕАН</text>';
+    s+='<text x="232" y="444" class="maplabel">ЮЖЕН ОКЕАН</text>';
+    s+='<text x="178" y="200" class="maplabel" style="letter-spacing:.2em;font-size:11px;fill:#8A6A2A">ЮЖНА</text><text x="168" y="214" class="maplabel" style="letter-spacing:.2em;font-size:11px;fill:#8A6A2A">АМЕРИКА</text>';
+    s+='<text x="6" y="14" class="linelabel" fill="#5B6870">↑ Северна Америка</text>';
+  }
+  svg.innerHTML=s;
+}
+var COL={x:'#D64545',w:'#1B6F75',l:'#2F6B3F'};
+var PTS=[
+  {id:'n',t:'x',n:'◆ Нос Галинас',lon:-71.67,lat:12.46,d:'<b>Най-северната точка</b> на континента. Намира се в Колумбия, на брега на Карибско море. Там има фар, а наоколо е суха полупустиня.',ext:1},
+  {id:'e',t:'x',n:'◆ Нос Кабу Бранку',lon:-34.79,lat:-7.15,d:'<b>Най-източната точка</b> на континента, в Бразилия, на Атлантическия океан. Точното място се казва Понта ду Сейшас. Това е най-източната точка и на двете Америки!',ext:1},
+  {id:'s',t:'x',n:'◆ Нос Фроуърд',lon:-71.29,lat:-53.9,d:'<b>Най-южната точка</b> на самия континент, в Чили, на брега на Магелановия проток. Внимание: нос Хорн е още по-на юг, но той е на остров, а не на континента.',ext:1},
+  {id:'w',t:'x',n:'◆ Нос Париняс',lon:-81.33,lat:-4.68,d:'<b>Най-западната точка</b> на континента, в Перу, на Тихия океан. Под скалите му почиват морски лъвове.',ext:1},
+  {id:'pan',t:'l',n:'Панамски провлак и канал',lon:-79.6,lat:9.1,d:'Тясната ивица суша, която свързва Южна и Северна Америка. През нея минава <b>Панамският канал</b> (открит през 1914 г., 82 км), който свързва Атлантическия и Тихия океан.'},
+  {id:'car',t:'w',n:'Карибско море',lon:-75,lat:13.2,d:'Мие <b>северните</b> брегове на континента. Има малки заливи, полуострови и красиви плажове.'},
+  {id:'amz',t:'w',n:'Устието на Амазонка',lon:-50,lat:-.3,d:'На <b>североизток</b> бреговете са ниски и заблатени около устията на големите реки. Там е трудно да се строят големи пристанища.'},
+  {id:'lp',t:'w',n:'Залив Ла Плата',lon:-56.8,lat:-35.3,d:'<b>Най-големият залив</b> на южното атлантическо крайбрежие. Тук се вливат реките Парана и Уругвай. Широк е около 220 км при океана.'},
+  {id:'ar',t:'w',n:'Залив Арика',lon:-70.9,lat:-18.4,d:'Залив на <b>тихоокеанското</b> крайбрежие, широко отворен към океана. Брегът тук е висок, стръмен и скалист.'},
+  {id:'mag',t:'w',n:'Магеланов проток',lon:-70,lat:-52.9,d:'Тесен воден път между континента и Огнена земя. Свързва Атлантическия и Тихия океан. Магелан минава през него през 1520 г.'},
+  {id:'tdf',t:'l',n:'Огнена земя',lon:-68.3,lat:-54.3,d:'Голям остров на юг от континента, отделен чрез Магелановия проток. Мореплавателите виждали огньовете на местните жители по брега, затова е кръстен така.'},
+  {id:'horn',t:'l',n:'Нос Хорн',lon:-67.27,lat:-55.98,d:'Скалист нос на малък остров на юг от Огнена земя. Преди Панамския канал корабите го заобикаляли в бури и огромни вълни.'},
+  {id:'gal',t:'l',n:'Галапагоски острови',lon:-90.4,lat:-.6,d:'Архипелаг в <b>Тихия океан</b>, близо до Екватора, на почти 1000 км от брега. Там живеят редки животни. Национален парк от 1959 г.'},
+  {id:'fal',t:'l',n:'Фолклендски острови',lon:-59.5,lat:-51.75,d:'Острови в <b>Атлантическия океан</b>, на около 500 км от югоизточните брегове на континента.'}
+];
+var mapSvg=$('#mapSvg');baseMap(mapSvg,true);
+(function(){
+  var g='';PTS.forEach(function(p){var c=P(p.lon,p.lat);
+    g+='<g class="mk" data-id="'+p.id+'" transform="translate('+c[0]+','+c[1]+')"><circle class="halo" r="6" stroke="'+COL[p.t]+'"/>'+
+      (p.ext?'<rect class="dot" x="-5" y="-5" width="10" height="10" transform="rotate(45)" fill="'+COL[p.t]+'" stroke="#fff" stroke-width="1.6"/>':'<circle class="dot" r="5" fill="'+COL[p.t]+'"/>')+
+      '<circle r="13" fill="transparent"/></g>'});
+  mapSvg.insertAdjacentHTML('beforeend',g);
+  $('#chips').innerHTML=PTS.map(function(p){return '<button class="chip" data-id="'+p.id+'"><i style="background:'+COL[p.t]+'"></i>'+p.n.replace('◆ ','')+'</button>'}).join('');
+})();
+function showPt(id){
+  var p=PTS.filter(function(x){return x.id===id})[0];
+  $$('.mk,.chip').forEach(function(e){e.classList.toggle('active',e.getAttribute('data-id')===id)});
+  $('#info').innerHTML='<h3>'+p.n+'</h3><p style="margin:0">'+p.d+'</p>';
+  if(!S.seen[id]){S.seen[id]=true;$$('[data-id="'+id+'"]').forEach(function(e){e.classList.add('seen')});addXP(2);
+    if(['n','e','s','w'].every(function(k){return S.seen[k]}))award('carto');}
+}
+$$('.mk,.chip').forEach(function(e){e.addEventListener('click',function(){showPt(e.getAttribute('data-id'))})});
+
+/* ================= ANIMATION ================= */
+var animSvg=$('#animSvg');baseMap(animSvg,false);
+var OLD=[[-62,15.5],[-57,9],[-47,1],[-33,-6],[-36,-17],[-45,-27],[-53,-37.5],[-62,-46],[-64.5,-53.5],[-66.5,-57],[-72,-56.5],[-77,-52],[-77.5,-40],[-74,-26],[-74.5,-17],[-80,-10],[-83.5,-3],[-84.5,5],[-90,11],[-94,15.5]];
+var NEW=[[-62,15.5],[-70,13.8],[-78,10.6],[-79.9,9.4],[-79.5,8.8],[-79.8,7.5],[-84,7],[-90,11],[-94,15.5]];
+function lineD(pts){return 'M'+pts.map(function(p){return P(p[0],p[1]).join(',')}).join(' L')}
+animSvg.insertAdjacentHTML('beforeend','<path id="rOld" class="route-old" d="'+lineD(OLD)+'" opacity=".25"/><path id="rNew" class="route-new" d="'+lineD(NEW)+'" opacity=".25"/>'+
+ '<text x="300" y="12" class="linelabel" fill="#1F2A30">↗ от Ню Йорк</text><text x="4" y="12" class="linelabel" fill="#1F2A30">↖ до Сан Франциско</text>'+
+ '<g id="ship" transform="translate(-50,-50)"><circle r="9" fill="#fff" stroke="#0F5257" stroke-width="2"/><text y="4.5" text-anchor="middle" font-size="12">🚢</text></g>');
+var animRunning=false;
+function runRoute(which){
+  if(animRunning)return;animRunning=true;
+  var path=$(which==='old'?'#rOld':'#rNew'),len=path.getTotalLength(),dur=which==='old'?9000:4000,km=which==='old'?22500:9500,out=$(which==='old'?'#odoOld':'#odoNew');
+  path.setAttribute('opacity','1');var ship=$('#ship'),t0=null;
+  $('#animMsg').textContent=which==='old'?'Корабът плава покрай целия континент, заобикаля нос Хорн в бурните южни води и се връща нагоре…':'Корабът минава през Панамския канал. Шлюзовете го издигат и после го спускат до Тихия океан…';
+  function step(ts){if(!t0)t0=ts;var k=Math.min(1,(ts-t0)/dur);var pt=path.getPointAtLength(len*k);ship.setAttribute('transform','translate('+pt.x+','+pt.y+')');
+    out.textContent=Math.round(km*k).toLocaleString('bg-BG');
+    if(k<1)requestAnimationFrame(step);else{animRunning=false;
+      if(!S.routes[which]){S.routes[which]=true;addXP(5);}
+      $('#animMsg').textContent=which==='old'?'Около 22 500 км, седмици в открито море и опасни бури край нос Хорн. Опитай и новия път!':'Около 9 500 км. Каналът спестява почти 13 000 км!';
+      if(S.routes.old&&S.routes.new){award('captain');$('#animMsg').textContent='Разликата е почти 13 000 км! Затова Панамският канал е толкова важен: той свързва Атлантическия с Тихия океан.';}
+    }}
+  requestAnimationFrame(step);
+}
+$('#goOld').addEventListener('click',function(){runRoute('old')});$('#goNew').addEventListener('click',function(){runRoute('new')});
+
+/* ================= PILOT ================= */
+var FLIGHT=[
+  {q:'Излиташ от Панамския провлак на изток. Под теб е синьо море, а по брега има малки заливи и плажове. Кое е това море?',o:['Карибско море','Средиземно море','Черно море'],a:0,e:'Карибско море мие северните брегове. Сега прелиташ над нос Галинас, най-северната точка на континента!'},
+  {q:'Продължаваш на югоизток. Брегът е нисък, зелен и блатист, а огромна река влива кафява вода в океана. Защо тук няма големи пристанища?',o:['Бреговете са ниски и заблатени','Скалите са твърде високи','Морето е замръзнало'],a:0,e:'Около устията на големите реки на североизток бреговете са ниски и заблатени, затова е трудно да се строят пристанища.'},
+  {q:'Стигаш до най-източната точка на континента, в Бразилия. Как се казва?',o:['Нос Кабу Бранку','Нос Хорн','Нос Галинас'],a:0,e:'Нос Кабу Бранку (Понта ду Сейшас) е най-източната точка на цялата Америка.'},
+  {q:'Летиш на юг. Под теб се отваря огромен залив с кафява вода, широк колкото от Бургас до Пловдив. Кой е той?',o:['Ла Плата','Арика','Мексикански залив'],a:0,e:'Ла Плата е най-големият залив на южното атлантическо крайбрежие.'},
+  {q:'Вляво от теб, на изток, на около 500 км навътре в океана виждаш острови. Кои са те?',o:['Фолклендските острови','Галапагоските острови','Канарските острови'],a:0,e:'Фолклендските острови са в Атлантическия океан, на около 500 км от брега.'},
+  {q:'Трябва да завиеш на запад през тесен воден път между континента и голям остров на юг. Как се казва?',o:['Магеланов проток','Панамски канал','Гибралтарски проток'],a:0,e:'Магелановият проток отделя Огнена земя от континента. На брега му е нос Фроуърд, най-южната точка на континента.'},
+  {q:'Вече си над Тихия океан и летиш на север. Какъв бряг виждаш на юг от Чили?',o:['Много островчета, дълбоки заливи и скалисти полуострови','Нисък пясъчен бряг с дюни','Блата и мангрови гори'],a:0,e:'Южното тихоокеанско крайбрежие е силно накъсано: островчета, дълбоки заливи и скали.'},
+  {q:'В Северно Чили брегът е висок и скалист. Виждаш широко отворен към океана залив. Кой е той?',o:['Арика','Ла Плата','Бискайски залив'],a:0,e:'Заливът Арика е на тихоокеанското крайбрежие и е широко отворен към океана.'},
+  {q:'В Перу прелиташ над най-западната точка на континента. Коя е тя?',o:['Нос Париняс','Нос Фроуърд','Нос Кабу Бранку'],a:0,e:'Нос Париняс в Перу е най-западната точка на континента.'},
+  {q:'Последна спирка! Далеч на запад, на почти 1000 км, край Екватора, има острови с гигантски костенурки. Кои са те?',o:['Галапагоските острови','Фолклендските острови','Огнена земя'],a:0,e:'Галапагос! Сега се връщаш в Панама. Мисията е изпълнена!'}
+];
+var pI=0,pStage=$('#pilotStage');
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function renderPilot(){
+  if(pI>=FLIGHT.length){pStage.innerHTML='<div class="stepdots">'+FLIGHT.map(function(){return '<i class="ok"></i>'}).join('')+'</div><p style="font-family:var(--head);font-weight:700;color:var(--teal);font-size:1.15rem;margin:0">🛬 Кацане в Панама! Обиколи целия континент.</p>';
+    if(!S.pilotDone){S.pilotDone=true;award('pilot');progress()}return}
+  var f=FLIGHT[pI],order=shuffle([0,1,2]);
+  pStage.innerHTML='<div class="stepdots">'+FLIGHT.map(function(_,i){return '<i class="'+(i<pI?'ok':i===pI?'cur':'')+'"></i>'}).join('')+'</div>'+
+   '<div class="qhead"><span>Спирка '+(pI+1)+' от '+FLIGHT.length+'</span></div><p class="qtext" style="font-size:1.02rem">'+f.q+'</p><div class="opts">'+
+   order.map(function(i){return '<button class="opt" data-i="'+i+'">'+f.o[i]+'</button>'}).join('')+'</div><div class="fb"></div>';
+  var tried=false;
+  $$('.opt',pStage).forEach(function(b){b.addEventListener('click',function(){
+    var i=+b.getAttribute('data-i'),fb=$('.fb',pStage);
+    if(i===f.a){b.classList.add('right');$$('.opt',pStage).forEach(function(x){x.disabled=true});
+      fb.className='fb ok';fb.innerHTML='<b>Точно така!</b> '+f.e+'<div style="margin-top:10px"><button class="btn small done" id="pNext">Лети нататък →</button></div>';
+      if(!tried)addXP(5);$('#pNext').addEventListener('click',function(){pI++;renderPilot()});}
+    else{tried=true;b.classList.add('wrong');b.disabled=true;fb.className='fb bad';fb.innerHTML='<b>Провери пак картата.</b> Опитай друг отговор.';}
+  })});
+}
+renderPilot();
+
+/* ================= VOCAB ================= */
+var EN=[['continent','Континент','South America is a continent.'],['coast','Бряг','The coast is high and rocky.'],['bay','Залив','La Plata is a big bay.'],['island','Остров','Galápagos is a group of islands.'],['strait','Проток','Magellan sailed through the strait.'],['canal','Канал','Ships use the Panama Canal.'],['equator','Екватор','The equator is very hot.'],['explorer','Изследовател','Humboldt was a great explorer.']];
+var ES=[['isla','остров'],['mar','море'],['costa','бряг'],['océano','океан'],['canal','канал']];
+$('#vocabEn').innerHTML=EN.map(function(w,i){return '<div class="word"><span class="w">'+w[0]+'</span><span class="ex">'+w[1].replace(/\.$/,'')+'<br><i>'+w[2]+'</i></span><button data-en="'+i+'" aria-label="Чуй">🔊</button></div>'}).join('');
+$('#vocabEs').innerHTML=ES.map(function(w,i){return '<div class="word"><span class="w">'+w[0]+'</span><span class="ex">'+w[1]+'</span><button data-es="'+i+'" aria-label="Чуй">🔊</button></div>'}).join('');
+var heard={};
+function heardOne(k){if(heard[k])return;heard[k]=1;addXP(1);if(Object.keys(heard).length>=5)award('polyglot')}
+$$('[data-en]').forEach(function(b){b.addEventListener('click',function(){var w=EN[+b.getAttribute('data-en')];speak(w[0]+'. '+w[2],'en-US',false);heardOne('en'+b.getAttribute('data-en'))})});
+$$('[data-es]').forEach(function(b){b.addEventListener('click',function(){var w=ES[+b.getAttribute('data-es')];speak(w[0],'es-ES',false);heardOne('es'+b.getAttribute('data-es'))})});
+
+/* ================= QUIZ ================= */
+var LV=[
+ [{q:'През коя част на Южна Америка минава Екваторът?',o:['През северната','През средата','През южната'],a:0,e:'Екваторът минава през северната част. През средата минава Южната тропична окръжност.'},
+  {q:'Кой провлак свързва Южна със Северна Америка?',o:['Панамският','Суецкият','Магелановият'],a:0,e:'Панамският провлак. Суецкият свързва Африка с Азия, а Магелановият е проток, не провлак.'},
+  {q:'Кое място заема Южна Америка по големина сред континентите?',o:['4-то','2-ро','6-то'],a:0,e:'Тя е 4-тият по големина континент, с площ 17,8 млн. км².'}],
+ [{q:'Кой е най-големият залив по южното атлантическо крайбрежие?',o:['Ла Плата','Арика','Карибският'],a:0,e:'Ла Плата. Арика е на Тихия океан.'},
+  {q:'Какво отделя Огнена земя от континента?',o:['Магелановият проток','Панамският канал','Карибско море'],a:0,e:'Магелановият проток, наречен на Фернандо Магелан.'},
+  {q:'Защо на североизток трудно се строят големи пристанища?',o:['Бреговете са ниски и заблатени','Бреговете са покрити с лед','Там няма океан'],a:0,e:'Около устията на големите реки бреговете са ниски и заблатени.'}],
+ [{q:'Как Колумб нарича откритите от него земи?',o:['Западна Индия','Нов свят','Америка'],a:0,e:'Колумб вярва, че е стигнал Индия, затова ги нарича Западна Индия.'},
+  {q:'Кой пръв доказва, че откритите земи са нов континент?',o:['Америго Веспучи','Христофор Колумб','Фернандо Магелан'],a:0,e:'Веспучи. Затова континентът носи неговото име.'},
+  {q:'Кого наричат „втори откривател на Америка“?',o:['Александър фон Хумболт','Фернандо Магелан','Америго Веспучи'],a:0,e:'Хумболт, който в началото на XIX век изследва подробно природата на континента.'}]
+];
+var FB_OK=['Браво!','Точно!','Отлично, детективе!','Вярно!'],FB_BAD=['Почти…','Не съвсем.','Опа!'];
+var qState=null;
+function startLevel(l){
+  qState={l:l,queue:[0,1,2],pos:0,firstOk:0,missed:{},total:3};
+  $('#qArea').scrollIntoView({behavior:'smooth',block:'start'});renderQ();
+}
+function renderQ(){
+  var st=qState,area=$('#qArea');
+  if(!st.queue.length){finishLevel();return}
+  var qi=st.queue[0],Q=LV[st.l][qi],order=shuffle([0,1,2]);
+  var doneCount=3-st.queue.length+ (0);
+  area.innerHTML='<div class="stage"><div class="qhead"><span>Ниво '+(st.l+1)+'</span><button class="btn ghost small" id="qQuit">✕</button></div>'+
+   '<div class="qprog"><i style="width:'+Math.round((3-st.queue.length)/3*100)+'%"></i></div>'+
+   '<p class="qtext">'+Q.q+'</p><div class="opts">'+order.map(function(i){return '<button class="opt" data-i="'+i+'">'+Q.o[i]+'</button>'}).join('')+'</div><div class="fb" id="qfb"></div></div>';
+  $('#qQuit').addEventListener('click',function(){qState=null;area.innerHTML=''});
+  $$('.opt',area).forEach(function(b){b.addEventListener('click',function(){
+    var i=+b.getAttribute('data-i'),fb=$('#qfb');$$('.opt',area).forEach(function(x){x.disabled=true;if(+x.getAttribute('data-i')===Q.a)x.classList.add('right')});
+    if(i===Q.a){fb.className='fb ok';fb.innerHTML='<b>'+FB_OK[Math.floor(Math.random()*FB_OK.length)]+'</b> '+Q.e;
+      if(!st.missed[qi]){st.firstOk++;addXP(10)}st.queue.shift();}
+    else{b.classList.add('wrong');fb.className='fb bad';fb.innerHTML='<b>'+FB_BAD[Math.floor(Math.random()*FB_BAD.length)]+'</b> '+Q.e+' <i>Въпросът ще се върне по-късно.</i>';
+      st.missed[qi]=true;st.queue.push(st.queue.shift());}
+    fb.insertAdjacentHTML('beforeend','<div style="margin-top:10px"><button class="btn small '+(i===Q.a?'done':'')+'" id="qNext">Продължи →</button></div>');
+    $('#qNext').addEventListener('click',renderQ);
+  })});
+}
+function finishLevel(){
+  var st=qState,l=st.l,area=$('#qArea');
+  if(!S.quizDone[l]){S.quizDone[l]=true;S.quizFirst+=st.firstOk;}
+  var nodes=$$('.node');nodes[l].classList.add('done');if(nodes[l+1])nodes[l+1].disabled=false;
+  var names=['Новобранец','Следовател','Главен детектив'];
+  area.innerHTML='<div class="stage" style="text-align:center"><div style="font-size:2.4rem">⭐</div><p class="qtext">Ниво „'+names[l]+'“ е преминато!</p><p>От първи опит: <b>'+st.firstOk+' от 3</b></p>'+
+   (l<2?'<button class="btn amber" id="qNextLvl">Към ниво '+(l+2)+' →</button>':'<p>Всички нива са готови! Сега отиди към <b>Разкриването</b> ↓</p>')+'</div>';
+  if(l<2)$('#qNextLvl').addEventListener('click',function(){startLevel(l+1)});
+  progress();
+  if(S.quizDone.every(Boolean)){if(S.quizFirst>=8)award('chief');checkReveal();}
+  qState=null;
+}
+$$('.node').forEach(function(n){n.addEventListener('click',function(){if(!n.disabled)startLevel(+n.getAttribute('data-lvl'))})});
+
+/* flashcards */
+var FC=[['Провлак','Тясна ивица суша, която свързва две части суша. Панамският провлак свързва двете Америки.'],['Канал','Изкуствен воден път за кораби. Панамският канал свързва Атлантическия и Тихия океан.'],['Проток','Тясна ивица вода между две части суша. Магелановият проток отделя Огнена земя от континента.'],['Залив','Част от морето или океана, навлизаща в сушата. Ла Плата и Арика.'],['17,8 млн. км²','Площта на Южна Америка. Тя е 4-тият по големина континент.'],['Крайни точки','С: нос Галинас · Ю: нос Фроуърд · И: нос Кабу Бранку · З: нос Париняс'],['Галапагос','Острови в Тихия океан край Екватора, на ~1000 км от брега. Национален парк от 1959 г.'],['Фолклендски острови','В Атлантическия океан, на ~500 км от югоизточния бряг.'],['Веспучи','Пръв доказва, че това е нов континент. Континентът носи неговото име.'],['Хумболт','Германски географ, „втори откривател на Америка“ (началото на XIX в.).']];
+var fI=0,flash=$('#flash');
+function renderFC(){flash.classList.remove('flip');setTimeout(function(){$('#fFront').textContent=FC[fI][0];$('#fBack').textContent=FC[fI][1];$('#fNum').textContent=(fI+1)+' / '+FC.length},150)}
+flash.addEventListener('click',function(){flash.classList.toggle('flip')});
+$('#fPrev').addEventListener('click',function(){fI=(fI-1+FC.length)%FC.length;renderFC()});
+$('#fNext').addEventListener('click',function(){fI=(fI+1)%FC.length;renderFC()});
+renderFC();
+
+/* ================= REVEAL ================= */
+function checkReveal(){
+  var clues=Object.keys(S.clues).length===4;
+  if(clues){$('#revealLock').textContent=S.quizDone.every(Boolean)?'Уликите са събрани, изпитът е издържан. Време е да посочиш виновника!':'Всички 4 улики са събрани! Можеш да разкриеш случая (а после да минеш и изпита).';$('#revealBody').style.display='block';}
+  else $('#revealLock').textContent='Събрани улики: '+Object.keys(S.clues).length+' от 4. Прочети досиетата и „Знаеш ли, че…“.';
+}
+var SUS=[
+ {t:'Колумб, който сам се е прекръстил на Америго',ok:0,e:'Не. Колумб до края си вярва, че е стигнал Индия (улика 3).'},
+ {t:'Германски картограф, който пише името в чест на Веспучи',ok:1,e:'Точно! През 1507 г. Мартин Валдзеемюлер пише „America“ на картата си (улика 4) в чест на Америго Веспучи, който пръв разбира, че това е НОВ континент (улика 3). Никой не е крал името: то е награда за откритието на Веспучи, че Колумб е сгрешил (улика 1). А имената на мореплавателите наистина остават по картата (улика 2)!'},
+ {t:'Магелан, който кръщава всичко по пътя си',ok:0,e:'Не. Магелан дава името си на протока, но не и на континента (улика 2).'},
+ {t:'Никой. Така се казвали земите от древността',ok:0,e:'Не. Европейците не знаели за тези земи, а името е измислено през 1507 г. (улика 4).'}
+];
+$('#suspects').innerHTML=shuffle([0,1,2,3]).map(function(i){return '<button class="opt" data-s="'+i+'">'+SUS[i].t+'</button>'}).join('');
+$$('[data-s]').forEach(function(b){b.addEventListener('click',function(){
+  var s=SUS[+b.getAttribute('data-s')],fb=$('#revealFb');
+  if(s.ok){b.classList.add('right');$$('[data-s]').forEach(function(x){x.disabled=true});fb.className='fb ok';fb.innerHTML='<b>Случаят е разкрит!</b> '+s.e;
+    $('#stamp').classList.add('show');if(!S.solved){S.solved=true;addXP(20,'Случаят е разкрит!');progress()}
+    $('#finalXp').textContent='Общо събра '+S.xp+' XP и '+Object.keys(S.badges).length+' от 6 значки.';}
+  else{b.classList.add('wrong');b.disabled=true;fb.className='fb bad';fb.innerHTML='<b>Не е той.</b> '+s.e;}
+})});
+checkReveal();
+
+/* ================= SUMMARY TEXT ================= */
+var plain='Урок 1. Южна Америка: географско положение, големина, брегове и опознаване\n\nЗАПОМНИ:\n'+
+ $$('#sumList li').map(function(li,i){return (i+1)+'. '+li.innerText}).join('\n')+
+ '\n\nКрайни точки: С – нос Галинас (Колумбия); Ю – нос Фроуърд (Чили); И – нос Кабу Бранку (Бразилия); З – нос Париняс (Перу).\n\nПонятия: провлак, канал, проток, залив, полуостров, устие, слабо разчленена брегова линия.';
+$('#plain').value=plain;
+$('#copyBtn').addEventListener('click',function(){
+  var ta=$('#plain');
+  function ok(){toast('Текстът е копиран ✓')}
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(plain).then(ok,function(){ta.select();document.execCommand('copy');ok()})}
+  else{ta.removeAttribute('readonly');ta.select();try{document.execCommand('copy');ok()}catch(e){toast('Маркирай текста и го копирай ръчно')}ta.setAttribute('readonly','')}
+});
+
+/* images: graceful fallback when offline */
+$$('figure img').forEach(function(img){img.addEventListener('error',function(){var d=document.createElement('div');d.className='noimg';d.textContent='📷 Снимката се показва, когато има интернет.';img.replaceWith(d)})});
+
+renderBadges();progress();
+})();
+</script>
+</body>
+</html>
