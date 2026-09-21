@@ -127,7 +127,8 @@ button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
 /* ---------- Gallery ---------- */
 .gallery{display:grid;gap:14px}
 figure{margin:0;background:var(--card);border-radius:14px;overflow:hidden;border:1px solid var(--line)}
-figure img{display:block;width:100%;height:220px;object-fit:cover;background:#E8E2D4}
+figure img{display:block;width:100%;height:auto;max-height:75vh;object-fit:contain;background:#E8E2D4;cursor:zoom-in}
+.zoomhint{font-size:.78rem;color:var(--muted)}
 figure .noimg{height:120px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.9rem;padding:12px;text-align:center;background:#EFE9DC}
 figcaption{padding:10px 12px;font-size:.95rem;line-height:1.45}
 figcaption small{display:block;color:var(--muted);font-size:.78rem;margin-top:4px}
@@ -220,7 +221,7 @@ textarea.plain{width:100%;min-height:200px;font:15px/1.5 var(--body);border:1px 
 details{background:#F7F4EC;border-radius:12px;padding:10px 12px;margin:10px 0}
 summary{font-family:var(--head);font-weight:700;color:var(--teal);cursor:pointer;min-height:32px}
 .src li{font-size:.88rem;margin-bottom:4px;word-break:break-word}
-@media (min-width:600px){ .gallery{grid-template-columns:1fr 1fr} figure img{height:240px} }
+@media (min-width:600px){ .gallery{grid-template-columns:1fr 1fr} }
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -892,7 +893,9 @@ $('#copyBtn').addEventListener('click',function(){
 });
 
 /* images: graceful fallback when offline */
-$$('figure img').forEach(function(img){img.addEventListener('error',function(){var d=document.createElement('div');d.className='noimg';d.textContent='📷 Снимката се показва, когато има интернет.';img.replaceWith(d)})});
+$$('figure img').forEach(function(img){img.addEventListener('click',function(){window.open(img.src.replace(/\?width=\d+/,''),'_blank','noopener')});
+  var cap=img.parentNode.querySelector('figcaption small');if(cap)cap.insertAdjacentHTML('beforeend','<span class="zoomhint"><br>🔍 Докосни снимката, за да я видиш в пълен размер.</span>');
+  img.addEventListener('error',function(){var d=document.createElement('div');d.className='noimg';d.textContent='📷 Снимката се показва, когато има интернет.';img.replaceWith(d)})});
 
 renderBadges();progress();
 })();
