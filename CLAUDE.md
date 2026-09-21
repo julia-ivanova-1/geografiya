@@ -14,12 +14,20 @@
 - Име на файла: `geografiya-6-urok-NN-tema-na-latinitsa.html` (пореден номер с водеща нула, кратка транслитерация на темата), напр. `geografiya-6-urok-01-yuzhna-amerika.html`. Специални уроци (вход/изход) следват `geografiya-6-<opisanie>.html`, напр. `geografiya-6-vhodno-nivo.html`.
 - `index.html` е единствената точка за навигация — **всеки нов урок трябва да се добави като нов `<a class="lesson">` ред** в подходящата секция (или нова `<h2>` секция за нова тема). Плейсхолдърът `<div class="lesson soon">…Следва…</div>` показва мястото на следващия урок — замени го при добавяне, а не го трий, ако все още има недобавени уроци след новия.
 - Не създавай отделни CSS/JS файлове — всичко живее в самия HTML файл на урока, по модела на съществуващите.
+- Изключение са споделените икони в корена на репото — `favicon.svg`, `favicon.ico`, `apple-touch-icon.png`, `icon-192.png`, `icon-512.png`, `site.webmanifest`. Те са общи за целия сайт (за по-добър вид при "Добави към начален екран" на телефон) и се ползват непроменени от всички HTML файлове — не ги дублирай и не създавай нови варианти за отделен урок.
 
 ## Стил и структура на урок (задължителен модел)
 
 Всеки нов урок трябва да следва точно оформлението, ритъма и техническите похвати на съществуващите уроци (`geografiya-6-urok-01-yuzhna-amerika.html`, `geografiya-6-vhodno-nivo.html`):
 
 - **`<head>`**: `charset=utf-8`, `viewport` с `initial-scale=1, viewport-fit=cover`, `theme-color #0F5257`, `lang="bg"`, шрифт Rubik (Google Fonts, `subset=cyrillic`) за заглавия.
+- **Икона / "Добави към начален екран"**: всеки HTML файл включва същите четири `<link>` тага към споделените икони в корена на репото (виж по-долу) — не създавай нова икона на урок:
+  ```html
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+  ```
 - **Цветова палитра и CSS променливи** — използвай съществуващите токени (`--teal`, `--teal-2`, `--teal-soft`, `--amber`, `--amber-soft`, `--amber-ink`, `--paper`, `--card`, `--ink`, `--muted`, `--line`, `--ok`/`--ok-soft`, `--bad`/`--bad-soft`, `--r`, `--shadow`, `--head`, `--body`). Не въвеждай нова палитра — копирай `:root` блока от съществуващ урок.
 - **Оформление**: `.wrap` с `max-width:760px`, sticky `.topbar` с XP брояч и прогрес бар, `.hero` с `.kicker` + `<h1>`, `.card` секции с `.dossier-tag`, "досиета" с номерирани `<section class="card" id="sN">`.
 - **Механики за ангажираност**, поддържани навсякъде: XP точки и `.toast` известия, значки (`BADGES`), речник с термини (`.term[data-t]` → bottom sheet), "чуй" бутони с Web Speech API (`speechSynthesis`, с fallback съобщение при липсващ български глас), интерактивни карти (inline SVG), тестове с избор на отговор и самооценка на отворени въпроси.
