@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F5257">
+<title>Урок 3 · Климат, климатични пояси и области в Южна Америка</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&display=swap&subset=cyrillic" rel="stylesheet">
+<style>
+:root{
+  --teal:#0F5257; --teal-2:#1B6F75; --teal-soft:#E3EFEE;
+  --amber:#F2A541; --amber-soft:#FDEFD8; --amber-ink:#8A5300;
+  --paper:#FBF7EF; --card:#FFFFFF; --ink:#1F2A30; --muted:#5B6870; --line:#E6DFD1;
+  --ok:#2E9E5B; --ok-soft:#E3F5EA; --bad:#D64545; --bad-soft:#FBE6E6;
+  --sea:#CFE6EE; --land:#E9D9A6; --land-edge:#A8894A;
+  --r:16px; --shadow:0 2px 0 rgba(15,82,87,.10), 0 6px 18px rgba(31,42,48,.06);
+  --head:"Rubik", system-ui, "Roboto", "Segoe UI", sans-serif;
+  --body:system-ui, "Roboto", "Segoe UI", Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.6 var(--body);overflow-x:hidden}
+h1,h2,h3{font-family:var(--head);line-height:1.2;margin:0 0 .5em;color:var(--teal)}
+h1{font-size:1.75rem;font-weight:800}
+h2{font-size:1.35rem;font-weight:700}
+h3{font-size:1.1rem;font-weight:700}
+p{margin:.5em 0 .8em}
+a{color:var(--teal-2)}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 120px}
+
+/* ---------- Top bar ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:var(--teal);color:#fff;padding:8px 16px 10px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.topbar-in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:10px}
+.xp{display:flex;align-items:center;gap:6px;font-family:var(--head);font-weight:800;font-size:1.05rem;background:rgba(255,255,255,.12);padding:4px 10px;border-radius:999px;white-space:nowrap}
+.xp .gem{color:var(--amber)}
+.xp.bump{animation:bump .5s}
+@keyframes bump{30%{transform:scale(1.25)}}
+.prog{flex:1;height:12px;background:rgba(255,255,255,.2);border-radius:999px;overflow:hidden}
+.prog>i{display:block;height:100%;width:0;background:var(--amber);border-radius:999px;transition:width .6s}
+.badgecount{font-size:.95rem;white-space:nowrap;background:rgba(255,255,255,.12);padding:4px 10px;border-radius:999px}
+.toast{position:fixed;left:50%;top:64px;transform:translateX(-50%) translateY(-20px);opacity:0;background:var(--amber);color:#3A2600;font-family:var(--head);font-weight:700;padding:8px 16px;border-radius:999px;z-index:60;transition:.3s;pointer-events:none;box-shadow:var(--shadow);max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- Hero ---------- */
+.hero{padding:22px 0 6px}
+.kicker{font-family:var(--head);font-weight:700;color:var(--amber-ink);letter-spacing:.04em;text-transform:uppercase;font-size:.85rem}
+.case{background:var(--card);border:2px dashed var(--teal-2);border-radius:var(--r);padding:16px;margin:14px 0;position:relative;box-shadow:var(--shadow)}
+.case h2{display:flex;align-items:center;gap:8px}
+.clues{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.clue{border-radius:12px;padding:10px;font-size:.9rem;line-height:1.4;background:#F1EEE7;color:var(--muted);min-height:74px}
+.clue b{display:block;font-family:var(--head);color:var(--muted);font-size:.8rem;margin-bottom:2px}
+.clue.on{background:var(--amber-soft);color:var(--ink);animation:pop .4s}
+.clue.on b{color:var(--amber-ink)}
+@keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.05)}}
+
+/* ---------- Cards / dossiers ---------- */
+.card{background:var(--card);border-radius:var(--r);padding:18px 16px;margin:18px 0;box-shadow:var(--shadow);border:1px solid var(--line)}
+.dossier-tag{display:inline-block;font-family:var(--head);font-weight:700;font-size:.8rem;color:#fff;background:var(--teal);padding:3px 10px;border-radius:6px;margin-bottom:8px;letter-spacing:.05em}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{border:0;border-radius:14px;padding:12px 16px;min-height:48px;font-family:var(--head);font-weight:700;font-size:1rem;background:var(--teal);color:#fff;box-shadow:0 4px 0 #0A3A3E;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0A3A3E}
+.btn.ghost{background:var(--teal-soft);color:var(--teal);box-shadow:0 4px 0 #C4DAD8}
+.btn.amber{background:var(--amber);color:#3A2600;box-shadow:0 4px 0 #C98422}
+.btn.done{background:var(--ok);box-shadow:0 4px 0 #1F7040}
+.btn[disabled]{opacity:.55;cursor:default}
+.btn.small{min-height:40px;padding:8px 12px;font-size:.9rem}
+.readbtn{margin-top:6px}
+.listen{display:inline-flex;align-items:center;gap:6px}
+.term{background:none;border:0;padding:0 2px;color:var(--teal);font-weight:700;border-bottom:2px dotted var(--amber);font-size:inherit;line-height:inherit}
+.hl{background:var(--amber-soft);padding:0 4px;border-radius:4px}
+.fact-num{font-family:var(--head);font-weight:800;color:var(--teal);font-size:1.5rem;line-height:1}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.stat{background:var(--teal-soft);border-radius:12px;padding:12px}
+.stat small{display:block;color:var(--muted);font-size:.85rem;margin-top:4px;line-height:1.35}
+.lib{background:#EAF3EC;border:1px solid #CFE3D3}
+.lib .dossier-tag{background:#2F6B3F}
+
+/* ---------- Maps ---------- */
+.mapbox{background:var(--sea);border-radius:14px;overflow:hidden;border:1px solid #B8D6E0}
+.mapbox svg{display:block;width:100%;height:auto}
+.land-outline{fill:none;stroke:#3A2E1A;stroke-width:1.4;stroke-linejoin:round}
+.maplabel{font:600 9px var(--body);fill:#2C5D73;letter-spacing:.12em}
+.mk{cursor:pointer}
+.mk circle.dot{stroke:#fff;stroke-width:1.6}
+.mk .halo{fill:none;stroke-width:2;opacity:0}
+.mk.active .halo{opacity:1;animation:ring 1.2s infinite}
+@keyframes ring{0%{r:6;opacity:1}100%{r:16;opacity:0}}
+.mk.seen circle.dot{stroke:#1F2A30}
+.regionhit{cursor:pointer;opacity:0}
+.rband{transition:opacity .2s}
+.rband.dim{opacity:.45}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.chip{border:0;border-radius:999px;padding:8px 12px;min-height:40px;font-size:.9rem;background:#F1EEE7;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.chip.seen{background:var(--teal-soft)}
+.chip.active{background:var(--teal);color:#fff}
+.infobox{background:var(--amber-soft);border-radius:12px;padding:12px;min-height:84px;margin-top:6px}
+.infobox h3{margin:0 0 4px;color:var(--amber-ink)}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:.85rem;color:var(--muted);margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.legend i.sq{border-radius:3px}
+
+/* ---------- Did you know ---------- */
+.dyk{display:grid;gap:10px}
+.dyk div{background:#F7F4EC;border-radius:12px;padding:12px 12px 12px 48px;position:relative}
+.dyk div:before{content:attr(data-i);position:absolute;left:12px;top:10px;font-size:1.4rem}
+
+/* ---------- Pilot-style stage / quiz ---------- */
+.stage{background:#F7F4EC;border-radius:14px;padding:14px;margin-top:10px}
+.stepdots{display:flex;gap:4px;margin-bottom:10px}
+.stepdots i{flex:1;height:6px;border-radius:3px;background:#E0D8C6}
+.stepdots i.ok{background:var(--ok)}
+.stepdots i.cur{background:var(--amber)}
+.opts{display:grid;gap:10px;margin-top:10px}
+.opt{border:2px solid var(--line);border-bottom-width:4px;background:#fff;border-radius:14px;padding:12px 14px;min-height:52px;text-align:left;font-size:1rem;color:var(--ink)}
+.opt:active{transform:translateY(2px)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt[disabled]{cursor:default}
+.fb{border-radius:14px;padding:12px 14px;margin-top:12px;display:none}
+.fb.ok{display:block;background:var(--ok-soft);border:2px solid var(--ok)}
+.fb.bad{display:block;background:var(--bad-soft);border:2px solid var(--bad)}
+.fb b{font-family:var(--head)}
+.fb.ok b{color:#1F7040}.fb.bad b{color:#A42F2F}
+.path{display:flex;flex-direction:column;align-items:center;gap:6px;margin:14px 0}
+.node{width:84px;height:84px;border-radius:50%;border:0;font-family:var(--head);font-weight:800;font-size:1.6rem;color:#fff;background:var(--teal);box-shadow:0 6px 0 #0A3A3E;position:relative}
+.node:nth-child(2){margin-left:90px}.node:nth-child(3){margin-right:90px}
+.node[disabled]{background:#C9C3B5;box-shadow:0 6px 0 #A39D8F;cursor:default}
+.node.done{background:var(--amber);box-shadow:0 6px 0 #C98422;color:#3A2600}
+.node span{position:absolute;top:92px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:.8rem;color:var(--muted);font-weight:700}
+.pathwrap{padding-bottom:26px}
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.9rem;color:var(--muted)}
+.qprog{height:14px;background:#E0D8C6;border-radius:999px;overflow:hidden;margin:8px 0 12px}
+.qprog i{display:block;height:100%;width:0;background:var(--ok);transition:width .4s}
+.qtext{font-family:var(--head);font-weight:700;font-size:1.15rem;color:var(--ink)}
+
+/* flashcards */
+.flash{perspective:900px;margin:12px 0}
+.flash-in{position:relative;height:190px;transition:transform .5s;transform-style:preserve-3d;cursor:pointer}
+.flash.flip .flash-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px}
+.front{background:var(--teal);color:#fff;font-family:var(--head);font-weight:800;font-size:1.4rem}
+.back{background:var(--amber-soft);color:var(--ink);transform:rotateY(180deg);font-size:1rem;line-height:1.45}
+
+/* vocab */
+.vocab{display:grid;gap:8px}
+.word{display:flex;align-items:center;gap:10px;background:#F7F4EC;border-radius:12px;padding:10px 12px}
+.word .w{font-family:var(--head);font-weight:700;color:var(--teal);min-width:88px}
+.word .ex{font-size:.92rem;color:var(--muted);line-height:1.4}
+.word button{margin-left:auto;flex:none;border:0;background:var(--teal-soft);border-radius:10px;width:44px;height:44px;font-size:1.1rem}
+.hola .word .w{color:#B0452E}
+
+/* self-check open questions */
+.q{border-top:1px solid var(--line);padding:14px 0 6px}
+h3+.q,.sc-first{border-top:0}
+.qnum{font-family:var(--head);font-weight:700;color:var(--amber-ink);font-size:.8rem;letter-spacing:.04em;text-transform:uppercase}
+textarea.ans{width:100%;min-height:72px;font:16px/1.45 var(--body);border:2px solid var(--line);border-radius:12px;padding:10px 12px;background:#FFFDF8;color:var(--ink);resize:vertical;display:block;margin-top:6px}
+textarea.ans:focus{outline:none;border-color:var(--teal-2)}
+textarea.ans[readonly]{background:#F1EEE7;color:var(--muted)}
+.model{background:var(--amber-soft);border-radius:12px;padding:10px 12px;margin-top:10px;display:none}
+.model.show{display:block}
+.model .lbl{font-family:var(--head);font-weight:700;color:var(--amber-ink);font-size:.85rem}
+.model p{margin:.2em 0 .5em}
+.self{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:6px}
+.self button{border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;background:#fff;min-height:56px;padding:6px 4px;font-family:var(--head);font-weight:700;font-size:.9rem;line-height:1.2;color:var(--ink)}
+.self button small{display:block;font-family:var(--body);font-weight:400;font-size:.76rem;color:var(--muted)}
+.self button[disabled]{cursor:default;opacity:.45}
+.self button.pick{opacity:1}
+.self button.pick.g1{border-color:var(--ok);background:var(--ok-soft)}
+.self button.pick.g05{border-color:var(--amber);background:#FFF4DF}
+.self button.pick.g0{border-color:var(--bad);background:var(--bad-soft)}
+.selfhint{font-size:.85rem;color:var(--muted);margin-top:6px}
+
+/* reveal / badges */
+.reveal{text-align:center;position:relative}
+.stamp{display:none;margin:12px auto;width:max-content;max-width:100%;border:4px solid var(--bad);color:var(--bad);font-family:var(--head);font-weight:800;font-size:1.8rem;padding:6px 18px;border-radius:10px;transform:rotate(-8deg);letter-spacing:.08em}
+.stamp.show{display:block;animation:stamp .5s}
+@keyframes stamp{0%{transform:rotate(-8deg) scale(2.2);opacity:0}100%{transform:rotate(-8deg) scale(1);opacity:1}}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;margin-top:12px}
+.badge{background:#F1EEE7;border-radius:14px;padding:10px 6px;text-align:center;font-size:.8rem;color:var(--muted);filter:grayscale(1);opacity:.6}
+.badge .ic{font-size:2rem;display:block}
+.badge.on{filter:none;opacity:1;background:var(--amber-soft);color:var(--ink);animation:pop .4s}
+.badge b{display:block;font-family:var(--head);font-size:.85rem}
+
+/* summary */
+.sum li{margin-bottom:6px}
+textarea.plain{width:100%;min-height:200px;font:15px/1.5 var(--body);border:1px solid var(--line);border-radius:12px;padding:10px;background:#FFFDF8;color:var(--ink)}
+
+/* glossary sheet */
+.sheet-bg{position:fixed;inset:0;background:rgba(31,42,48,.4);z-index:70;display:none}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:71;background:#fff;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .25s;max-width:760px;margin:0 auto;box-shadow:0 -6px 24px rgba(0,0,0,.15)}
+.sheet.open{transform:translateY(0)}
+.sheet h3{margin-bottom:6px}
+
+/* audio panel */
+.audiobar{position:fixed;left:0;right:0;bottom:0;z-index:55;background:#fff;border-top:1px solid var(--line);padding:8px 16px calc(8px + env(safe-area-inset-bottom));display:none;box-shadow:0 -4px 16px rgba(0,0,0,.08)}
+.audiobar.show{display:block}
+.audiobar-in{max-width:760px;margin:0 auto;display:flex;gap:8px;align-items:center}
+.audiobar .t{flex:1;font-size:.85rem;color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.audiobar select{font:inherit;font-size:.9rem;padding:6px;border-radius:10px;border:1px solid var(--line);background:#fff;min-height:40px}
+.voicewarn{display:none;margin-top:8px}
+
+details{background:#F7F4EC;border-radius:12px;padding:10px 12px;margin:10px 0}
+summary{font-family:var(--head);font-weight:700;color:var(--teal);cursor:pointer;min-height:32px}
+.src li{font-size:.88rem;margin-bottom:4px;word-break:break-word}
+.note{font-size:.88rem;color:var(--muted);background:#F1EEE7;border-radius:10px;padding:8px 10px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="xp" id="xpBox"><span class="gem">◆</span><span id="xp">0</span> XP</div>
+    <div class="prog" aria-label="Напредък"><i id="progBar"></i></div>
+    <div class="badgecount">🏅 <span id="bCount">0</span>/6</div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<main class="wrap">
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="kicker">География и икономика · 6. клас · Урок 3</div>
+  <h1>Климат, климатични пояси и области: защо Атакама не помни дъжд, а Амазония се дави във вода</h1>
+</header>
+
+<section class="case" id="case">
+  <div class="dossier-tag">🔍 СЛУЧАЯТ НА ДЕНЯ</div>
+  <h2>„Пустинята, която забрави дъжда“</h2>
+  <p>Детектив Венета получава странен сигнал: на едно и също място — континента Южна Америка — в един край вали почти всеки ден, а в друг с години не пада и капка. <b>Как е възможно на едно място да е толкова различно?</b></p>
+  <p><b>Твоята задача, детективе:</b> прочети досиетата, разгледай двете карти и събери 4 улики, за да разкриеш кой всъщност решава къде да вали.</p>
+  <div class="clues" id="clues">
+    <div class="clue" data-clue="1"><b>УЛИКА 1</b>🔒 Досие „Фактори“</div>
+    <div class="clue" data-clue="2"><b>УЛИКА 2</b>🔒 Карта на валежите</div>
+    <div class="clue" data-clue="3"><b>УЛИКА 3</b>🔒 Карта на поясите</div>
+    <div class="clue" data-clue="4"><b>УЛИКА 4</b>🔒 „Знаеш ли, че…“</div>
+  </div>
+</section>
+
+<div class="card" style="padding:12px 16px">
+  <div class="row">
+    <span style="flex:1;font-size:.95rem">🔊 Всяко досие има бутон <b>„Чуй“</b>, а думите с <span class="term" style="pointer-events:none">точки отдолу</span> показват обяснение при докосване.</span>
+  </div>
+  <div class="note voicewarn" id="voiceWarn">
+    Телефонът няма български глас за четене. Можеш да го добавиш от настройките на телефона: <i>Език → Преобразуване на текст в говор → Услуги на Google → Инсталиране на гласови данни → Български</i> (пътят може да е малко различен).
+  </div>
+</div>
+
+<!-- ===== DOSSIER 1: FACTORS ===== -->
+<section class="card" id="s1">
+  <div class="dossier-tag">ДОСИЕ №1</div>
+  <h2>Фактори и елементи на климата</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s1-text">🔊 Чуй</button></div>
+  <div id="s1-text">
+    <p>Върху климата на един континент влияят: <b>географското му положение</b>, <b>преобладаващите ветрове</b>, <b>океанските течения</b> и <b>особеностите на релефа</b>. Заедно те се наричат <button class="term" data-t="klimfaktor">климатообразуващи фактори</button>.</p>
+    <p>За разлика от Африка, <b>Екваторът пресича Южна Америка в северната ѝ част</b>. Затова континентът се простира от <b>субекваториалните ширини в Северното полукълбо</b> до <b>умерените ширини в Южното полукълбо</b>. Друга разлика: докато <b>Африка е най-горещият континент</b>, <b>Южна Америка е най-влажният континент</b>.</p>
+    <p>Причината са преобладаващите ветрове и океанските течения край бреговете. <button class="term" data-t="pasati">Пасатите</button> носят обилни валежи от Атлантическия океан чак до Андите. Топлите <b>Гвианско</b> и <b>Бразилско течение</b> също допринасят за повече валежи. В най-южните части преобладават <button class="term" data-t="zapvet">западни ветрове</button>, които носят влага от Тихия океан.</p>
+    <p>Студеното <b>Перуанско течение</b> край западните брегове е причина там да не се образуват валежи. Затова точно тук е <b>най-сухото място на Земята</b> — пустинята <b>Атакама</b>. Андите са преграда както за въздушните маси от Тихия океан, така и за влажния въздух от Атлантическия океан.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="fact-num">💧 №1</div><small>Южна Америка е най-влажният континент на Земята</small></div>
+    <div class="stat"><div class="fact-num">🔥 Африка</div><small>е най-горещият континент — за разлика от Южна Америка</small></div>
+    <div class="stat"><div class="fact-num">4</div><small>климатообразуващи фактора: положение, ветрове, течения, релеф</small></div>
+  </div>
+  <h3>Карта на климатообразуващите фактори (по фиг. 1 от учебника)</h3>
+  <div class="mapbox"><svg id="factorSvg" viewBox="0 0 400 450" role="img" aria-label="Схема на ветровете и теченията край Южна Америка"></svg></div>
+  <div class="legend">
+    <span><i style="background:#2E9E5B"></i>Екватор</span>
+    <span><i class="sq" style="background:#8A5300"></i>Южна тропична окръжност</span>
+    <span><i class="sq" style="background:#5B4B3A"></i>Андите (планинска бариера)</span>
+    <span><i style="background:#1B6F75"></i>студено течение (Перуанско)</span>
+    <span><i style="background:#D64545"></i>топли течения (Гвианско, Бразилско)</span>
+    <span><i style="background:#C9508E"></i>пасати</span>
+    <span><i style="background:#5B4B8A"></i>западни ветрове</span>
+  </div>
+  <button class="btn readbtn" data-done="s1" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== DOSSIER 2: TEMPERATURES & RAINFALL ===== -->
+<section class="card" id="s2">
+  <div class="dossier-tag">ДОСИЕ №2</div>
+  <h2>Температури и валежи от север на юг</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s2-text">🔊 Чуй</button></div>
+  <div id="s2-text">
+    <p>От север на юг до <b>Южната тропична окръжност</b> температурите през цялата година са <b>над 25°C</b>. На юг от нея температурите постепенно се понижават, а разликата между зимата и лятото се увеличава. В <b>най-южната част</b> на континента температурите през зимата (юли) са само около <b>1 – 2°C</b>.</p>
+    <p>Най-много валежи падат по <b>западните склонове на най-северната и най-южната част на Андите</b> — до <b>8000 mm годишно</b>! Обилни валежи има и в <b>Амазонската низина</b>. По-малко вали в <b>Бразилската планинска земя</b> и в <b>Патагония</b>. В пустинята <b>Атакама</b> дъжд не пада с години — но когато все пак завали, дъждовете са <button class="term" data-t="proliven">проливни</button>.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="fact-num">&gt;25°C</div><small>температури цяла година до Южната тропична окръжност</small></div>
+    <div class="stat"><div class="fact-num">1–2°C</div><small>температура през зимата (юли) в най-южната част на континента</small></div>
+    <div class="stat"><div class="fact-num">до 8000 mm</div><small>годишни валежи по западните склонове на Андите — на север и на юг</small></div>
+  </div>
+  <button class="btn readbtn" data-done="s2" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== MAP 1: RAINFALL ===== -->
+<section class="card" id="mapprecip">
+  <div class="dossier-tag">КАРТА НА ДЕТЕКТИВА</div>
+  <h2>Годишно количество на валежите</h2>
+  <p>Докосни точка на картата, за да разбереш колко вали там. Открий и седемте, за да получиш значка.</p>
+  <div class="mapbox"><svg id="mapPrecip" viewBox="0 0 400 450" role="img" aria-label="Карта на годишните валежи"></svg></div>
+  <div class="legend" id="precipLegend"></div>
+  <div class="infobox" id="precipInfo"><h3>Избери точка</h3><p style="margin:0">Тук ще се появи досието на мястото.</p></div>
+  <div class="chips" id="precipChips"></div>
+</section>
+
+<!-- ===== DOSSIER 3: CLIMATE ZONES INTRO ===== -->
+<section class="card" id="s3">
+  <div class="dossier-tag">ДОСИЕ №3</div>
+  <h2>Климатични пояси</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s3-text">🔊 Чуй</button></div>
+  <div id="s3-text">
+    <p>Голяма ивица от земната повърхност с подобен климат през цялата година се нарича <button class="term" data-t="klimpoyas">климатичен пояс</button>. На север и на юг от <b>екваториалния пояс</b> са разположени <b>два <button class="term" data-t="subekvat">субекваториални</button> пояса</b>. На юг от южния субекваториален пояс се редуват <b><button class="term" data-t="tropichen">тропичен</button></b>, <b><button class="term" data-t="subtropichen">субтропичен</button></b> и <b><button class="term" data-t="umeren">умерен</button></b> пояс. В умерения пояс западното крайбрежие има <button class="term" data-t="okeanski">океански климат</button>. Отделно, в самите планини на Андите, релефът създава своя собствена <b>планинска климатична област</b>, където с <button class="term" data-t="nadvis">надморската височина</button> климатът бързо се променя.</p>
+  </div>
+  <button class="btn readbtn" data-done="s3" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== MAP 2: CLIMATE ZONES ===== -->
+<section class="card" id="mapzones">
+  <div class="dossier-tag">КАРТА НА ДЕТЕКТИВА</div>
+  <h2>Климатичните пояси и планинската област</h2>
+  <p>Докосни лента от картата или чип под нея, за да прочетеш досието на пояса — заедно с истински данни за температура и валежи от градовете в него. Разгледай и седемте, за да получиш значка.</p>
+  <div class="mapbox"><svg id="mapZones" viewBox="0 0 400 450" role="img" aria-label="Карта на климатичните пояси"></svg></div>
+  <div class="legend" id="zoneLegend"></div>
+  <div class="infobox" id="zoneInfo"><h3>Избери пояс</h3><p style="margin:0">Тук ще се появи досието на пояса.</p></div>
+  <div class="chips" id="zoneChips"></div>
+  <p class="note" style="margin-top:10px">В планинската климатична област (Андите) с нарастване на надморската височина валежите се увеличават, а температурите бързо се понижават. По най-високите планински върхове през цялата година има сняг и лед.</p>
+</section>
+
+<!-- ===== LIBRARY ===== -->
+<section class="card lib" id="lib">
+  <div class="dossier-tag">📚 ГЕОГРАФСКА БИБЛИОТЕКА</div>
+  <h2>„Летящите реки“ на Амазония</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="lib-text">🔊 Чуй</button></div>
+  <div id="lib-text">
+    <p>Амазонската джунгла сякаш сама си произвежда дъжд. Горещото слънце изпарява огромни количества вода от милиардите дървета и от реката, влагата се вдига високо, охлажда се и пада отново като дъжд — а после пак се изпарява от гората. Учените наричат тези гигантски маси влага, пренасяни високо над гората, <b>„летящи реки“</b>.</p>
+    <p>Именно затова в Амазонската низина вали толкова обилно почти през цялата година — джунглата сама поддържа своя влажен климат.</p>
+  </div>
+  <button class="btn readbtn" data-done="lib" data-xp="10">✓ Прочетох · +10 XP</button>
+</section>
+
+<!-- ===== DID YOU KNOW ===== -->
+<section class="card" id="dyk">
+  <div class="dossier-tag">💡 ЗНАЕШ ЛИ, ЧЕ…</div>
+  <h2>Тайни от архива</h2>
+  <div class="dyk" id="dyk-text">
+    <div data-i="🚀">На места в пустинята <b>Атакама</b> метеорологични станции не са отчитали дъжд <b>с десетилетия</b>. Затова учени изпращат там роботи, преди да ги пратят на Марс — почвата и сухотата приличат на марсианските.</div>
+    <div data-i="🧊">Студеното <b>Перуанско течение</b> носи и друго име — <b>Хумболтово течение</b>, на немския учен и пътешественик <b>Александър фон Хумболт</b>, който го изследва в началото на <b>XIX век</b>.</div>
+    <div data-i="🏔️">Столицата на Боливия <b>Ла Пас</b> е на <b>3657 m</b> надморска височина — тя е <b>най-високо разположеното седалище на правителство</b> в света (макар че по конституция столицата на страната е градът Сукре).</div>
+    <div data-i="🔥">Островът <b>Огнена земя</b>, на самия юг на континента, е кръстен така от мореплавателя <b>Фернандо Магелан</b> през <b>1520 г.</b>, след като видял множество огньове, запалени по бреговете от местните жители.</div>
+    <div data-i="🌧️">Тихоокеанското крайбрежие на <b>Колумбия</b>, в най-северната част на Андите, е сред <b>най-дъждовните места на Земята</b> — там вали почти всеки ден от годината.</div>
+  </div>
+  <button class="btn readbtn" data-done="dyk" data-xp="10">✓ Прочетох · +10 XP</button>
+</section>
+
+<!-- ===== ROLE: METEOROLOGIST ===== -->
+<section class="card" id="exped">
+  <div class="dossier-tag">🌦 РОЛЯ: МЕТЕОРОЛОГ</div>
+  <h2>Ти си метеоролог на експедиция</h2>
+  <p>Мисията ти е да прекосиш континента от екватора до най-южния му край, а после да се качиш високо в Андите. На всяка спирка разпознай какъв климат откриваш.</p>
+  <div class="stage" id="expedStage"></div>
+</section>
+
+<!-- ===== DRAW ===== -->
+<section class="card" id="draw">
+  <div class="dossier-tag">🎨 ТВОРЧЕСКА ЗАДАЧА</div>
+  <h2>Нарисувай по памет</h2>
+  <p>На лист начертай контура на континента и го оцвети по климатични пояси, от север на юг:</p>
+  <ul>
+    <li><b>жълто-зелено</b> — субекваториален пояс (север);</li>
+    <li><b>тъмнозелено</b> — екваториален пояс (Амазонската низина);</li>
+    <li><b>жълто-кафяво</b> — субекваториален пояс (юг, Бразилската планинска земя);</li>
+    <li><b>оранжево</b> — тропичен пояс;</li>
+    <li><b>червено-кафяво</b> — субтропичен пояс (Лаплатската низина);</li>
+    <li><b>синьо</b> — умерен пояс (Патагония).</li>
+  </ul>
+  <p>После отбележи с лилаво Андите (планинската климатична област) и напиши до тях „до 8000 mm“, а до пустинята <b>Атакама</b> — „под 250 mm“.</p>
+  <button class="btn ghost readbtn" data-done="draw" data-xp="10">✓ Нарисувах · +10 XP</button>
+</section>
+
+<!-- ===== ENGLISH ===== -->
+<section class="card" id="eng">
+  <div class="dossier-tag">🇬🇧 ENGLISH CORNER</div>
+  <h2>Words of the day</h2>
+  <p style="font-size:.95rem">Докосни 🔊, за да чуеш думата и изречението.</p>
+  <div class="vocab" id="vocabEn"></div>
+  <div class="hola" style="margin-top:18px">
+    <h3 style="color:#B0452E">¡Hola! 🇪🇸 Бонус на испански</h3>
+    <p style="font-size:.95rem;margin-top:0">Тези думи за времето и климата се използват и в испаноезичните страни на континента.</p>
+    <div class="vocab" id="vocabEs"></div>
+  </div>
+</section>
+
+<!-- ===== SELF-CHECK ===== -->
+<section class="card" id="selfcheck">
+  <div class="dossier-tag">✍️ ПРОВЕРИ СЕ САМ</div>
+  <h2>Отговори с думи</h2>
+  <p style="font-size:.95rem">Напиши кратък отговор, после натисни „Готово“, за да видиш примерен отговор, и сам се оцени.</p>
+  <div id="scList"></div>
+</section>
+
+<!-- ===== QUIZ ===== -->
+<section class="card" id="quiz">
+  <div class="dossier-tag">🎯 ПРОВЕРИ СЕ</div>
+  <h2>Изпитът на детектива</h2>
+  <p>3 нива по 3 въпроса. Всяко ниво отключва следващото. Грешните въпроси се връщат в края на нивото.</p>
+  <div class="pathwrap"><div class="path" id="path">
+    <button class="node" data-lvl="0">1<span>Новобранец</span></button>
+    <button class="node" data-lvl="1" disabled>2<span>Следовател</span></button>
+    <button class="node" data-lvl="2" disabled>3<span>Главен климатолог</span></button>
+  </div></div>
+  <div id="qArea"></div>
+
+  <h3 style="margin-top:18px">🃏 Флашкарти</h3>
+  <p style="font-size:.95rem;margin-top:0">Докосни картата, за да я обърнеш.</p>
+  <div class="flash" id="flash"><div class="flash-in"><div class="face front" id="fFront"></div><div class="face back" id="fBack"></div></div></div>
+  <div class="row"><button class="btn ghost small" id="fPrev">← Назад</button><span id="fNum" style="flex:1;text-align:center;color:var(--muted)"></span><button class="btn ghost small" id="fNext">Напред →</button></div>
+</section>
+
+<!-- ===== REVEAL ===== -->
+<section class="card reveal" id="reveal">
+  <div class="dossier-tag">🔓 РАЗКРИВАНЕ</div>
+  <h2>Кой решава къде да вали?</h2>
+  <p id="revealLock">Събери 4-те улики, за да отключиш разкриването.</p>
+  <div id="revealBody" style="display:none;text-align:left">
+    <p>Погледни уликите. Кой е истинският „виновник“ за това, че в един и същ континент вали от 8000 mm в Андите до почти нищо в Атакама?</p>
+    <div class="opts" id="suspects"></div>
+    <div class="fb" id="revealFb"></div>
+  </div>
+  <div class="stamp" id="stamp">РАЗКРИТО</div>
+  <h3 style="margin-top:14px">Твоите значки</h3>
+  <div class="badges" id="badges"></div>
+  <p id="finalXp" style="margin-top:12px;font-family:var(--head);font-weight:700;color:var(--teal)"></p>
+</section>
+
+<!-- ===== SUMMARY ===== -->
+<section class="card" id="sum">
+  <div class="dossier-tag">📌 ЗАПОМНИ</div>
+  <h2>Най-важното от урока</h2>
+  <div class="row" style="margin-bottom:8px"><button class="btn ghost small listen" data-read="sumList">🔊 Чуй</button></div>
+  <ol class="sum" id="sumList">
+    <li>Върху климата влияят 4 фактора: <b>географско положение, преобладаващи ветрове, океански течения и релеф</b>.</li>
+    <li>Екваторът пресича Южна Америка в <b>северната ѝ част</b>, затова континентът е от субекваториални ширини на север до умерени на юг. <b>Африка</b> е най-горещият континент; <b>Южна Америка</b> е <b>най-влажният континент</b>.</li>
+    <li>Пасатите и топлите <b>Гвианско</b> и <b>Бразилско течение</b> носят обилни валежи от Атлантическия океан; западните ветрове носят влага от Тихия океан в най-южните части. Студеното <b>Перуанско течение</b> пречи за валежи по западния бряг — затова пустинята <b>Атакама</b> е най-сухото място на Земята.</li>
+    <li>До Южната тропична окръжност температурите цяла година са <b>над 25°C</b>; на юг от нея намаляват, а разликата зима/лято расте — в най-южната част зимата (юли) е <b>1–2°C</b>.</li>
+    <li>Най-много валежи (<b>до 8000 mm</b> годишно) падат по западните склонове на най-северната и най-южната част на Андите; обилни са и в Амазонската низина; по-малко вали в Бразилската планинска земя и Патагония; в Атакама с години не вали.</li>
+    <li>Пояси от север на юг: <b>два субекваториални пояса</b> около <b>екваториалния</b>, после <b>тропичен, субтропичен</b> и <b>умерен</b> пояс.</li>
+    <li><b>Екваториален пояс</b> — Амазонската низина: горещо и влажно цяла година (Манаус — 27,4°C, 2145 mm).</li>
+    <li><b>Субекваториален пояс</b> — два сезона (горещо влажно лято, по-гореща суха „зима“); когато в северния пояс е влажният сезон, в южния е сухият, и обратно (Куяба — 26,1°C, 1337 mm).</li>
+    <li><b>Тропичен пояс</b> — малък обхват: влажен на изток заради пасатите (Рио де Жанейро — 23,2°C, 1278 mm), тропичен пустинен в централната част на тихоокеанското крайбрежие.</li>
+    <li><b>Субтропичен пояс</b> — Лаплатска низина: мека влажна зима, топло по-сухо лято (Буенос Айрес — 16,8°C, 1040 mm).</li>
+    <li><b>Умерен пояс</b> — най-южните части: океански климат (обилни валежи, мека зима, хладно лято) на запад; по-сух на изток в Патагония (Сарменто — 10,8°C, само 143 mm).</li>
+    <li><b>Планинска климатична област</b> (Андите): с височината валежите растат, температурите падат бързо; на най-високите върхове — вечен сняг и лед (Ла Пас — 3657 m, 10,0°C).</li>
+  </ol>
+  <details>
+    <summary>📄 Текст за копиране (Google Docs / печат)</summary>
+    <textarea class="plain" id="plain" readonly></textarea>
+    <button class="btn small" id="copyBtn" style="margin-top:8px">📋 Копирай текста</button>
+  </details>
+</section>
+
+<!-- ===== PARENT ===== -->
+<section class="card" id="parent">
+  <details>
+    <summary>👤 За родителя: какво е добавено и източници</summary>
+    <p style="font-size:.92rem">Извън учебника са добавени: обяснението за „летящите реки“ на Амазония (кръговрат на влагата в горската екосистема), използването на пустинята Атакама като аналог на марсианска среда от учени, произходът на другото име на Перуанското течение (Хумболтово течение) от Александър фон Хумболт, статутът на Ла Пас като най-високо разположено седалище на правителство в света (при конституционна столица Сукре), историята на името „Огнена земя“, дадено от Фернандо Магелан през 1520 г., както и споменаването на тихоокеанското крайбрежие на Колумбия като едно от най-дъждовните места на Земята. Приблизителните местоположения на точките на картата с валежи и границите на климатичните пояси на картата са опростени за учебни цели по общите данни и описания в урока.</p>
+    <ul class="src">
+      <li><a href="https://en.wikipedia.org/wiki/Atacama_Desert" target="_blank" rel="noopener">Atacama Desert (Wikipedia)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Flying_river" target="_blank" rel="noopener">Flying river (Wikipedia)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Humboldt_Current" target="_blank" rel="noopener">Humboldt Current (Wikipedia)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/La_Paz" target="_blank" rel="noopener">La Paz (Wikipedia)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Tierra_del_Fuego" target="_blank" rel="noopener">Tierra del Fuego (Wikipedia)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Ch%C3%B3co_Department" target="_blank" rel="noopener">Chocó Department (Wikipedia)</a></li>
+    </ul>
+  </details>
+</section>
+
+</main>
+
+<div class="audiobar" id="audiobar">
+  <div class="audiobar-in">
+    <button class="btn small" id="aPause">⏸</button>
+    <button class="btn ghost small" id="aStop">⏹</button>
+    <span class="t" id="aText">Чета…</span>
+    <select id="aRate" aria-label="Скорост"><option value="0.8">0.8×</option><option value="1" selected>1×</option><option value="1.2">1.2×</option></select>
+  </div>
+</div>
+
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet"><h3 id="sheetT"></h3><p id="sheetD" style="margin:0 0 12px"></p><button class="btn ghost small" id="sheetClose">Разбрах</button></div>
+
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+
+/* ================= STATE ================= */
+var S={xp:0,done:{},badges:{},zonesSeen:{},precipSeen:{},clues:{},quizDone:[false,false,false],quizFirst:0,expedDone:false,solved:false};
+
+function progress(){
+  var n=0;['s1','s2','s3','lib','dyk','draw'].forEach(function(k){if(S.done[k])n++});
+  if(S.badges.zones)n++; if(S.badges.rain)n++; if(S.badges.exped)n++;
+  S.quizDone.forEach(function(d){if(d)n++}); if(S.solved)n++;
+  $('#progBar').style.width=Math.min(100,Math.round(n/13*100))+'%';
+}
+function toast(msg){var t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('show')},1800)}
+function addXP(n,msg){S.xp+=n;$('#xp').textContent=S.xp;var b=$('#xpBox');b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump');if(msg)toast('+'+n+' XP · '+msg);else toast('+'+n+' XP');progress()}
+
+/* ================= BADGES ================= */
+var BADGES=[
+  {id:'detective',ic:'🕵️',n:'Детектив',d:'Прочети всички досиета'},
+  {id:'rain',ic:'🌧️',n:'Ловец на дъждове',d:'Открий всички 7 точки на картата на валежите'},
+  {id:'zones',ic:'🗺️',n:'Картограф',d:'Разгледай всички 7 климатични пояса и области'},
+  {id:'exped',ic:'🌦',n:'Метеоролог',d:'Завърши експедицията'},
+  {id:'polyglot',ic:'💬',n:'Полиглот',d:'Чуй 5 думи'},
+  {id:'chief',ic:'👑',n:'Главен детектив',d:'Поне 8 от 9 верни от първи опит'}
+];
+function renderBadges(){
+  $('#badges').innerHTML=BADGES.map(function(b){return '<div class="badge'+(S.badges[b.id]?' on':'')+'"><span class="ic">'+b.ic+'</span><b>'+b.n+'</b>'+b.d+'</div>'}).join('');
+  $('#bCount').textContent=Object.keys(S.badges).length;
+}
+function award(id){if(S.badges[id])return;S.badges[id]=true;var b=BADGES.filter(function(x){return x.id===id})[0];renderBadges();setTimeout(function(){toast('🏅 Нова значка: '+b.n)},900);progress()}
+
+/* ================= CLUES ================= */
+var CLUES={
+  1:'Климатът зависи от 4 фактора: географско положение, преобладаващи ветрове, океански течения и релеф. Пасатите и топлите течения носят дъжд, а студеното Перуанско течение го спира.',
+  2:'Картата на валежите показва: до 8000 mm по западните склонове на Андите на север и на юг, обилно в Амазония, по-малко в Бразилската планинска земя и Патагония, а в Атакама — почти нищо.',
+  3:'Климатичните пояси се редуват от север на юг: субекваториален, екваториален, субекваториален, тропичен, субтропичен, умерен — плюс отделна планинска област в Андите.',
+  4:'В Атакама метеорологични станции не са отчитали дъжд с десетилетия, а Амазония сама си „произвежда“ част от дъжда чрез огромни маси влага — „летящите реки“.'
+};
+function giveClue(n){if(S.clues[n])return;S.clues[n]=true;var el=$('.clue[data-clue="'+n+'"]');el.classList.add('on');el.innerHTML='<b>УЛИКА '+n+' ✓</b>'+CLUES[n];toast('🔎 Нова улика!');checkReveal()}
+var CLUE_FOR={s1:1,dyk:4};
+
+/* ================= READ BUTTONS ================= */
+$$('[data-done]').forEach(function(b){
+  b.addEventListener('click',function(){
+    var k=b.getAttribute('data-done'); if(S.done[k])return;
+    S.done[k]=true; b.classList.add('done'); b.disabled=true; b.textContent='✓ Готово';
+    addXP(+b.getAttribute('data-xp'));
+    if(CLUE_FOR[k])setTimeout(function(){giveClue(CLUE_FOR[k])},700);
+    if(S.done.s1&&S.done.s2&&S.done.s3&&S.done.lib&&S.done.dyk&&S.done.draw)award('detective');
+  });
+});
+
+/* ================= GLOSSARY ================= */
+var G={
+  klimfaktor:['Климатообразуващ фактор','Нещо, което влияе върху климата на едно място — например географското положение, ветровете, океанските течения и релефът.'],
+  pasati:['Пасати','Постоянни ветрове, които духат от тропичните пояси към екватора. Над океаните носят влага и валежи.'],
+  zapvet:['Западни ветрове','Постоянни ветрове в умерените ширини, които духат от запад на изток и носят влага от океана.'],
+  proliven:['Проливен дъжд','Много силен и обилен дъжд, който пада за кратко време.'],
+  klimpoyas:['Климатичен пояс','Голяма ивица от земната повърхност с подобен климат през цялата година, разположена успоредно на екватора.'],
+  subekvat:['Субекваториален пояс','Климатичен пояс северно или южно от екваториалния, с два сезона — горещо влажно лято и по-гореща суха „зима“.'],
+  tropichen:['Тропичен пояс','Климатичен пояс между субекваториалния и субтропичния — горещ, но с различни валежи в зависимост от мястото.'],
+  subtropichen:['Субтропичен пояс','Климатичен пояс с мека влажна зима и топло, по-сухо лято.'],
+  umeren:['Умерен пояс','Климатичен пояс с по-хладно време и по-голяма разлика между зимата и лятото, отколкото в горещите пояси.'],
+  okeanski:['Океански климат','Климат покрай океански бряг с мека зима, хладно лято и обилни валежи през цялата година, благодарение на влажния въздух от океана.'],
+  nadvis:['Надморска височина','Височина на дадено място над морското равнище. С нарастването ѝ температурите обикновено се понижават.']
+};
+var sheet=$('#sheet'),sbg=$('#sheetBg');
+function openSheet(k){$('#sheetT').textContent=G[k][0];$('#sheetD').textContent=G[k][1];sbg.style.display='block';requestAnimationFrame(function(){sheet.classList.add('open')})}
+function closeSheet(){sheet.classList.remove('open');setTimeout(function(){sbg.style.display='none'},250)}
+$$('.term[data-t]').forEach(function(t){t.addEventListener('click',function(){openSheet(t.getAttribute('data-t'))})});
+sbg.addEventListener('click',closeSheet);$('#sheetClose').addEventListener('click',closeSheet);
+
+/* ================= SPEECH ================= */
+var synth=window.speechSynthesis, voices=[], queue=[], qi=0, speaking=false, paused=false, curLang='bg-BG', gen=0;
+function loadVoices(){if(!synth)return;voices=synth.getVoices()||[];
+  if(voices.length&&!pickVoice('bg'))$('#voiceWarn').style.display='block'; else $('#voiceWarn').style.display='none';}
+function pickVoice(lang){var l=lang.toLowerCase();var v=voices.filter(function(x){return x.lang&&x.lang.toLowerCase().replace('_','-').indexOf(l)===0});
+  var g=v.filter(function(x){return /google/i.test(x.name)});return g[0]||v[0]||null}
+if(synth){loadVoices();if(typeof synth.onvoiceschanged!=='undefined')synth.onvoiceschanged=loadVoices;}
+function splitText(t){t=t.replace(/\s+/g,' ').trim();var parts=t.match(/[^.!?…]+[.!?…]*/g)||[t];var out=[];
+  parts.forEach(function(p){p=p.trim();if(!p)return;while(p.length>180){var i=p.lastIndexOf(',',180);if(i<60)i=180;out.push(p.slice(0,i+1));p=p.slice(i+1).trim()}if(p)out.push(p)});return out}
+function speakNext(){
+  if(qi>=queue.length){stopSpeech();return}
+  var my=gen;var u=new SpeechSynthesisUtterance(queue[qi]);var v=pickVoice(curLang.slice(0,2));if(v)u.voice=v;u.lang=curLang;u.rate=+$('#aRate').value;
+  u.onend=u.onerror=function(){if(my!==gen||!speaking||paused)return;qi++;speakNext()};
+  $('#aText').textContent=queue[qi];synth.speak(u);
+}
+function speak(text,lang,showBar){
+  if(!synth){toast('Този браузър не може да чете на глас');return}
+  gen++;synth.cancel();queue=splitText(text);qi=0;speaking=true;paused=false;curLang=lang||'bg-BG';
+  $('#aPause').textContent='⏸';if(showBar!==false)$('#audiobar').classList.add('show');
+  var g0=gen;setTimeout(function(){if(g0===gen)speakNext()},60);
+}
+function stopSpeech(){gen++;speaking=false;paused=false;if(synth)synth.cancel();$('#audiobar').classList.remove('show')}
+$('#aPause').addEventListener('click',function(){
+  if(!speaking)return;
+  if(!paused){paused=true;gen++;synth.cancel();this.textContent='▶'}
+  else{paused=false;gen++;this.textContent='⏸';speakNext()}
+});
+$('#aStop').addEventListener('click',stopSpeech);
+$('#aRate').addEventListener('change',function(){if(speaking&&!paused){gen++;synth.cancel();setTimeout(speakNext,60)}});
+$$('[data-read]').forEach(function(b){b.addEventListener('click',function(){speak($('#'+b.getAttribute('data-read')).innerText,'bg-BG')})});
+
+/* ================= LAND SHAPE (shared) ================= */
+var K=6;function P(lon,lat){return [((lon+95)*K).toFixed(1),((15-lat)*K).toFixed(1)]}
+function poly(pts){return 'M'+pts.map(function(p){return P(p[0],p[1]).join(',')}).join(' L')+' Z'}
+var SA=[[-77.4,8.7],[-76,9.4],[-75.5,10.5],[-74.8,11],[-73.5,11.3],[-72.2,11.9],[-71.67,12.46],[-71.1,12],[-71.5,10.9],[-71,10.9],[-70.2,11.6],[-70,12.1],[-68.4,10.8],[-66,10.6],[-64,10.7],[-62,10.7],[-61,9.5],[-59.8,8.3],[-58,6.8],[-55,5.9],[-52,4.9],[-51,4],[-50,1.8],[-50.5,.2],[-48.5,-1],[-46,-1],[-44,-2.5],[-41.5,-2.9],[-39,-3.5],[-37.2,-4.9],[-35.3,-5.3],[-34.79,-7.15],[-35,-9],[-36.5,-10.5],[-38.5,-13],[-39,-16],[-39.7,-19.5],[-41,-22],[-43.2,-23],[-45,-23.8],[-48.5,-26.5],[-48.7,-28.5],[-50.2,-30.5],[-52.5,-33],[-53.5,-34],[-54.9,-34.9],[-56.3,-34.9],[-57.8,-34.4],[-58.5,-34.3],[-57.3,-35.5],[-56.7,-36.4],[-57.5,-38],[-59,-38.8],[-62,-39],[-62.3,-40.6],[-65,-41],[-64.2,-42.3],[-65,-43.3],[-65.5,-45],[-67.5,-46],[-66,-47.5],[-67.8,-49.5],[-68.9,-51.6],[-68.4,-52.3],[-69.5,-52.5],[-70.9,-53],[-71.3,-53.9],[-72.5,-53.5],[-73.5,-53],[-74.7,-52.7],[-75.2,-51],[-75.5,-48.5],[-74.5,-46.5],[-73.8,-44],[-73.9,-41.8],[-73.5,-40],[-73.6,-37.5],[-72.5,-35.5],[-71.7,-33],[-71.5,-30],[-71.3,-27],[-70.6,-24],[-70.2,-20],[-70.3,-18.5],[-71.5,-17.3],[-74,-15.8],[-76.3,-13.5],[-77.2,-12],[-78.5,-9.5],[-79.9,-7],[-81.33,-4.68],[-80.4,-3.4],[-80.2,-2.2],[-81,-2.2],[-80.5,-.5],[-80,.8],[-79,1.5],[-78.8,2.5],[-77.5,3.8],[-77.3,5.5],[-77.9,7.2]];
+var CA=[[-77.4,8.7],[-78.4,9.4],[-79.6,9.6],[-80.6,9],[-81.8,8.9],[-82.9,9.6],[-83.6,10.8],[-83.5,12.5],[-83.3,15],[-88,15],[-87.5,13.2],[-86,11.8],[-85.7,10.5],[-85,9.9],[-84,9.3],[-83,8.3],[-81.5,7.6],[-80.4,7.4],[-80,8.1],[-79,8.9],[-78.2,8.3],[-77.9,7.2]];
+var TDF=[[-68.5,-52.7],[-69.6,-52.8],[-70.3,-53.5],[-70.8,-54.3],[-72,-54.6],[-70.5,-55.1],[-68.5,-55.4],[-67.3,-55.9],[-66.5,-55.2],[-65.2,-54.8],[-66.5,-54.4],[-67.8,-53.6]];
+var LANDD=poly(CA)+' '+poly(SA)+' '+poly(TDF);
+
+/* ================= FACTOR MAP (winds & currents, fig. 1) ================= */
+function arrow(lon1,lat1,lon2,lat2,color,w){
+  var p1=P(lon1,lat1),p2=P(lon2,lat2);
+  var x1=+p1[0],y1=+p1[1],x2=+p2[0],y2=+p2[1];
+  var ang=Math.atan2(y2-y1,x2-x1),ah=7;
+  var hx1=x2-ah*Math.cos(ang-Math.PI/6),hy1=y2-ah*Math.sin(ang-Math.PI/6);
+  var hx2=x2-ah*Math.cos(ang+Math.PI/6),hy2=y2-ah*Math.sin(ang+Math.PI/6);
+  return '<line x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" stroke="'+color+'" stroke-width="'+w+'" stroke-linecap="round"/>'+
+    '<polygon points="'+x2+','+y2+' '+hx1.toFixed(1)+','+hy1.toFixed(1)+' '+hx2.toFixed(1)+','+hy2.toFixed(1)+'" fill="'+color+'"/>';
+}
+(function(){
+  var svg=$('#factorSvg'),yEq=(15-0)*K,yTr=(15-(-23.5))*K;
+  var s='<rect width="400" height="450" fill="#CFE6EE"/><path d="'+LANDD+'" fill="#E9D9A6" stroke="#A8894A" stroke-width="1"/>';
+  s+='<line x1="0" y1="'+yEq+'" x2="400" y2="'+yEq+'" stroke="#2E9E5B" stroke-width="2"/><text x="4" y="'+(yEq-4)+'" class="maplabel" fill="#2E9E5B">ЕКВАТОР</text>';
+  s+='<line x1="0" y1="'+yTr+'" x2="400" y2="'+yTr+'" stroke="#8A5300" stroke-width="1.5" stroke-dasharray="6 4"/><text x="4" y="'+(yTr-3)+'" class="maplabel" fill="#8A5300" style="font-size:6.5px">ЮЖНА ТРОПИЧНА ОКРЪЖНОСТ</text>';
+  var mtnPts=[[-77,5],[-73,-10],[-70,-20],[-70,-35],[-72,-48]];
+  var mtnD='M'+mtnPts.map(function(p){var c=P(p[0],p[1]);return c[0]+','+c[1]}).join(' L');
+  s+='<path d="'+mtnD+'" fill="none" stroke="#5B4B3A" stroke-width="3" stroke-dasharray="2 3" stroke-linecap="round"/>';
+  var mc=P(-70,-20);s+='<text x="'+(+mc[0]-4)+'" y="'+(+mc[1]-6)+'" text-anchor="end" class="maplabel" fill="#5B4B3A" style="font-size:6.5px">АНДИТЕ</text>';
+  s+=arrow(-72,-42,-71,-30,'#1B6F75',2.5);
+  s+=arrow(-71,-30,-71,-15,'#1B6F75',2.5);
+  s+=arrow(-71,-15,-79,-6,'#1B6F75',2.5);
+  s+=arrow(-58,7,-63,10,'#D64545',2.5);
+  s+=arrow(-38,-4,-42,-14,'#D64545',2.5);
+  s+=arrow(-42,-14,-48,-25,'#D64545',2.5);
+  s+=arrow(-48,-25,-52,-33,'#D64545',2.5);
+  s+=arrow(-30,8,-60,6,'#C9508E',2.5);
+  s+=arrow(-30,-2,-58,-4,'#C9508E',2.5);
+  s+=arrow(-30,-12,-55,-13,'#C9508E',2.5);
+  s+=arrow(-90,-48,-72,-46,'#5B4B8A',3);
+  svg.innerHTML=s;
+})();
+
+/* ================= MAP: RAINFALL ================= */
+var PCOL={u250:'#8A5300',b250_500:'#8FA84A',b1000_1500:'#4E7FA8',over2000:'#3B2E6B'};
+var PREC=[
+  {id:'andn',c:'over2000',n:'Северен склон на Андите',lon:-77,lat:5,d:'Тук, по западните склонове на най-северната част на Андите, падат <b>до 8000 mm</b> валежи годишно — едни от най-обилните на Земята.'},
+  {id:'ands',c:'over2000',n:'Южен склон на Андите',lon:-73,lat:-46,d:'И тук, по западните склонове на най-южната част на Андите, годишните валежи стигат <b>до 8000 mm</b>.'},
+  {id:'amaz',c:'over2000',n:'Амазонска низина',lon:-63,lat:-4,d:'В Амазонската низина валежите са <b>обилни</b> през по-голямата част от годината.'},
+  {id:'braz',c:'b1000_1500',n:'Бразилска планинска земя',lon:-47,lat:-15,d:'Тук вали <b>по-малко</b>, отколкото в Амазонската низина.'},
+  {id:'plata',c:'b1000_1500',n:'Лаплатска низина',lon:-58,lat:-33,d:'Умерено количество валежи — достатъчно за земеделие през по-голямата част от годината.'},
+  {id:'pata',c:'b250_500',n:'Патагония (изток)',lon:-68,lat:-45,d:'В Патагония вали <b>по-малко</b>, защото Андите спират влажния въздух, идващ от запад.'},
+  {id:'atac',c:'u250',n:'Пустинята Атакама',lon:-70,lat:-22,d:'Тук дъжд <b>не пада с години</b> — това е <b>най-сухото място на Земята</b>. Но когато все пак завали, дъждовете са проливни.'}
+];
+var mapPrecip=$('#mapPrecip');
+(function(){
+  var s='<rect width="400" height="450" fill="#CFE6EE"/><path d="'+LANDD+'" fill="#E9D9A6" stroke="#A8894A" stroke-width="1"/>';
+  var g='';PREC.forEach(function(p){var c=P(p.lon,p.lat);
+    g+='<g class="mk" data-id="'+p.id+'" transform="translate('+c[0]+','+c[1]+')"><circle class="halo" r="6" stroke="'+PCOL[p.c]+'"/><circle class="dot" r="6" fill="'+PCOL[p.c]+'"/><circle r="14" fill="transparent"/></g>'});
+  mapPrecip.innerHTML=s+g;
+  $('#precipChips').innerHTML=PREC.map(function(p){return '<button class="chip" data-id="'+p.id+'"><i style="background:'+PCOL[p.c]+'"></i>'+p.n+'</button>'}).join('');
+  $('#precipLegend').innerHTML='<span><i style="background:'+PCOL.u250+'"></i>под 250 mm</span><span><i style="background:'+PCOL.b250_500+'"></i>250–1000 mm</span><span><i style="background:'+PCOL.b1000_1500+'"></i>1000–1500 mm</span><span><i style="background:'+PCOL.over2000+'"></i>над 2000 mm</span>';
+})();
+function showPrecip(id){
+  var p=PREC.filter(function(x){return x.id===id})[0];
+  $$('#mapPrecip .mk').forEach(function(e){e.classList.toggle('active',e.getAttribute('data-id')===id)});
+  $$('#precipChips .chip').forEach(function(e){e.classList.toggle('active',e.getAttribute('data-id')===id)});
+  $('#precipInfo').innerHTML='<h3>'+p.n+'</h3><p style="margin:0">'+p.d+'</p>';
+  if(!S.precipSeen[id]){S.precipSeen[id]=true;$$('[data-id="'+id+'"]',document).forEach(function(e){e.classList.add('seen')});addXP(3);
+    if(Object.keys(S.precipSeen).length>=7){award('rain');setTimeout(function(){giveClue(2)},400)}}
+}
+$$('#mapPrecip .mk').forEach(function(e){e.addEventListener('click',function(){showPrecip(e.getAttribute('data-id'))})});
+$$('#precipChips .chip').forEach(function(e){e.addEventListener('click',function(){showPrecip(e.getAttribute('data-id'))})});
+
+/* ================= MAP: CLIMATE ZONES ================= */
+var ZCITY={
+  eq:'<div class="stats"><div class="stat"><div class="fact-num">Манаус</div><small>3°08′ ю.ш., 60°01′ з.д. · ср. год. темп. 27,4°C · ср. год. валежи 2145 mm · надм. вис. 92 m</small></div></div>',
+  seq:'<div class="stats"><div class="stat"><div class="fact-num">Куяба</div><small>15°36′ ю.ш., 56°06′ з.д. · ср. год. темп. 26,1°C · ср. год. валежи 1337 mm · надм. вис. 125 m</small></div></div>',
+  trop:'<div class="stats"><div class="stat"><div class="fact-num">Рио де Жанейро</div><small>22°54′ ю.ш., 43°10′ з.д. · ср. год. темп. 23,2°C · ср. год. валежи 1278 mm · надм. вис. 2 m</small></div></div>',
+  subtrop:'<div class="stats"><div class="stat"><div class="fact-num">Буенос Айрес</div><small>34°35′ ю.ш., 58°23′ з.д. · ср. год. темп. 16,8°C · ср. год. валежи 1040 mm · надм. вис. 24 m</small></div></div>',
+  temp:'<div class="stats"><div class="stat"><div class="fact-num">Сарменто</div><small>45°35′ ю.ш., 69°04′ з.д. · ср. год. темп. 10,8°C · ср. год. валежи само 143 mm · надм. вис. 273 m</small></div></div>',
+  mtn:'<div class="stats"><div class="stat"><div class="fact-num">Ла Пас</div><small>16°30′ ю.ш., 68°10′ з.д. · ср. год. темп. 10,0°C · ср. год. валежи 561 mm · надм. вис. 3657 m</small></div></div>'
+};
+var ZONES=[
+  {id:'neq',dir:'y',y0:0,y1:60,color:'#A3C94A',n:'Северен субекваториален пояс — най-северните части',
+   d:'Обхваща най-северните части на континента, на север от екваториалния пояс. Тук също има два сезона — продължително горещо и влажно лято и по-кратка, още по-гореща суха „зима“. Когато тук е дъждовният сезон, в южния субекваториален пояс е сухият — и обратно.'},
+  {id:'eq',dir:'y',y0:60,y1:150,color:'#1F8A5C',n:'Екваториален пояс — Амазонската низина',
+   d:'Обхваща Амазонската низина и разположените до Екватора части от тихоокеанското крайбрежие. През цялата година времето тук е много горещо и влажно.'+ZCITY.eq},
+  {id:'seq',dir:'y',y0:150,y1:210,color:'#C9A227',n:'Южен субекваториален пояс — Бразилската планинска земя',
+   d:'Обхваща по-голямата част от Бразилската планинска земя, на юг от екваториалния пояс. Има два сезона — продължително горещо и влажно лято и кратка, още по-гореща суха „зима“, обратни на тези в северния субекваториален пояс.'+ZCITY.seq},
+  {id:'trop',dir:'y',y0:210,y1:270,color:'#E08E45',n:'Тропичен пояс — малък обхват',
+   d:'В континента този пояс има малък обхват. По източното крайбрежие, под влияние на пасатите, климатът е влажен тропичен. В централната част на тихоокеанското крайбрежие, на същата ширина, климатът е тропичен пустинен — там е част от пустинята Атакама.'+ZCITY.trop},
+  {id:'subtrop',dir:'y',y0:270,y1:330,color:'#D6673C',n:'Субтропичен пояс — Лаплатската низина',
+   d:'Разположен е на юг от тропичния пояс. Обхваща по-голямата част от Лаплатската низина и тясна ивица от тихоокеанското крайбрежие. Зимата е мека и влажна, лятото — топло и по-сухо.'+ZCITY.subtrop},
+  {id:'temp',dir:'y',y0:330,y1:450,color:'#4E7FA8',n:'Умерен пояс — най-южните части',
+   d:'Обхваща най-южните части на континента. Западните ветрове носят влажен въздух от Тихия океан, затова климатът покрай западното крайбрежие е <b>океански</b> — с обилни валежи, мека зима и хладно лято. На изток, в Патагония, климатът е по-сух, защото Андите спират влажния въздух, идващ от запад.'+ZCITY.temp},
+  {id:'mtn',dir:'x',x0:20,x1:140,color:'#7A5BA8',n:'Планинска климатична област — Андите',
+   d:'Обхваща планинските вериги на Андите по цялата им дължина. С нарастване на надморската височина валежите се увеличават, а температурите бързо се понижават. По най-високите планински върхове през цялата година има сняг и лед.'+ZCITY.mtn}
+];
+var mapZones=$('#mapZones');
+(function(){
+  var s='<rect width="400" height="450" fill="#CFE6EE"/><defs><clipPath id="landClip2"><path d="'+LANDD+'"/></clipPath></defs>';
+  ZONES.forEach(function(z){
+    if(z.dir==='y')s+='<rect class="rband" data-id="'+z.id+'" x="0" y="'+z.y0+'" width="400" height="'+(z.y1-z.y0)+'" fill="'+z.color+'" clip-path="url(#landClip2)"/>';
+  });
+  ZONES.filter(function(z){return z.dir==='x'}).forEach(function(z){
+    s+='<rect class="rband" data-id="'+z.id+'" x="'+z.x0+'" y="0" width="'+(z.x1-z.x0)+'" height="450" fill="'+z.color+'" fill-opacity="0.72" clip-path="url(#landClip2)"/>';
+  });
+  s+='<path class="land-outline" d="'+LANDD+'"/>';
+  ZONES.forEach(function(z){
+    if(z.dir==='y')s+='<rect class="regionhit" data-id="'+z.id+'" x="0" y="'+z.y0+'" width="400" height="'+(z.y1-z.y0)+'"/>';
+    else s+='<rect class="regionhit" data-id="'+z.id+'" x="'+z.x0+'" y="0" width="'+(z.x1-z.x0)+'" height="450"/>';
+  });
+  mapZones.innerHTML=s;
+  $('#zoneLegend').innerHTML=ZONES.map(function(z){return '<span><i style="background:'+z.color+'"></i>'+z.n.split(' — ')[0]+'</span>'}).join('');
+  $('#zoneChips').innerHTML=ZONES.map(function(z){return '<button class="chip" data-id="'+z.id+'"><i style="background:'+z.color+'"></i>'+z.n.split(' — ')[1]+'</button>'}).join('');
+})();
+function showZone(id){
+  var z=ZONES.filter(function(x){return x.id===id})[0];
+  $$('.rband',mapZones).forEach(function(e){e.classList.toggle('dim',e.getAttribute('data-id')!==id)});
+  $$('.chip',$('#zoneChips')).forEach(function(e){e.classList.toggle('active',e.getAttribute('data-id')===id)});
+  $('#zoneInfo').innerHTML='<h3>'+z.n+'</h3><p style="margin:0">'+z.d+'</p>';
+  if(!S.zonesSeen[id]){S.zonesSeen[id]=true;$$('.chip',$('#zoneChips')).forEach(function(e){if(e.getAttribute('data-id')===id)e.classList.add('seen')});addXP(5);
+    if(ZONES.every(function(z){return S.zonesSeen[z.id]})){award('zones');setTimeout(function(){giveClue(3)},400)}}
+}
+$$('.regionhit',mapZones).forEach(function(e){e.addEventListener('click',function(){showZone(e.getAttribute('data-id'))})});
+$$('.chip',$('#zoneChips')).forEach(function(e){e.addEventListener('click',function(){showZone(e.getAttribute('data-id'))})});
+
+/* ================= ROLE: METEOROLOGIST EXPEDITION ================= */
+var EXPED=[
+  {q:'Тръгваш точно на екватора, там където той пресича континента. В коя ниска, гореща и влажна низина се намираш?',o:['Амазонска низина — екваториален пояс','Лаплатска низина — субтропичен пояс','Патагония — умерен пояс'],a:0,e:'Екваториалният пояс обхваща Амазонската низина — горещо и влажно цяла година.'},
+  {q:'Продължаваш на юг, в Бразилската планинска земя. Тук лятото е горещо и влажно, а „зимата“ е кратка, гореща и суха. В кой пояс си?',o:['Южен субекваториален пояс','Тропичен пояс','Умерен пояс'],a:0,e:'Субекваториалният пояс има два сезона — влажен и сух, обратни на северния субекваториален пояс.'},
+  {q:'Стигаш до тихоокеанското крайбрежие, на ширината на Рио де Жанейро. Тук покрай брега тече студено течение и почти никога не вали. Коя пустиня е това?',o:['Атакама','Сахара','Гоби'],a:0,e:'Студеното Перуанско течение пречи на образуването на валежи покрай този бряг.'},
+  {q:'Връщаш се на изток, на брега на Атлантическия океан, при Рио де Жанейро. Тук пасатите носят влага от океана. Какъв е климатът?',o:['Влажен тропичен','Тропичен пустинен','Океански'],a:0,e:'По източното крайбрежие в тропичния пояс климатът е влажен тропичен заради пасатите.'},
+  {q:'Слизаш още на юг, до Лаплатската низина, близо до Буенос Айрес. Зимата е мека и влажна, лятото — топло и по-сухо. В кой пояс си?',o:['Субтропичен пояс','Тропичен пояс','Умерен пояс'],a:0,e:'Субтропичният пояс обхваща по-голямата част от Лаплатската низина.'},
+  {q:'Стигаш най-южните части на континента, на западния бряг. Западните ветрове носят влага от Тихия океан. Какъв е климатът тук?',o:['Океански — обилни валежи, мека зима, хладно лято','Тропичен пустинен','Субекваториален'],a:0,e:'В умерения пояс западното крайбрежие има океански климат.'},
+  {q:'Накрая се качваш високо в Андите, близо до Ла Пас (3657 m). Какво се случва с температурите и валежите с нарастване на височината?',o:['Температурите падат, валежите се увеличават','Температурите растат, валежите намаляват','Нищо не се променя'],a:0,e:'В планинската климатична област с височината става по-студено и по-влажно, а по върховете — вечен сняг и лед.'}
+];
+var eI=0,eStage=$('#expedStage');
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function renderExped(){
+  if(eI>=EXPED.length){eStage.innerHTML='<div class="stepdots">'+EXPED.map(function(){return '<i class="ok"></i>'}).join('')+'</div><p style="font-family:var(--head);font-weight:700;color:var(--teal);font-size:1.15rem;margin:0">🏁 Експедицията завърши високо в Андите!</p>';
+    if(!S.expedDone){S.expedDone=true;award('exped');progress()}return}
+  var f=EXPED[eI],order=shuffle([0,1,2]);
+  eStage.innerHTML='<div class="stepdots">'+EXPED.map(function(_,i){return '<i class="'+(i<eI?'ok':i===eI?'cur':'')+'"></i>'}).join('')+'</div>'+
+   '<div class="qhead"><span>Спирка '+(eI+1)+' от '+EXPED.length+'</span></div><p class="qtext" style="font-size:1.02rem">'+f.q+'</p><div class="opts">'+
+   order.map(function(i){return '<button class="opt" data-i="'+i+'">'+f.o[i]+'</button>'}).join('')+'</div><div class="fb"></div>';
+  var tried=false;
+  $$('.opt',eStage).forEach(function(b){b.addEventListener('click',function(){
+    var i=+b.getAttribute('data-i'),fb=$('.fb',eStage);
+    if(i===f.a){b.classList.add('right');$$('.opt',eStage).forEach(function(x){x.disabled=true});
+      fb.className='fb ok';fb.innerHTML='<b>Точно така!</b> '+f.e+'<div style="margin-top:10px"><button class="btn small done" id="eNext">Напред →</button></div>';
+      if(!tried)addXP(5);$('#eNext').addEventListener('click',function(){eI++;renderExped()});}
+    else{tried=true;b.classList.add('wrong');b.disabled=true;fb.className='fb bad';fb.innerHTML='<b>Провери пак досието.</b> Опитай друг отговор.';}
+  })});
+}
+renderExped();
+
+/* ================= VOCAB ================= */
+var EN=[['climate','Климат','The climate of South America is very varied.'],['rainfall','Валежи','The Amazon lowland gets very abundant rainfall.'],['drought','Суша','Parts of the Atacama Desert can go years without rain.'],['desert','Пустиня','The Atacama Desert is the driest place on Earth.'],['wind','Вятър','Trade winds carry moisture from the Atlantic Ocean.'],['current','Течение','The cold Peruvian Current flows along the west coast.'],['temperate','Умерен','The temperate zone covers the southernmost part of the continent.'],['altitude','Надморска височина','Temperatures drop quickly with altitude in the Andes.']];
+var ES=[['clima','климат'],['lluvia','дъжд'],['viento','вятър'],['seco','сух'],['corriente','течение']];
+$('#vocabEn').innerHTML=EN.map(function(w,i){return '<div class="word"><span class="w">'+w[0]+'</span><span class="ex">'+w[1].replace(/\.$/,'')+'<br><i>'+w[2]+'</i></span><button data-en="'+i+'" aria-label="Чуй">🔊</button></div>'}).join('');
+$('#vocabEs').innerHTML=ES.map(function(w,i){return '<div class="word"><span class="w">'+w[0]+'</span><span class="ex">'+w[1]+'</span><button data-es="'+i+'" aria-label="Чуй">🔊</button></div>'}).join('');
+var heard={};
+function heardOne(k){if(heard[k])return;heard[k]=1;addXP(1);if(Object.keys(heard).length>=5)award('polyglot')}
+$$('[data-en]').forEach(function(b){b.addEventListener('click',function(){var w=EN[+b.getAttribute('data-en')];speak(w[0]+'. '+w[2],'en-US',false);heardOne('en'+b.getAttribute('data-en'))})});
+$$('[data-es]').forEach(function(b){b.addEventListener('click',function(){var w=ES[+b.getAttribute('data-es')];speak(w[0],'es-ES',false);heardOne('es'+b.getAttribute('data-es'))})});
+
+/* ================= SELF-CHECK (open questions) ================= */
+var SC=[
+  {q:'Защо Южна Америка е най-влажният континент, а Африка — най-горещият?',a:'Защото Екваторът пресича Южна Америка в северната ѝ част, а пасатите, топлите течения (**Гвианско**, **Бразилско**) и западните ветрове носят много влага към континента.'},
+  {q:'Защо в пустинята Атакама почти не вали?',a:'Заради студеното **Перуанско течение**, което тече покрай западния бряг и пречи на образуването на валежи.'},
+  {q:'Какви са двата сезона в субекваториалния пояс и защо се редуват противоположно на север и юг?',a:'Продължително горещо и влажно **лято** и кратка, още по-гореща суха **„зима“**. Когато в северния субекваториален пояс е влажният сезон, в южния е сухият — и обратно.'},
+  {q:'Защо климатът на западния бряг на умерения пояс е океански, а в Патагония на изток е сух?',a:'Западните ветрове носят влага от Тихия океан към западния бряг, но **Андите** спират влажния въздух, преди да стигне до Патагония на изток.'},
+  {q:'Какво се случва с температурите и валежите с увеличаване на надморската височина в планинската климатична област?',a:'Валежите се **увеличават**, а температурите бързо се **понижават**; по най-високите върхове има вечен сняг и лед.'},
+  {q:'Защо в тропичния пояс климатът е толкова различен на изток (Рио де Жанейро) и в централната част на тихоокеанското крайбрежие, макар да са на еднаква географска ширина?',a:'На изток пасатите носят влага от Атлантическия океан (**влажен тропичен** климат), а на запад студеното Перуанско течение спира валежите (**тропичен пустинен** климат).'}
+];
+function marks(s){return s.replace(/\*\*(.+?)\*\*/g,'<mark>$1</mark>')}
+var GR={'1':{c:'g1',t:'✓ Вярно'},'0.5':{c:'g05',t:'≈ Частично'},'0':{c:'g0',t:'✗ Грешно'}};
+$('#scList').innerHTML=SC.map(function(q,i){return '<div class="q'+(i===0?' sc-first':'')+'" data-sc="'+i+'"><div class="qnum">Въпрос '+(i+1)+'</div><p class="qtext">'+q.q+'</p>'+
+  '<textarea class="ans" rows="2" placeholder="Напиши отговора си тук…" aria-label="Отговор"></textarea>'+
+  '<div class="row" style="margin-top:8px"><button class="btn small scdone" disabled>Готово</button></div>'+
+  '<div class="model"><div class="lbl">ПРИМЕРЕН ОТГОВОР</div><p>'+marks(q.a)+'</p>'+
+  '<div class="lbl">Как се справи? Сравни ключовите думи.</div>'+
+  '<div class="self"><button data-g="1">✓ Вярно<small>1 т.</small></button><button data-g="0.5">≈ Частично<small>0,5 т.</small></button><button data-g="0">✗ Грешно<small>0 т.</small></button></div>'+
+  '<p class="selfhint"></p></div></div>'}).join('');
+$$('[data-sc]').forEach(function(box){
+  var ta=$('textarea',box),db=$('.scdone',box);
+  ta.addEventListener('input',function(){db.disabled=!ta.value.trim()});
+  db.addEventListener('click',function(){
+    if(!ta.value.trim())return;
+    ta.readOnly=true;db.disabled=true;db.textContent='✓ Изпратено';db.classList.add('done');
+    $('.model',box).classList.add('show');
+    $('.model',box).scrollIntoView({behavior:'smooth',block:'nearest'});
+  });
+  $$('.self button',box).forEach(function(b){b.addEventListener('click',function(){
+    var g=+b.getAttribute('data-g');
+    $$('.self button',box).forEach(function(x){x.disabled=true;if(+x.getAttribute('data-g')===g)x.classList.add('pick',GR[String(g)].c)});
+    $('.selfhint',box).textContent='Оценката е записана: '+GR[String(g)].t+'.';
+    if(g===1)addXP(10);else if(g===0.5)addXP(5);
+  })});
+});
+
+/* ================= QUIZ ================= */
+var LV=[
+ [{q:'Кой пояс се редува веднага на север и на юг от екваториалния пояс?',o:['Субекваториален','Тропичен','Умерен'],a:0,e:'На север и на юг от екваториалния пояс са разположени два субекваториални пояса.'},
+  {q:'Кой континент е „най-влажният“ по думите на учебника, и кой — „най-горещият“?',o:['Южна Америка е най-влажна, Африка е най-гореща','Африка е най-влажна, Южна Америка е най-гореща','И двата са еднакво горещи и влажни'],a:0,e:'Южна Америка е най-влажният континент; Африка е най-горещият.'},
+  {q:'Защо в пустинята Атакама почти не вали?',o:['Заради студеното Перуанско течение','Заради топлото Бразилско течение','Заради пасатите'],a:0,e:'Студеното течение покрай западния бряг пречи на образуването на валежи.'}],
+ [{q:'На юг от Южната тропична окръжност температурите…',o:['се понижават, а разликите между сезоните се увеличават','се повишават, а разликите намаляват','остават без промяна'],a:0,e:'Континентът става по-хладен и с по-големи сезонни разлики на юг.'},
+  {q:'Къде падат най-много валежи в континента — до 8000 mm годишно?',o:['По западните склонове на най-северната и най-южната част на Андите','В центъра на пустинята Атакама','В Патагония'],a:0,e:'Точно там валежите достигат до 8000 mm годишно.'},
+  {q:'Какъв е климатът в най-южната част на континента през зимата (юли)?',o:['Около 1–2°C','Над 25°C','Около 15°C'],a:0,e:'Там температурите през зимата са само 1–2°C.'}],
+ [{q:'Кой пояс обхваща Амазонската низина и е горещ и влажен през цялата година?',o:['Екваториалният','Субтропичният','Умереният'],a:0,e:'Екваториалният пояс обхваща Амазонската низина (пример: Манаус).'},
+  {q:'Кой пояс се характеризира с мека влажна зима и топло по-сухо лято, и обхваща Лаплатската низина?',o:['Субтропичният','Тропичният','Субекваториалният'],a:0,e:'Субтропичният пояс обхваща по-голямата част от Лаплатската низина (пример: Буенос Айрес).'},
+  {q:'Защо климатът в Патагония на изток е по-сух, въпреки че е в умерения пояс?',o:['Заради Андите, които спират влажния въздух от запад','Заради топлото Бразилско течение','Заради екватора'],a:0,e:'Андите преграждат пътя на влажния въздух, идващ от Тихия океан.'}]
+];
+var FB_OK=['Браво!','Точно!','Отлично, детективе!','Вярно!'],FB_BAD=['Почти…','Не съвсем.','Опа!'];
+var qState=null;
+function startLevel(l){
+  qState={l:l,queue:[0,1,2],pos:0,firstOk:0,missed:{},total:3};
+  $('#qArea').scrollIntoView({behavior:'smooth',block:'start'});renderQ();
+}
+function renderQ(){
+  var st=qState,area=$('#qArea');
+  if(!st.queue.length){finishLevel();return}
+  var qi=st.queue[0],Q=LV[st.l][qi],order=shuffle([0,1,2]);
+  area.innerHTML='<div class="stage"><div class="qhead"><span>Ниво '+(st.l+1)+'</span><button class="btn ghost small" id="qQuit">✕</button></div>'+
+   '<div class="qprog"><i style="width:'+Math.round((3-st.queue.length)/3*100)+'%"></i></div>'+
+   '<p class="qtext">'+Q.q+'</p><div class="opts">'+order.map(function(i){return '<button class="opt" data-i="'+i+'">'+Q.o[i]+'</button>'}).join('')+'</div><div class="fb" id="qfb"></div></div>';
+  $('#qQuit').addEventListener('click',function(){qState=null;area.innerHTML=''});
+  $$('.opt',area).forEach(function(b){b.addEventListener('click',function(){
+    var i=+b.getAttribute('data-i'),fb=$('#qfb');$$('.opt',area).forEach(function(x){x.disabled=true;if(+x.getAttribute('data-i')===Q.a)x.classList.add('right')});
+    if(i===Q.a){fb.className='fb ok';fb.innerHTML='<b>'+FB_OK[Math.floor(Math.random()*FB_OK.length)]+'</b> '+Q.e;
+      if(!st.missed[qi]){st.firstOk++;addXP(10)}st.queue.shift();}
+    else{b.classList.add('wrong');fb.className='fb bad';fb.innerHTML='<b>'+FB_BAD[Math.floor(Math.random()*FB_BAD.length)]+'</b> '+Q.e+' <i>Въпросът ще се върне по-късно.</i>';
+      st.missed[qi]=true;st.queue.push(st.queue.shift());}
+    fb.insertAdjacentHTML('beforeend','<div style="margin-top:10px"><button class="btn small '+(i===Q.a?'done':'')+'" id="qNext">Продължи →</button></div>');
+    $('#qNext').addEventListener('click',renderQ);
+  })});
+}
+function finishLevel(){
+  var st=qState,l=st.l,area=$('#qArea');
+  if(!S.quizDone[l]){S.quizDone[l]=true;S.quizFirst+=st.firstOk;}
+  var nodes=$$('.node');nodes[l].classList.add('done');if(nodes[l+1])nodes[l+1].disabled=false;
+  var names=['Новобранец','Следовател','Главен климатолог'];
+  area.innerHTML='<div class="stage" style="text-align:center"><div style="font-size:2.4rem">⭐</div><p class="qtext">Ниво „'+names[l]+'“ е преминато!</p><p>От първи опит: <b>'+st.firstOk+' от 3</b></p>'+
+   (l<2?'<button class="btn amber" id="qNextLvl">Към ниво '+(l+2)+' →</button>':'<p>Всички нива са готови! Сега отиди към <b>Разкриването</b> ↓</p>')+'</div>';
+  if(l<2)$('#qNextLvl').addEventListener('click',function(){startLevel(l+1)});
+  progress();
+  if(S.quizDone.every(Boolean)){if(S.quizFirst>=8)award('chief');checkReveal();}
+  qState=null;
+}
+$$('.node').forEach(function(n){n.addEventListener('click',function(){if(!n.disabled)startLevel(+n.getAttribute('data-lvl'))})});
+
+/* flashcards */
+var FC=[['Климатичен пояс','Голяма ивица от земната повърхност с подобен климат, разположена успоредно на екватора.'],['Пасати','Постоянни ветрове от тропиците към екватора; над океана носят влага и валежи.'],['Западни ветрове','Постоянни ветрове в умерените ширини, духащи от запад на изток; носят влага от океана.'],['Перуанско течение','Студено океанско течение покрай западния бряг; заради него по крайбрежието почти не вали.'],['Гвианско и Бразилско течение','Топли течения покрай източния бряг; допринасят за повече валежи.'],['Екваториален пояс','Обхваща Амазонската низина; горещо и влажно цяла година.'],['Субекваториален пояс','Два сезона — горещо влажно лято и по-гореща суха „зима“.'],['Тропичен пояс','Влажен на изток (пасати), тропичен пустинен в централната част на тихоокеанското крайбрежие.'],['Субтропичен пояс','Мека влажна зима, топло по-сухо лято. Обхваща Лаплатската низина.'],['Умерен пояс','Океански климат на запад, по-сух климат на изток в Патагония.'],['Планинска климатична област','В Андите; с височината валежите растат, температурите падат бързо.']];
+var fI=0,flash=$('#flash');
+function renderFC(){flash.classList.remove('flip');setTimeout(function(){$('#fFront').textContent=FC[fI][0];$('#fBack').textContent=FC[fI][1];$('#fNum').textContent=(fI+1)+' / '+FC.length},150)}
+flash.addEventListener('click',function(){flash.classList.toggle('flip')});
+$('#fPrev').addEventListener('click',function(){fI=(fI-1+FC.length)%FC.length;renderFC()});
+$('#fNext').addEventListener('click',function(){fI=(fI+1)%FC.length;renderFC()});
+renderFC();
+
+/* ================= REVEAL ================= */
+function checkReveal(){
+  var clues=Object.keys(S.clues).length===4;
+  if(clues){$('#revealLock').textContent=S.quizDone.every(Boolean)?'Уликите са събрани, изпитът е издържан. Време е да посочиш „виновника“!':'Всички 4 улики са събрани! Можеш да разкриеш случая (а после да минеш и изпита).';$('#revealBody').style.display='block';}
+  else $('#revealLock').textContent='Събрани улики: '+Object.keys(S.clues).length+' от 4. Прочети досиетата, разгледай картите и „Знаеш ли, че…“.';
+}
+var SUS=[
+ {t:'Случайност — просто така се е паднало',ok:0,e:'Не. Толкова точна подредба от пояси не е случайна (улика 3).'},
+ {t:'Съчетанието от ветрове, течения, положение и релеф',ok:1,e:'Точно! Географското положение на континента, пасатите и западните ветрове, топлите и студеното течение, и планинската бариера на Андите — заедно решават къде да вали много и къде почти никога (улика 1). Затова картата на валежите показва до 8000 mm в Андите и почти нищо в Атакама (улика 2), а климатичните пояси се редуват точно по тази причина от север на юг (улика 3). Дори „летящите реки“ на Амазония и марсианската сухота на Атакама (улика 4) идват от същите фактори.'},
+ {t:'Само температурата на въздуха',ok:0,e:'Не. Температурата е само един елемент — факторите са четири (улика 1).'},
+ {t:'Хората, които изкуствено са пресушили района',ok:0,e:'Не. Тези разлики в климата съществуват от хиляди години, много преди хората да строят каквото и да било тук (улика 4).'}
+];
+$('#suspects').innerHTML=shuffle([0,1,2,3]).map(function(i){return '<button class="opt" data-s="'+i+'">'+SUS[i].t+'</button>'}).join('');
+$$('[data-s]').forEach(function(b){b.addEventListener('click',function(){
+  var s=SUS[+b.getAttribute('data-s')],fb=$('#revealFb');
+  if(s.ok){b.classList.add('right');$$('[data-s]').forEach(function(x){x.disabled=true});fb.className='fb ok';fb.innerHTML='<b>Случаят е разкрит!</b> '+s.e;
+    $('#stamp').classList.add('show');if(!S.solved){S.solved=true;addXP(20,'Случаят е разкрит!');progress()}
+    $('#finalXp').textContent='Общо събра '+S.xp+' XP и '+Object.keys(S.badges).length+' от 6 значки.';}
+  else{b.classList.add('wrong');b.disabled=true;fb.className='fb bad';fb.innerHTML='<b>Не е той.</b> '+s.e;}
+})});
+checkReveal();
+
+/* ================= SUMMARY TEXT ================= */
+var plain='Урок 3. Климат, климатични пояси и области в Южна Америка\n\nЗАПОМНИ:\n'+
+ $$('#sumList li').map(function(li,i){return (i+1)+'. '+li.innerText}).join('\n')+
+ '\n\nПонятия: климатообразуващ фактор, пасати, западни ветрове, климатичен пояс, субекваториален, тропичен, субтропичен, умерен пояс, планинска климатична област, надморска височина.';
+$('#plain').value=plain;
+$('#copyBtn').addEventListener('click',function(){
+  var ta=$('#plain');
+  function ok(){toast('Текстът е копиран ✓')}
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(plain).then(ok,function(){ta.select();document.execCommand('copy');ok()})}
+  else{ta.removeAttribute('readonly');ta.select();try{document.execCommand('copy');ok()}catch(e){toast('Маркирай текста и го копирай ръчно')}ta.setAttribute('readonly','')}
+});
+
+renderBadges();progress();
+})();
+</script>
+</body>
+</html>
