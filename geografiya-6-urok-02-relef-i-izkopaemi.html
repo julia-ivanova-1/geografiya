@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F5257">
+<title>Урок 2 · Релеф и полезни изкопаеми в Южна Америка</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&display=swap&subset=cyrillic" rel="stylesheet">
+<style>
+:root{
+  --teal:#0F5257; --teal-2:#1B6F75; --teal-soft:#E3EFEE;
+  --amber:#F2A541; --amber-soft:#FDEFD8; --amber-ink:#8A5300;
+  --paper:#FBF7EF; --card:#FFFFFF; --ink:#1F2A30; --muted:#5B6870; --line:#E6DFD1;
+  --ok:#2E9E5B; --ok-soft:#E3F5EA; --bad:#D64545; --bad-soft:#FBE6E6;
+  --sea:#CFE6EE; --land:#E9D9A6; --land-edge:#A8894A;
+  --r:16px; --shadow:0 2px 0 rgba(15,82,87,.10), 0 6px 18px rgba(31,42,48,.06);
+  --head:"Rubik", system-ui, "Roboto", "Segoe UI", sans-serif;
+  --body:system-ui, "Roboto", "Segoe UI", Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.6 var(--body);overflow-x:hidden}
+h1,h2,h3{font-family:var(--head);line-height:1.2;margin:0 0 .5em;color:var(--teal)}
+h1{font-size:1.75rem;font-weight:800}
+h2{font-size:1.35rem;font-weight:700}
+h3{font-size:1.1rem;font-weight:700}
+p{margin:.5em 0 .8em}
+a{color:var(--teal-2)}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 120px}
+
+/* ---------- Top bar ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:var(--teal);color:#fff;padding:8px 16px 10px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.topbar-in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:10px}
+.xp{display:flex;align-items:center;gap:6px;font-family:var(--head);font-weight:800;font-size:1.05rem;background:rgba(255,255,255,.12);padding:4px 10px;border-radius:999px;white-space:nowrap}
+.xp .gem{color:var(--amber)}
+.xp.bump{animation:bump .5s}
+@keyframes bump{30%{transform:scale(1.25)}}
+.prog{flex:1;height:12px;background:rgba(255,255,255,.2);border-radius:999px;overflow:hidden}
+.prog>i{display:block;height:100%;width:0;background:var(--amber);border-radius:999px;transition:width .6s}
+.badgecount{font-size:.95rem;white-space:nowrap;background:rgba(255,255,255,.12);padding:4px 10px;border-radius:999px}
+.toast{position:fixed;left:50%;top:64px;transform:translateX(-50%) translateY(-20px);opacity:0;background:var(--amber);color:#3A2600;font-family:var(--head);font-weight:700;padding:8px 16px;border-radius:999px;z-index:60;transition:.3s;pointer-events:none;box-shadow:var(--shadow);max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- Hero ---------- */
+.hero{padding:22px 0 6px}
+.kicker{font-family:var(--head);font-weight:700;color:var(--amber-ink);letter-spacing:.04em;text-transform:uppercase;font-size:.85rem}
+.case{background:var(--card);border:2px dashed var(--teal-2);border-radius:var(--r);padding:16px;margin:14px 0;position:relative;box-shadow:var(--shadow)}
+.case h2{display:flex;align-items:center;gap:8px}
+.clues{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.clue{border-radius:12px;padding:10px;font-size:.9rem;line-height:1.4;background:#F1EEE7;color:var(--muted);min-height:74px}
+.clue b{display:block;font-family:var(--head);color:var(--muted);font-size:.8rem;margin-bottom:2px}
+.clue.on{background:var(--amber-soft);color:var(--ink);animation:pop .4s}
+.clue.on b{color:var(--amber-ink)}
+@keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.05)}}
+
+/* ---------- Cards / dossiers ---------- */
+.card{background:var(--card);border-radius:var(--r);padding:18px 16px;margin:18px 0;box-shadow:var(--shadow);border:1px solid var(--line)}
+.dossier-tag{display:inline-block;font-family:var(--head);font-weight:700;font-size:.8rem;color:#fff;background:var(--teal);padding:3px 10px;border-radius:6px;margin-bottom:8px;letter-spacing:.05em}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{border:0;border-radius:14px;padding:12px 16px;min-height:48px;font-family:var(--head);font-weight:700;font-size:1rem;background:var(--teal);color:#fff;box-shadow:0 4px 0 #0A3A3E;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0A3A3E}
+.btn.ghost{background:var(--teal-soft);color:var(--teal);box-shadow:0 4px 0 #C4DAD8}
+.btn.amber{background:var(--amber);color:#3A2600;box-shadow:0 4px 0 #C98422}
+.btn.done{background:var(--ok);box-shadow:0 4px 0 #1F7040}
+.btn[disabled]{opacity:.55;cursor:default}
+.btn.small{min-height:40px;padding:8px 12px;font-size:.9rem}
+.readbtn{margin-top:6px}
+.listen{display:inline-flex;align-items:center;gap:6px}
+.term{background:none;border:0;padding:0 2px;color:var(--teal);font-weight:700;border-bottom:2px dotted var(--amber);font-size:inherit;line-height:inherit}
+.hl{background:var(--amber-soft);padding:0 4px;border-radius:4px}
+.fact-num{font-family:var(--head);font-weight:800;color:var(--teal);font-size:1.5rem;line-height:1}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.stat{background:var(--teal-soft);border-radius:12px;padding:12px}
+.stat small{display:block;color:var(--muted);font-size:.85rem;margin-top:4px;line-height:1.35}
+.lib{background:#EAF3EC;border:1px solid #CFE3D3}
+.lib .dossier-tag{background:#2F6B3F}
+
+/* ---------- Maps ---------- */
+.mapbox{background:var(--sea);border-radius:14px;overflow:hidden;border:1px solid #B8D6E0}
+.mapbox svg{display:block;width:100%;height:auto}
+.land-outline{fill:none;stroke:#3A2E1A;stroke-width:1.4;stroke-linejoin:round}
+.maplabel{font:600 9px var(--body);fill:#2C5D73;letter-spacing:.12em}
+.mk{cursor:pointer}
+.mk circle.dot{stroke:#fff;stroke-width:1.6}
+.mk .halo{fill:none;stroke-width:2;opacity:0}
+.mk.active .halo{opacity:1;animation:ring 1.2s infinite}
+@keyframes ring{0%{r:6;opacity:1}100%{r:16;opacity:0}}
+.mk.seen circle.dot{stroke:#1F2A30}
+.regionhit{cursor:pointer;opacity:0}
+.rband{transition:opacity .2s}
+.rband.dim{opacity:.45}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.chip{border:0;border-radius:999px;padding:8px 12px;min-height:40px;font-size:.9rem;background:#F1EEE7;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.chip.seen{background:var(--teal-soft)}
+.chip.active{background:var(--teal);color:#fff}
+.infobox{background:var(--amber-soft);border-radius:12px;padding:12px;min-height:84px;margin-top:6px}
+.infobox h3{margin:0 0 4px;color:var(--amber-ink)}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:.85rem;color:var(--muted);margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.legend i.sq{border-radius:3px}
+
+/* ---------- Profile chart ---------- */
+.profilebox{background:#F7F4EC;border-radius:14px;overflow:hidden;border:1px solid var(--line);padding:6px 4px}
+.profilebox svg{display:block;width:100%;height:auto}
+.gridl{stroke:#D8CFBA;stroke-width:1}
+.axlabel{font:600 8px var(--body);fill:var(--muted)}
+.plabel{font:700 9px var(--head);fill:var(--teal)}
+.parea{fill:var(--land)}
+.pline{fill:none;stroke:var(--land-edge);stroke-width:2}
+
+/* ---------- Did you know ---------- */
+.dyk{display:grid;gap:10px}
+.dyk div{background:#F7F4EC;border-radius:12px;padding:12px 12px 12px 48px;position:relative}
+.dyk div:before{content:attr(data-i);position:absolute;left:12px;top:10px;font-size:1.4rem}
+
+/* ---------- Pilot-style stage / quiz ---------- */
+.stage{background:#F7F4EC;border-radius:14px;padding:14px;margin-top:10px}
+.stepdots{display:flex;gap:4px;margin-bottom:10px}
+.stepdots i{flex:1;height:6px;border-radius:3px;background:#E0D8C6}
+.stepdots i.ok{background:var(--ok)}
+.stepdots i.cur{background:var(--amber)}
+.opts{display:grid;gap:10px;margin-top:10px}
+.opt{border:2px solid var(--line);border-bottom-width:4px;background:#fff;border-radius:14px;padding:12px 14px;min-height:52px;text-align:left;font-size:1rem;color:var(--ink)}
+.opt:active{transform:translateY(2px)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt[disabled]{cursor:default}
+.fb{border-radius:14px;padding:12px 14px;margin-top:12px;display:none}
+.fb.ok{display:block;background:var(--ok-soft);border:2px solid var(--ok)}
+.fb.bad{display:block;background:var(--bad-soft);border:2px solid var(--bad)}
+.fb b{font-family:var(--head)}
+.fb.ok b{color:#1F7040}.fb.bad b{color:#A42F2F}
+.path{display:flex;flex-direction:column;align-items:center;gap:6px;margin:14px 0}
+.node{width:84px;height:84px;border-radius:50%;border:0;font-family:var(--head);font-weight:800;font-size:1.6rem;color:#fff;background:var(--teal);box-shadow:0 6px 0 #0A3A3E;position:relative}
+.node:nth-child(2){margin-left:90px}.node:nth-child(3){margin-right:90px}
+.node[disabled]{background:#C9C3B5;box-shadow:0 6px 0 #A39D8F;cursor:default}
+.node.done{background:var(--amber);box-shadow:0 6px 0 #C98422;color:#3A2600}
+.node span{position:absolute;top:92px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:.8rem;color:var(--muted);font-weight:700}
+.pathwrap{padding-bottom:26px}
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.9rem;color:var(--muted)}
+.qprog{height:14px;background:#E0D8C6;border-radius:999px;overflow:hidden;margin:8px 0 12px}
+.qprog i{display:block;height:100%;width:0;background:var(--ok);transition:width .4s}
+.qtext{font-family:var(--head);font-weight:700;font-size:1.15rem;color:var(--ink)}
+
+/* flashcards */
+.flash{perspective:900px;margin:12px 0}
+.flash-in{position:relative;height:190px;transition:transform .5s;transform-style:preserve-3d;cursor:pointer}
+.flash.flip .flash-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px}
+.front{background:var(--teal);color:#fff;font-family:var(--head);font-weight:800;font-size:1.4rem}
+.back{background:var(--amber-soft);color:var(--ink);transform:rotateY(180deg);font-size:1rem;line-height:1.45}
+
+/* vocab */
+.vocab{display:grid;gap:8px}
+.word{display:flex;align-items:center;gap:10px;background:#F7F4EC;border-radius:12px;padding:10px 12px}
+.word .w{font-family:var(--head);font-weight:700;color:var(--teal);min-width:88px}
+.word .ex{font-size:.92rem;color:var(--muted);line-height:1.4}
+.word button{margin-left:auto;flex:none;border:0;background:var(--teal-soft);border-radius:10px;width:44px;height:44px;font-size:1.1rem}
+.hola .word .w{color:#B0452E}
+
+/* self-check open questions */
+.q{border-top:1px solid var(--line);padding:14px 0 6px}
+h3+.q,.sc-first{border-top:0}
+.qnum{font-family:var(--head);font-weight:700;color:var(--amber-ink);font-size:.8rem;letter-spacing:.04em;text-transform:uppercase}
+textarea.ans{width:100%;min-height:72px;font:16px/1.45 var(--body);border:2px solid var(--line);border-radius:12px;padding:10px 12px;background:#FFFDF8;color:var(--ink);resize:vertical;display:block;margin-top:6px}
+textarea.ans:focus{outline:none;border-color:var(--teal-2)}
+textarea.ans[readonly]{background:#F1EEE7;color:var(--muted)}
+.model{background:var(--amber-soft);border-radius:12px;padding:10px 12px;margin-top:10px;display:none}
+.model.show{display:block}
+.model .lbl{font-family:var(--head);font-weight:700;color:var(--amber-ink);font-size:.85rem}
+.model p{margin:.2em 0 .5em}
+.self{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:6px}
+.self button{border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;background:#fff;min-height:56px;padding:6px 4px;font-family:var(--head);font-weight:700;font-size:.9rem;line-height:1.2;color:var(--ink)}
+.self button small{display:block;font-family:var(--body);font-weight:400;font-size:.76rem;color:var(--muted)}
+.self button[disabled]{cursor:default;opacity:.45}
+.self button.pick{opacity:1}
+.self button.pick.g1{border-color:var(--ok);background:var(--ok-soft)}
+.self button.pick.g05{border-color:var(--amber);background:#FFF4DF}
+.self button.pick.g0{border-color:var(--bad);background:var(--bad-soft)}
+.selfhint{font-size:.85rem;color:var(--muted);margin-top:6px}
+
+/* reveal / badges */
+.reveal{text-align:center;position:relative}
+.stamp{display:none;margin:12px auto;width:max-content;max-width:100%;border:4px solid var(--bad);color:var(--bad);font-family:var(--head);font-weight:800;font-size:1.8rem;padding:6px 18px;border-radius:10px;transform:rotate(-8deg);letter-spacing:.08em}
+.stamp.show{display:block;animation:stamp .5s}
+@keyframes stamp{0%{transform:rotate(-8deg) scale(2.2);opacity:0}100%{transform:rotate(-8deg) scale(1);opacity:1}}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;margin-top:12px}
+.badge{background:#F1EEE7;border-radius:14px;padding:10px 6px;text-align:center;font-size:.8rem;color:var(--muted);filter:grayscale(1);opacity:.6}
+.badge .ic{font-size:2rem;display:block}
+.badge.on{filter:none;opacity:1;background:var(--amber-soft);color:var(--ink);animation:pop .4s}
+.badge b{display:block;font-family:var(--head);font-size:.85rem}
+
+/* summary */
+.sum li{margin-bottom:6px}
+textarea.plain{width:100%;min-height:200px;font:15px/1.5 var(--body);border:1px solid var(--line);border-radius:12px;padding:10px;background:#FFFDF8;color:var(--ink)}
+
+/* glossary sheet */
+.sheet-bg{position:fixed;inset:0;background:rgba(31,42,48,.4);z-index:70;display:none}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:71;background:#fff;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .25s;max-width:760px;margin:0 auto;box-shadow:0 -6px 24px rgba(0,0,0,.15)}
+.sheet.open{transform:translateY(0)}
+.sheet h3{margin-bottom:6px}
+
+/* audio panel */
+.audiobar{position:fixed;left:0;right:0;bottom:0;z-index:55;background:#fff;border-top:1px solid var(--line);padding:8px 16px calc(8px + env(safe-area-inset-bottom));display:none;box-shadow:0 -4px 16px rgba(0,0,0,.08)}
+.audiobar.show{display:block}
+.audiobar-in{max-width:760px;margin:0 auto;display:flex;gap:8px;align-items:center}
+.audiobar .t{flex:1;font-size:.85rem;color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.audiobar select{font:inherit;font-size:.9rem;padding:6px;border-radius:10px;border:1px solid var(--line);background:#fff;min-height:40px}
+.voicewarn{display:none;margin-top:8px}
+
+details{background:#F7F4EC;border-radius:12px;padding:10px 12px;margin:10px 0}
+summary{font-family:var(--head);font-weight:700;color:var(--teal);cursor:pointer;min-height:32px}
+.src li{font-size:.88rem;margin-bottom:4px;word-break:break-word}
+.note{font-size:.88rem;color:var(--muted);background:#F1EEE7;border-radius:10px;padding:8px 10px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="xp" id="xpBox"><span class="gem">◆</span><span id="xp">0</span> XP</div>
+    <div class="prog" aria-label="Напредък"><i id="progBar"></i></div>
+    <div class="badgecount">🏅 <span id="bCount">0</span>/6</div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<main class="wrap">
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="kicker">География и икономика · 6. клас · Урок 2</div>
+  <h1>Релеф и полезни изкопаеми: защо Андите треперят и какво крият под тях</h1>
+</header>
+
+<section class="case" id="case">
+  <div class="dossier-tag">🔍 СЛУЧАЯТ НА ДЕНЯ</div>
+  <h2>„Неспокойната земя“</h2>
+  <p>От Чили пристига сигнал: земята пак е треперила, вулкан е изхвърлил пепел, а точно там миньорите намират огромни жили руда. Детектив Венета иска да разбере: <b>какво разлюлява Андите и защо точно там е скрито толкова богатство?</b></p>
+  <p><b>Твоята задача, детективе:</b> прочети досиетата, събери 4 улики и накрая разкрий „виновника“.</p>
+  <div class="clues" id="clues">
+    <div class="clue" data-clue="1"><b>УЛИКА 1</b>🔒 Досие „Андите“</div>
+    <div class="clue" data-clue="2"><b>УЛИКА 2</b>🔒 Карта на трите части</div>
+    <div class="clue" data-clue="3"><b>УЛИКА 3</b>🔒 Карта на изкопаемите</div>
+    <div class="clue" data-clue="4"><b>УЛИКА 4</b>🔒 „Знаеш ли, че…“</div>
+  </div>
+</section>
+
+<div class="card" style="padding:12px 16px">
+  <div class="row">
+    <span style="flex:1;font-size:.95rem">🔊 Всяко досие има бутон <b>„Чуй“</b>, а думите с <span class="term" style="pointer-events:none">точки отдолу</span> показват обяснение при докосване.</span>
+  </div>
+  <div class="note voicewarn" id="voiceWarn">
+    Телефонът няма български глас за четене. Можеш да го добавиш от настройките на телефона: <i>Език → Преобразуване на текст в говор → Услуги на Google → Инсталиране на гласови данни → Български</i> (пътят може да е малко различен).
+  </div>
+</div>
+
+<!-- ===== DOSSIER 1: MAIN FEATURES ===== -->
+<section class="card" id="s1">
+  <div class="dossier-tag">ДОСИЕ №1</div>
+  <h2>Главни черти на релефа</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s1-text">🔊 Чуй</button></div>
+  <div id="s1-text">
+    <p>Релефът на Южна Америка е много разнообразен. В континента е <b>най-обширната <button class="term" data-t="nizina">низина</button> на Земята</b> — Амазонската, с площ <span class="hl">5 млн. km²</span>. Тук е и <b>най-дългата <button class="term" data-t="planvereg">планинска верига</button> на Земята</b> — Андите, дълга <span class="hl">7 хил. km</span>.</p>
+    <p>По <b>средна височина</b> (590 m) континентът е на <b>5-то място</b> сред континентите — нито най-нисък, нито най-висок.</p>
+    <p>Релефът е различен в трите части на континента: <b>на запад</b> е високопланински, <b>в средата</b> — низинен, а <b>на изток</b> — <button class="term" data-t="plato">платовиден</button> и нископланински.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="fact-num">5 млн. km²</div><small>площ на Амазонската низина — най-голямата в света</small></div>
+    <div class="stat"><div class="fact-num">7 хил. km</div><small>дължина на Андите — най-дългата планинска верига на Земята</small></div>
+    <div class="stat"><div class="fact-num">590 m</div><small>средна височина на континента · 5-то място сред континентите</small></div>
+  </div>
+  <h3>Релефен профил (фиг. 1 от учебника)</h3>
+  <p style="font-size:.95rem">Ако „срежеш“ континента по права линия от Андите до Атлантическия океан (3440 km), релефът ще изглежда така:</p>
+  <div class="profilebox"><svg id="profSvg" viewBox="0 0 400 210" role="img" aria-label="Релефен профил на Южна Америка"></svg></div>
+  <button class="btn readbtn" data-done="s1" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== MAP 1: THREE PARTS ===== -->
+<section class="card" id="mapregions">
+  <div class="dossier-tag">КАРТА НА ДЕТЕКТИВА</div>
+  <h2>Трите части на континента</h2>
+  <p>Според релефа Южна Америка се дели на три части. Докосни лента от картата или чип под нея, за да научиш повече. Разгледай и трите, за да получиш значка.</p>
+  <div class="mapbox"><svg id="mapReg" viewBox="0 0 400 450" role="img" aria-label="Карта на трите части на релефа"></svg></div>
+  <div class="legend" id="regLegend"></div>
+  <div class="infobox" id="regInfo"><h3>Избери част</h3><p style="margin:0">Тук ще се появи досието на частта.</p></div>
+  <div class="chips" id="regChips"></div>
+</section>
+
+<!-- ===== DOSSIER 2: WEST — ANDES ===== -->
+<section class="card" id="s2">
+  <div class="dossier-tag">ДОСИЕ №2</div>
+  <h2>Западната част: Андите</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s2-text">🔊 Чуй</button></div>
+  <div id="s2-text">
+    <p>Западната част на континента е заета изцяло от <b>планинските вериги на Андите</b>. Те се простират от <b>Панамския провлак</b> на север до остров <b>Огнена земя</b> на юг.</p>
+    <p>Андите се състоят от <b>две успоредни планински вериги</b>. Между тях има високо издигнати <button class="term" data-t="plato">плата</button> и дълбоки <button class="term" data-t="kotlovina">котловини</button>.</p>
+    <ul>
+      <li><b>На север</b> Андите се разклоняват като ветрило.</li>
+      <li><b>Централната им част</b> е най-широка. Тук между планинските вериги са образувани дълбоки езера.</li>
+      <li>Почти успоредно на тихоокеанския бряг се простира пустинята <b>Атакама</b>.</li>
+      <li><b>На юг</b> релефът на Андите впечатлява с величествени остри върхове, покрити с вечен сняг и лед.</li>
+    </ul>
+    <p>В тази южна част се издига и <b>най-високият връх на континента — Аконкагуа (6961 m)</b>.</p>
+    <p>Земната кора в Андите е <b>неспокойна</b>. Действащите <button class="term" data-t="vulkan">вулкани</button>, честите <button class="term" data-t="zemetres">земетресения</button> и свличанията на земни маси са постоянна заплаха за местното население.</p>
+    <p>Голямата височина на Андите затруднява транспортните и стопанските връзки между тихоокеанското крайбрежие и вътрешността на континента.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="fact-num">6961 m</div><small>връх Аконкагуа — най-високата точка на континента</small></div>
+  </div>
+  <button class="btn readbtn" data-done="s2" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== DOSSIER 3: MIDDLE ===== -->
+<section class="card" id="s3">
+  <div class="dossier-tag">ДОСИЕ №3</div>
+  <h2>Средната част: низините</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s3-text">🔊 Чуй</button></div>
+  <div id="s3-text">
+    <p>Средната част на континента е <b>най-ниската</b>. Тук се простират <b>три големи низини</b>:</p>
+    <ul>
+      <li>В <b>северната</b> част е низината на река <b>Ориноко</b>.</li>
+      <li>На юг от нея са <b>Амазонската</b> и <b>Лаплатската</b> низина.</li>
+    </ul>
+    <p>Южните части на континента са заети от областта <b>Патагония</b>. В нея преобладават равнини и плата.</p>
+    <p>На полуостров <b>Валдес</b>, на атлантическия бряг на Патагония, се намира <b>най-ниската точка на континента</b> — <button class="term" data-t="depresia">депресия</button>, разположена <span class="hl">40 m под морското равнище (−40 m)</span>.</p>
+  </div>
+  <button class="btn readbtn" data-done="s3" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== DOSSIER 4: EAST ===== -->
+<section class="card" id="s4">
+  <div class="dossier-tag">ДОСИЕ №4</div>
+  <h2>Източната част: старите плата</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s4-text">🔊 Чуй</button></div>
+  <div id="s4-text">
+    <p>Източната част на континента включва <b>Гвианската</b> и <b>Бразилската планинска земя</b>. Релефът им е много разнообразен — преобладават <button class="term" data-t="plato">плата</button> с отвесни склонове и плоски върхове. На места те достигат <b>над 2 хил. m височина</b>. Между платата реките образуват дълбоки долини.</p>
+  </div>
+  <button class="btn readbtn" data-done="s4" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== LIBRARY ===== -->
+<section class="card lib" id="lib">
+  <div class="dossier-tag">📚 ГЕОГРАФСКА БИБЛИОТЕКА</div>
+  <h2>Водопадът Анхел: скок от ръба на плато</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="lib-text">🔊 Чуй</button></div>
+  <div id="lib-text">
+    <p>На ръба на едно от платата на Гвианската планинска земя, във Венецуела, водата пада от височина близо <b>979 m</b> — това е <b>най-високият водопад в света</b>, наречен <b>Анхел</b>. Толкова е висок, че по-голямата част от водата се превръща в мъгла, преди да стигне дъното.</p>
+    <p>Водопадът е кръстен на американския пилот <b>Джими Ейнджъл</b>, който през <b>1933 г.</b> го забелязва от самолета си, докато търси златна мина в непроходимата джунгла. Мястото е толкова труднодостъпно, че и днес се стига само пеша през джунглата или по въздух.</p>
+  </div>
+  <button class="btn readbtn" data-done="lib" data-xp="10">✓ Прочетох · +10 XP</button>
+</section>
+
+<!-- ===== MAP 2: MINERALS ===== -->
+<section class="card" id="mapmin">
+  <div class="dossier-tag">КАРТА НА ДЕТЕКТИВА</div>
+  <h2>Полезни изкопаеми</h2>
+  <p>Континентът е богат на разнообразни <button class="term" data-t="poleznoIzkopaemo">полезни изкопаеми</button>. Докосни точка на картата, за да разбереш какво се крие там. Открий поне 6, за да получиш значка.</p>
+  <div class="mapbox"><svg id="mapMin" viewBox="0 0 400 450" role="img" aria-label="Карта на полезните изкопаеми"></svg></div>
+  <div class="legend">
+    <span><i style="background:#1B6F75"></i>руда (метал)</span>
+    <span><i style="background:#A0522D"></i>гориво (въглища, нефт, газ)</span>
+    <span><i style="background:#C98422"></i>друго изкопаемо</span>
+  </div>
+  <div class="infobox" id="minInfo"><h3>Избери точка</h3><p style="margin:0">Тук ще се появи досието на находището.</p></div>
+  <div class="chips" id="minChips"></div>
+  <p class="note" style="margin-top:10px">Освен изброените, на много места в континента има и находища на желязна, цинкова и оловна <button class="term" data-t="ruda">руда</button>, а също и злато.</p>
+</section>
+
+<!-- ===== DID YOU KNOW ===== -->
+<section class="card" id="dyk">
+  <div class="dossier-tag">💡 ЗНАЕШ ЛИ, ЧЕ…</div>
+  <h2>Тайни от архива</h2>
+  <div class="dyk" id="dyk-text">
+    <div data-i="🌋">Андите са част от <b>Огнения пръстен</b> — верига от вулкани и разломи по границите на <button class="term" data-t="tektonska">тектонските плочи</button> около Тихия океан. Там стават над <b>80%</b> от земетресенията по света.</div>
+    <div data-i="🏔">Аконкагуа е не само най-високият връх на Андите, а и на цялото <b>Южно и Западно полукълбо</b> — по-висок е от всеки връх извън Азия.</div>
+    <div data-i="🏜">Пустинята Атакама е едно от <b>най-сухите места на Земята</b>. На някои места дъжд не е валял с десетилетия.</div>
+    <div data-i="📈">През <b>1960 г.</b> край град Валдивия, Чили, е регистрирано <b>най-силното земетресение</b> в историята на измерванията — с магнитуд <b>9,5</b>.</div>
+    <div data-i="⛏️">Сребърният рудник <b>Сере Рико</b> в Боливия е бил най-големият източник на сребро в света в продължение на векове, откакто е открит през <b>XVI в.</b></div>
+  </div>
+  <button class="btn readbtn" data-done="dyk" data-xp="10">✓ Прочетох · +10 XP</button>
+</section>
+
+<!-- ===== ROLE: GEOLOGIST ===== -->
+<section class="card" id="exped">
+  <div class="dossier-tag">⛏ РОЛЯ: ГЕОЛОГ</div>
+  <h2>Ти си геолог на експедиция</h2>
+  <p>Мисията ти е да прекосиш континента от най-високия връх до най-известния водопад. На всяка спирка разпознай какво откриваш.</p>
+  <div class="stage" id="expedStage"></div>
+</section>
+
+<!-- ===== DRAW ===== -->
+<section class="card" id="draw">
+  <div class="dossier-tag">🎨 ТВОРЧЕСКА ЗАДАЧА</div>
+  <h2>Нарисувай по памет</h2>
+  <p>На лист начертай контура на континента и го оцвети на три части:</p>
+  <ul>
+    <li><b>лилаво</b> на запад — Андите;</li>
+    <li><b>зелено</b> в средата — низините и Патагония;</li>
+    <li><b>кафяво/оранжево</b> на изток — Гвианската и Бразилската планинска земя.</li>
+  </ul>
+  <p>После отбележи: връх <b>Аконкагуа</b> (запад), депресията на <b>п-в Валдес</b> (юг), и по едно място за <b>медна руда</b> и <b>боксит</b>.</p>
+  <button class="btn ghost readbtn" data-done="draw" data-xp="10">✓ Нарисувах · +10 XP</button>
+</section>
+
+<!-- ===== ENGLISH ===== -->
+<section class="card" id="eng">
+  <div class="dossier-tag">🇬🇧 ENGLISH CORNER</div>
+  <h2>Words of the day</h2>
+  <p style="font-size:.95rem">Докосни 🔊, за да чуеш думата и изречението.</p>
+  <div class="vocab" id="vocabEn"></div>
+  <div class="hola" style="margin-top:18px">
+    <h3 style="color:#B0452E">¡Hola! 🇪🇸 Бонус на испански</h3>
+    <p style="font-size:.95rem;margin-top:0">Много думи за релефа и изкопаемите в Южна Америка идват от испански или се използват и там.</p>
+    <div class="vocab" id="vocabEs"></div>
+  </div>
+</section>
+
+<!-- ===== SELF-CHECK ===== -->
+<section class="card" id="selfcheck">
+  <div class="dossier-tag">✍️ ПРОВЕРИ СЕ САМ</div>
+  <h2>Отговори с думи</h2>
+  <p style="font-size:.95rem">Напиши кратък отговор, после натисни „Готово“, за да видиш примерен отговор, и сам се оцени.</p>
+  <div id="scList"></div>
+</section>
+
+<!-- ===== QUIZ ===== -->
+<section class="card" id="quiz">
+  <div class="dossier-tag">🎯 ПРОВЕРИ СЕ</div>
+  <h2>Изпитът на детектива</h2>
+  <p>3 нива по 3 въпроса. Всяко ниво отключва следващото. Грешните въпроси се връщат в края на нивото.</p>
+  <div class="pathwrap"><div class="path" id="path">
+    <button class="node" data-lvl="0">1<span>Новобранец</span></button>
+    <button class="node" data-lvl="1" disabled>2<span>Следовател</span></button>
+    <button class="node" data-lvl="2" disabled>3<span>Главен геолог</span></button>
+  </div></div>
+  <div id="qArea"></div>
+
+  <h3 style="margin-top:18px">🃏 Флашкарти</h3>
+  <p style="font-size:.95rem;margin-top:0">Докосни картата, за да я обърнеш.</p>
+  <div class="flash" id="flash"><div class="flash-in"><div class="face front" id="fFront"></div><div class="face back" id="fBack"></div></div></div>
+  <div class="row"><button class="btn ghost small" id="fPrev">← Назад</button><span id="fNum" style="flex:1;text-align:center;color:var(--muted)"></span><button class="btn ghost small" id="fNext">Напред →</button></div>
+</section>
+
+<!-- ===== REVEAL ===== -->
+<section class="card reveal" id="reveal">
+  <div class="dossier-tag">🔓 РАЗКРИВАНЕ</div>
+  <h2>Кой разлюлява Андите?</h2>
+  <p id="revealLock">Събери 4-те улики, за да отключиш разкриването.</p>
+  <div id="revealBody" style="display:none;text-align:left">
+    <p>Погледни уликите. Кой е истинският „виновник“ за трепереща земя, вулкани и скрити богатства?</p>
+    <div class="opts" id="suspects"></div>
+    <div class="fb" id="revealFb"></div>
+  </div>
+  <div class="stamp" id="stamp">РАЗКРИТО</div>
+  <h3 style="margin-top:14px">Твоите значки</h3>
+  <div class="badges" id="badges"></div>
+  <p id="finalXp" style="margin-top:12px;font-family:var(--head);font-weight:700;color:var(--teal)"></p>
+</section>
+
+<!-- ===== SUMMARY ===== -->
+<section class="card" id="sum">
+  <div class="dossier-tag">📌 ЗАПОМНИ</div>
+  <h2>Най-важното от урока</h2>
+  <div class="row" style="margin-bottom:8px"><button class="btn ghost small listen" data-read="sumList">🔊 Чуй</button></div>
+  <ol class="sum" id="sumList">
+    <li>Релефът на Южна Америка е разнообразен: <b>на запад</b> е високопланински (Андите), <b>в средата</b> — низинен, <b>на изток</b> — платовиден и нископланински.</li>
+    <li>Амазонската низина е <b>най-обширната низина на Земята</b> (5 млн. km²). Андите са <b>най-дългата планинска верига на Земята</b> (7 хил. km).</li>
+    <li>Средната височина на континента е <b>590 m</b> — 5-то място сред континентите.</li>
+    <li>Андите се простират от <b>Панамския провлак</b> до остров <b>Огнена земя</b>. Състоят се от две успоредни вериги с плата и котловини между тях. На север се разклоняват като ветрило, в централната част са най-широки (с дълбоки езера), а на юг имат остри върхове с вечен сняг. Покрай тихоокеанския бряг е пустинята <b>Атакама</b>.</li>
+    <li>Най-високият връх е <b>Аконкагуа — 6961 m</b>. Земната кора в Андите е неспокойна: чести земетресения, активни вулкани и свличания на земни маси.</li>
+    <li>Средната част е най-ниска: низини на <b>Ориноко, Амазонка</b> и <b>Ла Плата</b>, и областта <b>Патагония</b>. На п-в <b>Валдес</b> е най-ниската точка на континента — депресия, <b>−40 m</b>.</li>
+    <li>Източната част включва <b>Гвианската</b> и <b>Бразилската планинска земя</b> — плата с отвесни склонове и плоски върхове, на места над 2000 m.</li>
+    <li>Континентът е богат на полезни изкопаеми: в <b>Андите</b> са най-големите находища на <b>медна руда</b> в света (оттам идва и името „Анди“, от думата „анда“ — мед); в <b>Гвианската и Бразилската планинска земя</b> има много <b>боксит</b> (за алуминий); в <b>Атакама</b> се добива <b>селитра</b> (за торове). На много места има и въглища, нефт, природен газ, сребро, злато, желязна, цинкова и калаена руда.</li>
+  </ol>
+  <details>
+    <summary>📄 Текст за копиране (Google Docs / печат)</summary>
+    <textarea class="plain" id="plain" readonly></textarea>
+    <button class="btn small" id="copyBtn" style="margin-top:8px">📋 Копирай текста</button>
+  </details>
+</section>
+
+<!-- ===== PARENT ===== -->
+<section class="card" id="parent">
+  <details>
+    <summary>👤 За родителя: какво е добавено и източници</summary>
+    <p style="font-size:.92rem">Извън учебника са добавени: Огненият пръстен на Тихия океан и връзката му с Андите, сравнението на Аконкагуа с най-високите върхове извън Азия, суровината на Атакама, земетресението във Валдивия (1960 г., магнитуд 9,5), рудникът Сере Рико в Боливия, водопадът Анхел и историята на Джими Ейнджъл, както и приблизителните местоположения на находищата на медна руда, селитра, боксит, желязна руда, нефт, сребро, калай, природен газ и въглища на картата с полезни изкопаеми (по общоизвестни данни за основните региони на добив във всяка страна).</p>
+    <ul class="src">
+      <li><a href="https://en.wikipedia.org/wiki/Andes" target="_blank" rel="noopener">Andes (Wikipedia)</a> · <a href="https://en.wikipedia.org/wiki/Aconcagua" target="_blank" rel="noopener">Aconcagua (Wikipedia)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Ring_of_Fire" target="_blank" rel="noopener">Ring of Fire (Wikipedia)</a> · <a href="https://en.wikipedia.org/wiki/Nazca_Plate" target="_blank" rel="noopener">Nazca Plate (Wikipedia)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Atacama_Desert" target="_blank" rel="noopener">Atacama Desert (Wikipedia)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/1960_Valdivia_earthquake" target="_blank" rel="noopener">1960 Valdivia earthquake (Wikipedia)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Cerro_Rico" target="_blank" rel="noopener">Cerro Rico (Wikipedia)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Angel_Falls" target="_blank" rel="noopener">Angel Falls (Wikipedia)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Valdés_Peninsula" target="_blank" rel="noopener">Valdés Peninsula (Wikipedia)</a></li>
+    </ul>
+  </details>
+</section>
+
+</main>
+
+<div class="audiobar" id="audiobar">
+  <div class="audiobar-in">
+    <button class="btn small" id="aPause">⏸</button>
+    <button class="btn ghost small" id="aStop">⏹</button>
+    <span class="t" id="aText">Чета…</span>
+    <select id="aRate" aria-label="Скорост"><option value="0.8">0.8×</option><option value="1" selected>1×</option><option value="1.2">1.2×</option></select>
+  </div>
+</div>
+
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet"><h3 id="sheetT"></h3><p id="sheetD" style="margin:0 0 12px"></p><button class="btn ghost small" id="sheetClose">Разбрах</button></div>
+
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+
+/* ================= STATE ================= */
+var S={xp:0,done:{},badges:{},regionsSeen:{},mineralsSeen:{},clues:{},quizDone:[false,false,false],quizFirst:0,expedDone:false,solved:false};
+
+function progress(){
+  var n=0;['s1','s2','s3','s4','lib','dyk','draw'].forEach(function(k){if(S.done[k])n++});
+  if(S.badges.regions)n++; if(S.badges.prospector)n++; if(S.badges.exped)n++;
+  S.quizDone.forEach(function(d){if(d)n++}); if(S.solved)n++;
+  $('#progBar').style.width=Math.min(100,Math.round(n/14*100))+'%';
+}
+function toast(msg){var t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('show')},1800)}
+function addXP(n,msg){S.xp+=n;$('#xp').textContent=S.xp;var b=$('#xpBox');b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump');if(msg)toast('+'+n+' XP · '+msg);else toast('+'+n+' XP');progress()}
+
+/* ================= BADGES ================= */
+var BADGES=[
+  {id:'detective',ic:'🕵️',n:'Детектив',d:'Прочети всички досиета'},
+  {id:'regions',ic:'🗺️',n:'Картограф',d:'Разгледай и трите части на релефа'},
+  {id:'prospector',ic:'⛏️',n:'Старател',d:'Открий 6 находища на картата'},
+  {id:'exped',ic:'🧭',n:'Геолог',d:'Завърши експедицията'},
+  {id:'polyglot',ic:'💬',n:'Полиглот',d:'Чуй 5 думи'},
+  {id:'chief',ic:'👑',n:'Главен детектив',d:'Поне 8 от 9 верни от първи опит'}
+];
+function renderBadges(){
+  $('#badges').innerHTML=BADGES.map(function(b){return '<div class="badge'+(S.badges[b.id]?' on':'')+'"><span class="ic">'+b.ic+'</span><b>'+b.n+'</b>'+b.d+'</div>'}).join('');
+  $('#bCount').textContent=Object.keys(S.badges).length;
+}
+function award(id){if(S.badges[id])return;S.badges[id]=true;var b=BADGES.filter(function(x){return x.id===id})[0];renderBadges();setTimeout(function(){toast('🏅 Нова значка: '+b.n)},900);progress()}
+
+/* ================= CLUES ================= */
+var CLUES={
+  1:'В Андите земята трепери, вулканите не спят. Земната кора там е неспокойна…',
+  2:'Континентът е разделен на три части: висока планинска стена на запад, низина по средата, стари плата на изток.',
+  3:'Точно под високите планини на запад са скрити най-големите находища на медна руда в света.',
+  4:'Андите са част от Огнения пръстен — там, където две огромни късове от земната кора се трият една в друга.'
+};
+function giveClue(n){if(S.clues[n])return;S.clues[n]=true;var el=$('.clue[data-clue="'+n+'"]');el.classList.add('on');el.innerHTML='<b>УЛИКА '+n+' ✓</b>'+CLUES[n];toast('🔎 Нова улика!');checkReveal()}
+var CLUE_FOR={s2:1,dyk:4};
+
+/* ================= READ BUTTONS ================= */
+$$('[data-done]').forEach(function(b){
+  b.addEventListener('click',function(){
+    var k=b.getAttribute('data-done'); if(S.done[k])return;
+    S.done[k]=true; b.classList.add('done'); b.disabled=true; b.textContent='✓ Готово';
+    addXP(+b.getAttribute('data-xp'));
+    if(CLUE_FOR[k])setTimeout(function(){giveClue(CLUE_FOR[k])},700);
+    if(S.done.s1&&S.done.s2&&S.done.s3&&S.done.s4&&S.done.lib&&S.done.dyk)award('detective');
+  });
+});
+
+/* ================= GLOSSARY ================= */
+var G={
+  nizina:['Низина','Ниска и равна част от сушата, обикновено покрай голяма река или по крайбрежието. Амазонската низина е най-голямата в света.'],
+  planvereg:['Планинска верига','Редица от много планини, съединени една с друга в дълга ивица. Андите са най-дългата планинска верига на Земята.'],
+  plato:['Плато','Висока, сравнително равна земя, ограничена от стръмни (отвесни) склонове. В Южна Америка има плата и в Андите, и на изток — в Гвианската и Бразилската планинска земя.'],
+  kotlovina:['Котловина','Дълбока падина, обградена от всички страни с по-високи части на релефа — например планини.'],
+  vulkan:['Вулкан','Планина или отвор в земната кора, през който излизат разтопени скали (лава), пепел и газове от вътрешността на Земята.'],
+  zemetres:['Земетресение','Внезапно разтърсване на земната повърхност, причинено от движение на земната кора.'],
+  depresia:['Депресия','Част от сушата, разположена под морското равнище — тоест под 0 m.'],
+  ruda:['Руда','Скала или минерал, от които хората добиват метал — например мед, желязо или сребро.'],
+  poleznoIzkopaemo:['Полезно изкопаемо','Природно вещество в земните недра, което хората добиват и използват — руда, въглища, нефт, газ и др.'],
+  tektonska:['Тектонска плоча','Огромен къс от твърдата обвивка на Земята. Плочите бавно се движат — когато две от тях се сблъскат или трият, планините растат, а земята трепери.']
+};
+var sheet=$('#sheet'),sbg=$('#sheetBg');
+function openSheet(k){$('#sheetT').textContent=G[k][0];$('#sheetD').textContent=G[k][1];sbg.style.display='block';requestAnimationFrame(function(){sheet.classList.add('open')})}
+function closeSheet(){sheet.classList.remove('open');setTimeout(function(){sbg.style.display='none'},250)}
+$$('.term[data-t]').forEach(function(t){t.addEventListener('click',function(){openSheet(t.getAttribute('data-t'))})});
+sbg.addEventListener('click',closeSheet);$('#sheetClose').addEventListener('click',closeSheet);
+
+/* ================= SPEECH ================= */
+var synth=window.speechSynthesis, voices=[], queue=[], qi=0, speaking=false, paused=false, curLang='bg-BG', gen=0;
+function loadVoices(){if(!synth)return;voices=synth.getVoices()||[];
+  if(voices.length&&!pickVoice('bg'))$('#voiceWarn').style.display='block'; else $('#voiceWarn').style.display='none';}
+function pickVoice(lang){var l=lang.toLowerCase();var v=voices.filter(function(x){return x.lang&&x.lang.toLowerCase().replace('_','-').indexOf(l)===0});
+  var g=v.filter(function(x){return /google/i.test(x.name)});return g[0]||v[0]||null}
+if(synth){loadVoices();if(typeof synth.onvoiceschanged!=='undefined')synth.onvoiceschanged=loadVoices;}
+function splitText(t){t=t.replace(/\s+/g,' ').trim();var parts=t.match(/[^.!?…]+[.!?…]*/g)||[t];var out=[];
+  parts.forEach(function(p){p=p.trim();if(!p)return;while(p.length>180){var i=p.lastIndexOf(',',180);if(i<60)i=180;out.push(p.slice(0,i+1));p=p.slice(i+1).trim()}if(p)out.push(p)});return out}
+function speakNext(){
+  if(qi>=queue.length){stopSpeech();return}
+  var my=gen;var u=new SpeechSynthesisUtterance(queue[qi]);var v=pickVoice(curLang.slice(0,2));if(v)u.voice=v;u.lang=curLang;u.rate=+$('#aRate').value;
+  u.onend=u.onerror=function(){if(my!==gen||!speaking||paused)return;qi++;speakNext()};
+  $('#aText').textContent=queue[qi];synth.speak(u);
+}
+function speak(text,lang,showBar){
+  if(!synth){toast('Този браузър не може да чете на глас');return}
+  gen++;synth.cancel();queue=splitText(text);qi=0;speaking=true;paused=false;curLang=lang||'bg-BG';
+  $('#aPause').textContent='⏸';if(showBar!==false)$('#audiobar').classList.add('show');
+  var g0=gen;setTimeout(function(){if(g0===gen)speakNext()},60);
+}
+function stopSpeech(){gen++;speaking=false;paused=false;if(synth)synth.cancel();$('#audiobar').classList.remove('show')}
+$('#aPause').addEventListener('click',function(){
+  if(!speaking)return;
+  if(!paused){paused=true;gen++;synth.cancel();this.textContent='▶'}
+  else{paused=false;gen++;this.textContent='⏸';speakNext()}
+});
+$('#aStop').addEventListener('click',stopSpeech);
+$('#aRate').addEventListener('change',function(){if(speaking&&!paused){gen++;synth.cancel();setTimeout(speakNext,60)}});
+$$('[data-read]').forEach(function(b){b.addEventListener('click',function(){speak($('#'+b.getAttribute('data-read')).innerText,'bg-BG')})});
+
+/* ================= LAND SHAPE (shared) ================= */
+var K=6;function P(lon,lat){return [((lon+95)*K).toFixed(1),((15-lat)*K).toFixed(1)]}
+function poly(pts){return 'M'+pts.map(function(p){return P(p[0],p[1]).join(',')}).join(' L')+' Z'}
+var SA=[[-77.4,8.7],[-76,9.4],[-75.5,10.5],[-74.8,11],[-73.5,11.3],[-72.2,11.9],[-71.67,12.46],[-71.1,12],[-71.5,10.9],[-71,10.9],[-70.2,11.6],[-70,12.1],[-68.4,10.8],[-66,10.6],[-64,10.7],[-62,10.7],[-61,9.5],[-59.8,8.3],[-58,6.8],[-55,5.9],[-52,4.9],[-51,4],[-50,1.8],[-50.5,.2],[-48.5,-1],[-46,-1],[-44,-2.5],[-41.5,-2.9],[-39,-3.5],[-37.2,-4.9],[-35.3,-5.3],[-34.79,-7.15],[-35,-9],[-36.5,-10.5],[-38.5,-13],[-39,-16],[-39.7,-19.5],[-41,-22],[-43.2,-23],[-45,-23.8],[-48.5,-26.5],[-48.7,-28.5],[-50.2,-30.5],[-52.5,-33],[-53.5,-34],[-54.9,-34.9],[-56.3,-34.9],[-57.8,-34.4],[-58.5,-34.3],[-57.3,-35.5],[-56.7,-36.4],[-57.5,-38],[-59,-38.8],[-62,-39],[-62.3,-40.6],[-65,-41],[-64.2,-42.3],[-65,-43.3],[-65.5,-45],[-67.5,-46],[-66,-47.5],[-67.8,-49.5],[-68.9,-51.6],[-68.4,-52.3],[-69.5,-52.5],[-70.9,-53],[-71.3,-53.9],[-72.5,-53.5],[-73.5,-53],[-74.7,-52.7],[-75.2,-51],[-75.5,-48.5],[-74.5,-46.5],[-73.8,-44],[-73.9,-41.8],[-73.5,-40],[-73.6,-37.5],[-72.5,-35.5],[-71.7,-33],[-71.5,-30],[-71.3,-27],[-70.6,-24],[-70.2,-20],[-70.3,-18.5],[-71.5,-17.3],[-74,-15.8],[-76.3,-13.5],[-77.2,-12],[-78.5,-9.5],[-79.9,-7],[-81.33,-4.68],[-80.4,-3.4],[-80.2,-2.2],[-81,-2.2],[-80.5,-.5],[-80,.8],[-79,1.5],[-78.8,2.5],[-77.5,3.8],[-77.3,5.5],[-77.9,7.2]];
+var CA=[[-77.4,8.7],[-78.4,9.4],[-79.6,9.6],[-80.6,9],[-81.8,8.9],[-82.9,9.6],[-83.6,10.8],[-83.5,12.5],[-83.3,15],[-88,15],[-87.5,13.2],[-86,11.8],[-85.7,10.5],[-85,9.9],[-84,9.3],[-83,8.3],[-81.5,7.6],[-80.4,7.4],[-80,8.1],[-79,8.9],[-78.2,8.3],[-77.9,7.2]];
+var TDF=[[-68.5,-52.7],[-69.6,-52.8],[-70.3,-53.5],[-70.8,-54.3],[-72,-54.6],[-70.5,-55.1],[-68.5,-55.4],[-67.3,-55.9],[-66.5,-55.2],[-65.2,-54.8],[-66.5,-54.4],[-67.8,-53.6]];
+var LANDD=poly(CA)+' '+poly(SA)+' '+poly(TDF);
+
+/* ================= MAP 1: THREE RELIEF REGIONS ================= */
+var REGIONS=[
+  {id:'w',n:'Западната част — Андите',color:'#7A5BA8',x0:0,x1:158,
+   d:'Заета изцяло от планинските вериги на <b>Андите</b> — от Панамския провлак на север до остров Огнена земя на юг. Две успоредни вериги с плата и котловини между тях. На север се разклоняват като ветрило, в средата са най-широки (с дълбоки езера), а на юг — остри върхове с вечен сняг. Тук е и връх <b>Аконкагуа (6961 m)</b>, най-високата точка на континента.'},
+  {id:'m',n:'Средната част — низините',color:'#2E9E5B',x0:158,x1:236,
+   d:'<b>Най-ниската</b> част на континента. Тук са низините на реките <b>Ориноко, Амазонка</b> и <b>Ла Плата</b>, а на юг — областта <b>Патагония</b> с равнини и плата. На п-в Валдес е и най-ниската точка на континента: депресия, −40 m.'},
+  {id:'e',n:'Източната част — старите плата',color:'#C98422',x0:236,x1:400,
+   d:'Включва <b>Гвианската</b> и <b>Бразилската планинска земя</b>. Плата с отвесни склонове и плоски върхове, на места над 2000 m. Между платата реките образуват дълбоки долини.'}
+];
+var mapReg=$('#mapReg');
+(function(){
+  var s='<rect width="400" height="450" fill="#CFE6EE"/><defs><clipPath id="landClip"><path d="'+LANDD+'"/></clipPath></defs>';
+  REGIONS.forEach(function(r){s+='<rect class="rband" data-id="'+r.id+'" x="'+r.x0+'" y="0" width="'+(r.x1-r.x0)+'" height="450" fill="'+r.color+'" clip-path="url(#landClip)"/>'});
+  s+='<path class="land-outline" d="'+LANDD+'"/>';
+  REGIONS.forEach(function(r){s+='<rect class="regionhit" data-id="'+r.id+'" x="'+r.x0+'" y="0" width="'+(r.x1-r.x0)+'" height="450"/>'});
+  mapReg.innerHTML=s;
+  $('#regLegend').innerHTML=REGIONS.map(function(r){return '<span><i style="background:'+r.color+'"></i>'+r.n.split(' — ')[0]+'</span>'}).join('');
+  $('#regChips').innerHTML=REGIONS.map(function(r){return '<button class="chip" data-id="'+r.id+'"><i style="background:'+r.color+'"></i>'+r.n.split(' — ')[1]+'</button>'}).join('');
+})();
+function showRegion(id){
+  var r=REGIONS.filter(function(x){return x.id===id})[0];
+  $$('.rband',mapReg).forEach(function(e){e.classList.toggle('dim',e.getAttribute('data-id')!==id)});
+  $$('.chip',$('#regChips')).forEach(function(e){e.classList.toggle('active',e.getAttribute('data-id')===id)});
+  $('#regInfo').innerHTML='<h3>'+r.n+'</h3><p style="margin:0">'+r.d+'</p>';
+  if(!S.regionsSeen[id]){S.regionsSeen[id]=true;$$('.chip',$('#regChips')).forEach(function(e){if(e.getAttribute('data-id')===id)e.classList.add('seen')});addXP(5);
+    if(['w','m','e'].every(function(k){return S.regionsSeen[k]})){award('regions');setTimeout(function(){giveClue(2)},400)}}
+}
+$$('.regionhit',mapReg).forEach(function(e){e.addEventListener('click',function(){showRegion(e.getAttribute('data-id'))})});
+$$('.chip',$('#regChips')).forEach(function(e){e.addEventListener('click',function(){showRegion(e.getAttribute('data-id'))})});
+
+/* ================= MAP 2: MINERALS ================= */
+var MCOL={ore:'#1B6F75',fuel:'#A0522D',other:'#C98422'};
+var MIN=[
+  {id:'cu',t:'ore',n:'Медна руда',lon:-70,lat:-24,d:'В <b>Андите</b> (Чили, Перу) са <b>най-големите находища на медна руда в света</b>. Името „Анди“ идва от думата „анда“ — на езика на древното местно население тя означава <b>мед</b>.'},
+  {id:'nitro',t:'other',n:'Селитра',lon:-68.2,lat:-20.5,d:'В пустинята <b>Атакама</b> е открита селитра. Използва се за производство на <b>минерални торове</b>.'},
+  {id:'bauxite',t:'other',n:'Боксит',lon:-58,lat:5,d:'Гвианската и Бразилската планинска земя са богати на <b>боксит</b> — от него се произвежда <b>алуминий</b>.'},
+  {id:'iron',t:'ore',n:'Желязна руда',lon:-50,lat:-19,d:'В Бразилската планинска земя има огромни находища на <b>желязна руда</b> — едни от най-големите в света.'},
+  {id:'oil',t:'fuel',n:'Нефт',lon:-64,lat:9,d:'Венецуела, около низината на река Ориноко, има едни от най-големите известни находища на <b>нефт</b> в света.'},
+  {id:'silver',t:'ore',n:'Сребро',lon:-66,lat:-19.5,d:'В Андите на Боливия и Перу се добива <b>сребро</b> — тук е бил и легендарният рудник Сере Рико, векове наред най-големият източник на сребро в света.'},
+  {id:'tin',t:'ore',n:'Калаена руда',lon:-65,lat:-16.5,d:'Боливия е един от най-големите добивници на <b>калаена руда</b> в света.'},
+  {id:'gas',t:'fuel',n:'Природен газ',lon:-63,lat:-22,d:'В Андите на Боливия и Аржентина има големи находища на <b>природен газ</b>.'},
+  {id:'coal',t:'fuel',n:'Въглища',lon:-72.5,lat:11,d:'В Колумбия има едни от най-големите находища на <b>въглища</b> в Латинска Америка.'}
+];
+var mapMin=$('#mapMin');
+(function(){
+  var s='<rect width="400" height="450" fill="#CFE6EE"/><path class="land" d="'+LANDD+'" fill="'+'#E9D9A6'+'" stroke="#A8894A" stroke-width="1"/>';
+  var g='';MIN.forEach(function(p){var c=P(p.lon,p.lat);
+    g+='<g class="mk" data-id="'+p.id+'" transform="translate('+c[0]+','+c[1]+')"><circle class="halo" r="6" stroke="'+MCOL[p.t]+'"/><circle class="dot" r="6" fill="'+MCOL[p.t]+'"/><circle r="14" fill="transparent"/></g>'});
+  mapMin.innerHTML=s+g;
+  $('#minChips').innerHTML=MIN.map(function(p){return '<button class="chip" data-id="'+p.id+'"><i style="background:'+MCOL[p.t]+'"></i>'+p.n+'</button>'}).join('');
+})();
+function showMin(id){
+  var p=MIN.filter(function(x){return x.id===id})[0];
+  $$('#mapMin .mk').forEach(function(e){e.classList.toggle('active',e.getAttribute('data-id')===id)});
+  $$('#minChips .chip').forEach(function(e){e.classList.toggle('active',e.getAttribute('data-id')===id)});
+  $('#minInfo').innerHTML='<h3>'+p.n+'</h3><p style="margin:0">'+p.d+'</p>';
+  if(!S.mineralsSeen[id]){S.mineralsSeen[id]=true;$$('[data-id="'+id+'"]',document).forEach(function(e){e.classList.add('seen')});addXP(3);
+    if(Object.keys(S.mineralsSeen).length>=6){award('prospector');setTimeout(function(){giveClue(3)},400)}}
+}
+$$('#mapMin .mk').forEach(function(e){e.addEventListener('click',function(){showMin(e.getAttribute('data-id'))})});
+$$('#minChips .chip').forEach(function(e){e.addEventListener('click',function(){showMin(e.getAttribute('data-id'))})});
+
+/* ================= PROFILE CHART ================= */
+(function(){
+  var svg=$('#profSvg'),s='';
+  var grid=[[0,190],[1000,170],[2000,150],[3000,130],[4000,110],[5000,90],[6000,70]];
+  grid.forEach(function(g){s+='<line x1="30" x2="400" y1="'+g[1]+'" y2="'+g[1]+'" class="gridl"/><text x="0" y="'+(g[1]+3)+'" class="axlabel">'+(g[0]?(g[0]/1000+' хил. m'):'0 m')+'</text>'});
+  var pathPts='M30,190 L60,175 L80,140 L95,52 L110,140 L130,175 L150,160 L170,185 L190,190 L260,188 L285,175 L305,150 L320,160 L340,132 L360,165 L385,185 L400,190';
+  s+='<path class="parea" d="'+pathPts+' L400,210 L30,210 Z"/><path class="pline" d="'+pathPts+'"/>';
+  s+='<text x="95" y="16" text-anchor="middle" class="plabel">Анди</text>';
+  s+='<text x="95" y="46" text-anchor="middle" class="axlabel" style="font-size:7px">в. Аконкагуа 6961 m</text>';
+  s+='<text x="225" y="16" text-anchor="middle" class="plabel">Лаплатска низина</text>';
+  s+='<text x="225" y="182" text-anchor="middle" class="axlabel" style="font-size:7px">р. Парана</text>';
+  s+='<text x="330" y="16" text-anchor="middle" class="plabel" style="font-size:7px">Бразилска планинска земя</text>';
+  s+='<text x="340" y="128" text-anchor="middle" class="axlabel" style="font-size:7px">в. Бандейра ~2891 m</text>';
+  s+='<line x1="30" x2="400" y1="200" y2="200" stroke="#A8894A" stroke-width="1"/>';
+  s+='<text x="215" y="209" text-anchor="middle" class="axlabel">3440 km</text>';
+  svg.innerHTML=s;
+})();
+
+/* ================= ROLE: GEOLOGIST EXPEDITION ================= */
+var EXPED=[
+  {q:'Тръгваш от най-високия връх на континента. Как се казва той и колко е висок?',o:['Аконкагуа, 6961 m','Бандейра, 2891 m','Чимборасо, 6263 m'],a:0,e:'Аконкагуа е връхът, откъдето започваш експедицията в Андите.'},
+  {q:'Слизаш по западния склон и стигаш до суха земя, почти без капка дъжд. Коя пустиня е това?',o:['Атакама','Патагонска пустиня','Сахара'],a:0,e:'Атакама се простира почти успоредно на тихоокеанския бряг на Андите.'},
+  {q:'Под краката ти геолозите копаят и намират червеникава руда, от която светът взима метал за жици и кабели. Коя е тя?',o:['Медна руда','Желязна руда','Калаена руда'],a:0,e:'В Андите са най-големите находища на медна руда в света.'},
+  {q:'Продължаваш на изток, слизаш от планините и стъпваш на равна земя, обляна от голяма река. В коя част на континента си?',o:['Средната (низините)','Западната (Андите)','Източната (платата)'],a:0,e:'Средната част е най-ниската, с низините на Ориноко, Амазонка и Ла Плата.'},
+  {q:'Тръгваш на юг, до полуостров на атлантическия бряг на Патагония, и слизаш под морското равнище. Как се казва мястото?',o:['Депресия на п-в Валдес, −40 m','Дъното на Амазонка','Кратер на вулкан'],a:0,e:'Това е най-ниската точка на целия континент.'},
+  {q:'Тръгваш на северoизток, към стари плата с отвесни склонове и плоски върхове. Коя планинска земя откриваш?',o:['Гвианска и Бразилска планинска земя','Андите','Патагонско плато'],a:0,e:'Тук платата достигат над 2 хил. m височина, а реките дълбаят дълбоки долини.'},
+  {q:'В тази планинска земя намираш червеникава пръст, богата на минерал, от който се прави лек метал за самолети и консервни кутии. Кой е той?',o:['Боксит (алуминий)','Сребро','Природен газ'],a:0,e:'Гвианската и Бразилската планинска земя са богати на боксит.'},
+  {q:'Последна спирка: ръбът на плато, откъдето вода пада от близо 1 km височина. Какво виждаш?',o:['Водопадът Анхел','Ниагарският водопад','Виктория'],a:0,e:'Анхел е най-високият водопад в света — на ръба на Гвианската планинска земя.'}
+];
+var eI=0,eStage=$('#expedStage');
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function renderExped(){
+  if(eI>=EXPED.length){eStage.innerHTML='<div class="stepdots">'+EXPED.map(function(){return '<i class="ok"></i>'}).join('')+'</div><p style="font-family:var(--head);font-weight:700;color:var(--teal);font-size:1.15rem;margin:0">🏁 Експедицията завърши на ръба на водопада Анхел!</p>';
+    if(!S.expedDone){S.expedDone=true;award('exped');progress()}return}
+  var f=EXPED[eI],order=shuffle([0,1,2]);
+  eStage.innerHTML='<div class="stepdots">'+EXPED.map(function(_,i){return '<i class="'+(i<eI?'ok':i===eI?'cur':'')+'"></i>'}).join('')+'</div>'+
+   '<div class="qhead"><span>Спирка '+(eI+1)+' от '+EXPED.length+'</span></div><p class="qtext" style="font-size:1.02rem">'+f.q+'</p><div class="opts">'+
+   order.map(function(i){return '<button class="opt" data-i="'+i+'">'+f.o[i]+'</button>'}).join('')+'</div><div class="fb"></div>';
+  var tried=false;
+  $$('.opt',eStage).forEach(function(b){b.addEventListener('click',function(){
+    var i=+b.getAttribute('data-i'),fb=$('.fb',eStage);
+    if(i===f.a){b.classList.add('right');$$('.opt',eStage).forEach(function(x){x.disabled=true});
+      fb.className='fb ok';fb.innerHTML='<b>Точно така!</b> '+f.e+'<div style="margin-top:10px"><button class="btn small done" id="eNext">Напред →</button></div>';
+      if(!tried)addXP(5);$('#eNext').addEventListener('click',function(){eI++;renderExped()});}
+    else{tried=true;b.classList.add('wrong');b.disabled=true;fb.className='fb bad';fb.innerHTML='<b>Провери пак досието.</b> Опитай друг отговор.';}
+  })});
+}
+renderExped();
+
+/* ================= VOCAB ================= */
+var EN=[['relief','Релеф','The relief of South America is very varied.'],['mountain range','Планинска верига','The Andes is the longest mountain range on Earth.'],['plateau','Плато','A plateau has steep slopes and a flat top.'],['lowland','Низина','The Amazon lowland is the largest in the world.'],['volcano','Вулкан','There are active volcanoes in the Andes.'],['earthquake','Земетресение','Earthquakes are frequent in the Andes.'],['ore','Руда','Copper ore is mined in the Andes.'],['mineral','Полезно изкопаемо','South America is rich in minerals.']];
+var ES=[['volcán','вулкан'],['montaña','планина'],['terremoto','земетресение'],['mina','мина/рудник'],['roca','скала']];
+$('#vocabEn').innerHTML=EN.map(function(w,i){return '<div class="word"><span class="w">'+w[0]+'</span><span class="ex">'+w[1].replace(/\.$/,'')+'<br><i>'+w[2]+'</i></span><button data-en="'+i+'" aria-label="Чуй">🔊</button></div>'}).join('');
+$('#vocabEs').innerHTML=ES.map(function(w,i){return '<div class="word"><span class="w">'+w[0]+'</span><span class="ex">'+w[1]+'</span><button data-es="'+i+'" aria-label="Чуй">🔊</button></div>'}).join('');
+var heard={};
+function heardOne(k){if(heard[k])return;heard[k]=1;addXP(1);if(Object.keys(heard).length>=5)award('polyglot')}
+$$('[data-en]').forEach(function(b){b.addEventListener('click',function(){var w=EN[+b.getAttribute('data-en')];speak(w[0]+'. '+w[2],'en-US',false);heardOne('en'+b.getAttribute('data-en'))})});
+$$('[data-es]').forEach(function(b){b.addEventListener('click',function(){var w=ES[+b.getAttribute('data-es')];speak(w[0],'es-ES',false);heardOne('es'+b.getAttribute('data-es'))})});
+
+/* ================= SELF-CHECK (open questions) ================= */
+var SC=[
+  {q:'Опиши накратко релефа в западната, средната и източната част на Южна Америка.',a:'Запад — **високопланински** (Андите); среда — **низинен** (низини на Ориноко, Амазонка, Ла Плата, областта Патагония); изток — **платовиден и нископланински** (Гвианска и Бразилска планинска земя).'},
+  {q:'Защо в Андите има чести земетресения и активни вулкани?',a:'Защото земната кора там е **неспокойна** — две огромни тектонски плочи се трият и сблъскват точно под планините.'},
+  {q:'Кой е най-високият връх на континента и колко е висок?',a:'**Аконкагуа**, **6961 m**, в Андите.'},
+  {q:'Кое е най-ниското място на континента и къде се намира?',a:'**Депресия от −40 m** на полуостров **Валдес**, на атлантическия бряг на Патагония.'},
+  {q:'Защо в Андите е трудно да се пътува между тихоокеанското крайбрежие и вътрешността на континента?',a:'Заради **голямата височина** на планините — тя затруднява транспортните и стопанските връзки.'},
+  {q:'Кои полезни изкопаеми са най-характерни за Андите, и кои — за Гвианската и Бразилската планинска земя?',a:'В Андите — **медна руда** (най-големите находища в света); в Гвианската и Бразилската планинска земя — **боксит**, от който се произвежда алуминий.'}
+];
+function marks(s){return s.replace(/\*\*(.+?)\*\*/g,'<mark>$1</mark>')}
+var GR={'1':{c:'g1',t:'✓ Вярно'},'0.5':{c:'g05',t:'≈ Частично'},'0':{c:'g0',t:'✗ Грешно'}};
+$('#scList').innerHTML=SC.map(function(q,i){return '<div class="q'+(i===0?' sc-first':'')+'" data-sc="'+i+'"><div class="qnum">Въпрос '+(i+1)+'</div><p class="qtext">'+q.q+'</p>'+
+  '<textarea class="ans" rows="2" placeholder="Напиши отговора си тук…" aria-label="Отговор"></textarea>'+
+  '<div class="row" style="margin-top:8px"><button class="btn small scdone" disabled>Готово</button></div>'+
+  '<div class="model"><div class="lbl">ПРИМЕРЕН ОТГОВОР</div><p>'+marks(q.a)+'</p>'+
+  '<div class="lbl">Как се справи? Сравни ключовите думи.</div>'+
+  '<div class="self"><button data-g="1">✓ Вярно<small>1 т.</small></button><button data-g="0.5">≈ Частично<small>0,5 т.</small></button><button data-g="0">✗ Грешно<small>0 т.</small></button></div>'+
+  '<p class="selfhint"></p></div></div>'}).join('');
+$$('[data-sc]').forEach(function(box){
+  var ta=$('textarea',box),db=$('.scdone',box);
+  ta.addEventListener('input',function(){db.disabled=!ta.value.trim()});
+  db.addEventListener('click',function(){
+    if(!ta.value.trim())return;
+    ta.readOnly=true;db.disabled=true;db.textContent='✓ Изпратено';db.classList.add('done');
+    $('.model',box).classList.add('show');
+    $('.model',box).scrollIntoView({behavior:'smooth',block:'nearest'});
+  });
+  $$('.self button',box).forEach(function(b){b.addEventListener('click',function(){
+    var g=+b.getAttribute('data-g');
+    $$('.self button',box).forEach(function(x){x.disabled=true;if(+x.getAttribute('data-g')===g)x.classList.add('pick',GR[String(g)].c)});
+    $('.selfhint',box).textContent='Оценката е записана: '+GR[String(g)].t+'.';
+    if(g===1)addXP(10);else if(g===0.5)addXP(5);
+  })});
+});
+
+/* ================= QUIZ ================= */
+var LV=[
+ [{q:'Коя е най-обширната низина в Южна Америка и каква е площта ѝ?',o:['Амазонска низина (5 млн. km²)','Лаплатска низина (2 млн. km²)','Патагонска низина (3 млн. km²)'],a:0,e:'Амазонската низина е с площ 5 млн. km² — най-голямата в света.'},
+  {q:'Коя е най-дългата планинска верига на Земята?',o:['Андите','Хималаите','Кордилерите в Северна Америка'],a:0,e:'Андите са дълги 7 хил. km.'},
+  {q:'На кое място е Южна Америка по средна височина (590 m) сред континентите?',o:['5-то','1-во','3-то'],a:0,e:'Континентът е нито най-нисък, нито най-висок сред континентите.'}],
+ [{q:'Кой е най-високият връх на континента?',o:['Аконкагуа (6961 m)','Бандейра (2891 m)','Чимборасо'],a:0,e:'Аконкагуа е в южната част на Андите.'},
+  {q:'Кое е най-ниското място на континента?',o:['Депресия на п-в Валдес (−40 m)','Дъното на Амазонка','Атакама'],a:0,e:'На п-в Валдес, на атлантическия бряг на Патагония.'},
+  {q:'Коя пустиня се простира почти успоредно на тихоокеанския бряг на Андите?',o:['Атакама','Сахара','Гоби'],a:0,e:'Атакама е едно от най-сухите места на Земята.'}],
+ [{q:'За кой ресурс Андите са световен лидер по находища?',o:['Медна руда','Боксит','Селитра'],a:0,e:'В Андите са най-големите находища на медна руда в света.'},
+  {q:'От кой минерал се произвежда алуминий и къде са основните му находища?',o:['Боксит — Гвианска и Бразилска планинска земя','Желязна руда — Андите','Калаена руда — Патагония'],a:0,e:'Боксит се добива предимно в Гвианската и Бразилската планинска земя.'},
+  {q:'Какво изкопаемо се добива в пустинята Атакама и за какво служи то?',o:['Селитра — за минерални торове','Боксит — за алуминий','Въглища — за електричество'],a:0,e:'Селитрата от Атакама се използва за производство на минерални торове.'}]
+];
+var FB_OK=['Браво!','Точно!','Отлично, детективе!','Вярно!'],FB_BAD=['Почти…','Не съвсем.','Опа!'];
+var qState=null;
+function startLevel(l){
+  qState={l:l,queue:[0,1,2],pos:0,firstOk:0,missed:{},total:3};
+  $('#qArea').scrollIntoView({behavior:'smooth',block:'start'});renderQ();
+}
+function renderQ(){
+  var st=qState,area=$('#qArea');
+  if(!st.queue.length){finishLevel();return}
+  var qi=st.queue[0],Q=LV[st.l][qi],order=shuffle([0,1,2]);
+  area.innerHTML='<div class="stage"><div class="qhead"><span>Ниво '+(st.l+1)+'</span><button class="btn ghost small" id="qQuit">✕</button></div>'+
+   '<div class="qprog"><i style="width:'+Math.round((3-st.queue.length)/3*100)+'%"></i></div>'+
+   '<p class="qtext">'+Q.q+'</p><div class="opts">'+order.map(function(i){return '<button class="opt" data-i="'+i+'">'+Q.o[i]+'</button>'}).join('')+'</div><div class="fb" id="qfb"></div></div>';
+  $('#qQuit').addEventListener('click',function(){qState=null;area.innerHTML=''});
+  $$('.opt',area).forEach(function(b){b.addEventListener('click',function(){
+    var i=+b.getAttribute('data-i'),fb=$('#qfb');$$('.opt',area).forEach(function(x){x.disabled=true;if(+x.getAttribute('data-i')===Q.a)x.classList.add('right')});
+    if(i===Q.a){fb.className='fb ok';fb.innerHTML='<b>'+FB_OK[Math.floor(Math.random()*FB_OK.length)]+'</b> '+Q.e;
+      if(!st.missed[qi]){st.firstOk++;addXP(10)}st.queue.shift();}
+    else{b.classList.add('wrong');fb.className='fb bad';fb.innerHTML='<b>'+FB_BAD[Math.floor(Math.random()*FB_BAD.length)]+'</b> '+Q.e+' <i>Въпросът ще се върне по-късно.</i>';
+      st.missed[qi]=true;st.queue.push(st.queue.shift());}
+    fb.insertAdjacentHTML('beforeend','<div style="margin-top:10px"><button class="btn small '+(i===Q.a?'done':'')+'" id="qNext">Продължи →</button></div>');
+    $('#qNext').addEventListener('click',renderQ);
+  })});
+}
+function finishLevel(){
+  var st=qState,l=st.l,area=$('#qArea');
+  if(!S.quizDone[l]){S.quizDone[l]=true;S.quizFirst+=st.firstOk;}
+  var nodes=$$('.node');nodes[l].classList.add('done');if(nodes[l+1])nodes[l+1].disabled=false;
+  var names=['Новобранец','Следовател','Главен геолог'];
+  area.innerHTML='<div class="stage" style="text-align:center"><div style="font-size:2.4rem">⭐</div><p class="qtext">Ниво „'+names[l]+'“ е преминато!</p><p>От първи опит: <b>'+st.firstOk+' от 3</b></p>'+
+   (l<2?'<button class="btn amber" id="qNextLvl">Към ниво '+(l+2)+' →</button>':'<p>Всички нива са готови! Сега отиди към <b>Разкриването</b> ↓</p>')+'</div>';
+  if(l<2)$('#qNextLvl').addEventListener('click',function(){startLevel(l+1)});
+  progress();
+  if(S.quizDone.every(Boolean)){if(S.quizFirst>=8)award('chief');checkReveal();}
+  qState=null;
+}
+$$('.node').forEach(function(n){n.addEventListener('click',function(){if(!n.disabled)startLevel(+n.getAttribute('data-lvl'))})});
+
+/* flashcards */
+var FC=[['Амазонска низина','Най-обширната низина на Земята — 5 млн. km².'],['Анди','Най-дългата планинска верига на Земята — 7 хил. km. От Панамския провлак до Огнена земя.'],['Аконкагуа','Най-високият връх на континента — 6961 m.'],['Депресия','Място под морското равнище. На п-в Валдес тя е −40 m.'],['Плато','Висока равна земя с отвесни склонове. Такива има и в Андите, и на изток.'],['Медна руда','В Андите са най-големите находища в света. Оттам идва и името: „анда“ означава мед.'],['Боксит','От него се произвежда алуминий. Много е в Гвианската и Бразилската планинска земя.'],['Селитра','Добива се в пустинята Атакама, за минерални торове.'],['Патагония','Област в южната част на континента, с равнини и плата.'],['Котловина','Дълбока падина между планински вериги, каквито има в Централните Анди.']];
+var fI=0,flash=$('#flash');
+function renderFC(){flash.classList.remove('flip');setTimeout(function(){$('#fFront').textContent=FC[fI][0];$('#fBack').textContent=FC[fI][1];$('#fNum').textContent=(fI+1)+' / '+FC.length},150)}
+flash.addEventListener('click',function(){flash.classList.toggle('flip')});
+$('#fPrev').addEventListener('click',function(){fI=(fI-1+FC.length)%FC.length;renderFC()});
+$('#fNext').addEventListener('click',function(){fI=(fI+1)%FC.length;renderFC()});
+renderFC();
+
+/* ================= REVEAL ================= */
+function checkReveal(){
+  var clues=Object.keys(S.clues).length===4;
+  if(clues){$('#revealLock').textContent=S.quizDone.every(Boolean)?'Уликите са събрани, изпитът е издържан. Време е да посочиш „виновника“!':'Всички 4 улики са събрани! Можеш да разкриеш случая (а после да минеш и изпита).';$('#revealBody').style.display='block';}
+  else $('#revealLock').textContent='Събрани улики: '+Object.keys(S.clues).length+' от 4. Прочети досиетата, разгледай картите и „Знаеш ли, че…“.';
+}
+var SUS=[
+ {t:'Голяма подземна река, която мести планините',ok:0,e:'Не. Реки не движат цели планински вериги (улика 1).'},
+ {t:'Сблъсъкът на две тектонски плочи точно под Андите',ok:1,e:'Точно! Земната кора е изградена от огромни тектонски плочи (улика 4 — Огненият пръстен). Под Андите две от тях бавно се трият и сблъскват. Затова планините продължават да растат, земята трепери и вулканите изригват (улика 1). Точно на границата между плочите се образуват и богатите залежи на метални руди (улика 3) — а релефът на целия континент се дели на запад, среда и изток именно заради тези процеси (улика 2).'},
+ {t:'Магията на древните инки',ok:0,e:'Не. Тресенето на земята се обяснява с наука, не с магия (улика 4).'},
+ {t:'Силният вятър откъм Тихия океан',ok:0,e:'Не. Вятърът не причинява земетресения и вулкани (улика 1).'}
+];
+$('#suspects').innerHTML=shuffle([0,1,2,3]).map(function(i){return '<button class="opt" data-s="'+i+'">'+SUS[i].t+'</button>'}).join('');
+$$('[data-s]').forEach(function(b){b.addEventListener('click',function(){
+  var s=SUS[+b.getAttribute('data-s')],fb=$('#revealFb');
+  if(s.ok){b.classList.add('right');$$('[data-s]').forEach(function(x){x.disabled=true});fb.className='fb ok';fb.innerHTML='<b>Случаят е разкрит!</b> '+s.e;
+    $('#stamp').classList.add('show');if(!S.solved){S.solved=true;addXP(20,'Случаят е разкрит!');progress()}
+    $('#finalXp').textContent='Общо събра '+S.xp+' XP и '+Object.keys(S.badges).length+' от 6 значки.';}
+  else{b.classList.add('wrong');b.disabled=true;fb.className='fb bad';fb.innerHTML='<b>Не е той.</b> '+s.e;}
+})});
+checkReveal();
+
+/* ================= SUMMARY TEXT ================= */
+var plain='Урок 2. Релеф и полезни изкопаеми в Южна Америка\n\nЗАПОМНИ:\n'+
+ $$('#sumList li').map(function(li,i){return (i+1)+'. '+li.innerText}).join('\n')+
+ '\n\nПонятия: низина, планинска верига, плато, котловина, вулкан, земетресение, депресия, руда, полезно изкопаемо, тектонска плоча.';
+$('#plain').value=plain;
+$('#copyBtn').addEventListener('click',function(){
+  var ta=$('#plain');
+  function ok(){toast('Текстът е копиран ✓')}
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(plain).then(ok,function(){ta.select();document.execCommand('copy');ok()})}
+  else{ta.removeAttribute('readonly');ta.select();try{document.execCommand('copy');ok()}catch(e){toast('Маркирай текста и го копирай ръчно')}ta.setAttribute('readonly','')}
+});
+
+renderBadges();progress();
+})();
+</script>
+</body>
+</html>
