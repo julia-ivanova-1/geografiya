@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F5257">
+<title>Входно ниво · География 6. клас</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&display=swap&subset=cyrillic" rel="stylesheet">
+<style>
+:root{
+  --teal:#0F5257; --teal-2:#1B6F75; --teal-soft:#E3EFEE;
+  --amber:#F2A541; --amber-soft:#FDEFD8; --amber-ink:#8A5300;
+  --paper:#FBF7EF; --card:#FFFFFF; --ink:#1F2A30; --muted:#5B6870; --line:#E6DFD1;
+  --ok:#2E9E5B; --ok-soft:#E3F5EA; --bad:#D64545; --bad-soft:#FBE6E6;
+  --r:16px; --shadow:0 2px 0 rgba(15,82,87,.10), 0 6px 18px rgba(31,42,48,.06);
+  --head:"Rubik", system-ui, "Roboto", "Segoe UI", sans-serif;
+  --body:system-ui, "Roboto", "Segoe UI", Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.6 var(--body);overflow-x:hidden}
+h1,h2,h3{font-family:var(--head);line-height:1.2;margin:0 0 .5em;color:var(--teal)}
+h1{font-size:1.75rem;font-weight:800}
+h2{font-size:1.35rem;font-weight:700}
+h3{font-size:1.1rem;font-weight:700}
+p{margin:.5em 0 .8em}
+a{color:var(--teal-2)}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 120px}
+section{scroll-margin-top:70px}
+
+/* top bar */
+.topbar{position:sticky;top:0;z-index:50;background:var(--teal);color:#fff;padding:8px 16px 10px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.topbar-in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:10px}
+.xp{display:flex;align-items:center;gap:6px;font-family:var(--head);font-weight:800;font-size:1.05rem;background:rgba(255,255,255,.12);padding:4px 10px;border-radius:999px;white-space:nowrap}
+.xp .gem{color:var(--amber)}
+.xp.bump{animation:bump .5s}
+@keyframes bump{30%{transform:scale(1.25)}}
+.prog{flex:1;height:12px;background:rgba(255,255,255,.2);border-radius:999px;overflow:hidden;min-width:40px}
+.prog>i{display:block;height:100%;width:0;background:var(--amber);border-radius:999px;transition:width .6s}
+.badgecount{font-size:.9rem;white-space:nowrap;background:rgba(255,255,255,.12);padding:4px 10px;border-radius:999px}
+.toast{position:fixed;left:50%;top:64px;transform:translateX(-50%) translateY(-20px);opacity:0;background:var(--amber);color:#3A2600;font-family:var(--head);font-weight:700;padding:8px 16px;border-radius:999px;z-index:60;transition:.3s;pointer-events:none;box-shadow:var(--shadow);max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* hero */
+.hero{padding:22px 0 6px}
+.kicker{font-family:var(--head);font-weight:700;color:var(--amber-ink);letter-spacing:.04em;text-transform:uppercase;font-size:.85rem}
+.case{background:var(--card);border:2px dashed var(--teal-2);border-radius:var(--r);padding:16px;margin:14px 0;box-shadow:var(--shadow)}
+.steps{margin:.4em 0 0;padding-left:1.2em}
+.steps li{margin-bottom:4px}
+.jump{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 0}
+.jump a{display:flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;background:var(--teal-soft);color:var(--teal);font-family:var(--head);font-weight:700;border-radius:12px;min-height:48px;padding:8px;text-align:center;font-size:.95rem}
+
+/* cards */
+.card{background:var(--card);border-radius:var(--r);padding:18px 16px;margin:18px 0;box-shadow:var(--shadow);border:1px solid var(--line)}
+.dossier-tag{display:inline-block;font-family:var(--head);font-weight:700;font-size:.8rem;color:#fff;background:var(--teal);padding:3px 10px;border-radius:6px;margin-bottom:8px;letter-spacing:.05em}
+.part-head{margin:34px 0 6px}
+.part-head .dossier-tag{background:var(--amber);color:#3A2600}
+.part-head p{color:var(--muted);margin:.2em 0 0;font-size:.95rem}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{border:0;border-radius:14px;padding:12px 16px;min-height:48px;font-family:var(--head);font-weight:700;font-size:1rem;background:var(--teal);color:#fff;box-shadow:0 4px 0 #0A3A3E;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0A3A3E}
+.btn.ghost{background:var(--teal-soft);color:var(--teal);box-shadow:0 4px 0 #C4DAD8}
+.btn.amber{background:var(--amber);color:#3A2600;box-shadow:0 4px 0 #C98422}
+.btn.done{background:var(--ok);box-shadow:0 4px 0 #1F7040}
+.btn.danger{background:var(--bad);box-shadow:0 4px 0 #9E2E2E}
+.btn[disabled]{opacity:.55;cursor:default}
+.btn.small{min-height:44px;padding:8px 12px;font-size:.92rem}
+.btn.wide{width:100%}
+.term{background:none;border:0;padding:0 2px;color:var(--teal);font-weight:700;border-bottom:2px dotted var(--amber);font-size:inherit;line-height:inherit}
+.review ul{margin:.4em 0 .6em;padding-left:1.2em}
+.review li{margin-bottom:6px}
+.readbtn{margin-top:4px}
+.note{font-size:.88rem;color:var(--muted);background:#F1EEE7;border-radius:10px;padding:8px 10px}
+.voicewarn{display:none;margin-top:8px}
+
+/* svg */
+.diagram{background:#F7F4EC;border-radius:14px;padding:8px;margin:10px 0}
+.diagram svg{display:block;width:100%;height:auto;max-width:420px;margin:0 auto}
+.diagram figcaption{font-size:.85rem;color:var(--muted);text-align:center;padding:4px 6px 2px}
+.diagram figure{margin:0}
+
+/* questions */
+.topic-card h3{margin-bottom:2px}
+.topic-card .sub{color:var(--muted);font-size:.9rem;margin:0 0 6px}
+.q{border-top:1px solid var(--line);padding:14px 0 6px}
+h3+.q{border-top:0}
+.qnum{font-family:var(--head);font-weight:700;color:var(--amber-ink);font-size:.8rem;letter-spacing:.04em;text-transform:uppercase}
+.qtext{font-family:var(--head);font-weight:700;font-size:1.08rem;color:var(--ink);margin:.2em 0 .4em}
+.opts{display:grid;gap:10px;margin-top:8px}
+.opt{border:2px solid var(--line);border-bottom-width:4px;background:#fff;border-radius:14px;padding:12px 14px;min-height:52px;text-align:left;font-size:1rem;color:var(--ink);width:100%}
+.opt:active{transform:translateY(2px)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt[disabled]{cursor:default;transform:none}
+.opt.dim{opacity:.6}
+.fb{border-radius:14px;padding:10px 14px;margin-top:10px;display:none;font-size:.97rem;line-height:1.5}
+.fb.ok{display:block;background:var(--ok-soft);border:2px solid var(--ok)}
+.fb.bad{display:block;background:var(--bad-soft);border:2px solid var(--bad)}
+.fb b{font-family:var(--head)}
+.fb.ok b{color:#1F7040}.fb.bad b{color:#A42F2F}
+textarea.ans{width:100%;min-height:84px;font:17px/1.45 var(--body);border:2px solid var(--line);border-radius:12px;padding:10px 12px;background:#FFFDF8;color:var(--ink);resize:vertical;display:block}
+textarea.ans:focus{outline:none;border-color:var(--teal-2)}
+textarea.ans[readonly]{background:#F1EEE7;color:var(--muted)}
+.model{background:var(--amber-soft);border-radius:12px;padding:10px 12px;margin-top:10px;display:none}
+.model.show{display:block}
+.model .lbl{font-family:var(--head);font-weight:700;color:var(--amber-ink);font-size:.85rem}
+.model p{margin:.2em 0 .5em}
+mark{background:#FFD98A;color:inherit;padding:0 3px;border-radius:4px;font-weight:700}
+.self{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:6px}
+.self button{border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;background:#fff;min-height:56px;padding:6px 4px;font-family:var(--head);font-weight:700;font-size:.92rem;line-height:1.2;color:var(--ink)}
+.self button small{display:block;font-family:var(--body);font-weight:400;font-size:.78rem;color:var(--muted)}
+.self button[disabled]{cursor:default;opacity:.45}
+.self button.pick{opacity:1}
+.self button.pick.g1{border-color:var(--ok);background:var(--ok-soft)}
+.self button.pick.g05{border-color:var(--amber);background:#FFF4DF}
+.self button.pick.g0{border-color:var(--bad);background:var(--bad-soft)}
+.selfhint{font-size:.88rem;color:var(--muted);margin:6px 0 0}
+
+/* result */
+.left{font-family:var(--head);font-weight:700;color:var(--teal);font-size:1.1rem}
+.scores{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
+.scores div{background:var(--teal-soft);border-radius:12px;padding:10px 6px;text-align:center}
+.scores .n{font-family:var(--head);font-weight:800;font-size:1.35rem;color:var(--teal);display:block;line-height:1.1}
+.scores small{color:var(--muted);font-size:.8rem}
+.grade{text-align:center;background:var(--amber-soft);border-radius:14px;padding:14px 10px;margin:10px 0}
+.grade .pct{font-family:var(--head);font-weight:800;font-size:1.1rem;color:var(--amber-ink)}
+.grade .big{font-family:var(--head);font-weight:800;font-size:2rem;color:var(--teal);line-height:1.2}
+.grade small{display:block;color:var(--muted);font-size:.78rem;margin-top:6px;line-height:1.35}
+.ttable{width:100%;border-collapse:collapse;font-size:.92rem;margin:10px 0}
+.ttable th,.ttable td{padding:8px 4px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+.ttable th{font-family:var(--head);color:var(--teal);font-size:.85rem}
+.ttable td.num{text-align:right;white-space:nowrap}
+.flag{display:inline-block;background:var(--bad-soft);color:#A42F2F;border-radius:8px;padding:2px 8px;font-size:.8rem;font-weight:700;text-decoration:none;white-space:nowrap}
+.okflag{color:var(--ok);font-weight:700}
+.bigbadge{text-align:center;margin:12px 0}
+.bigbadge .ic{font-size:3rem;display:block;line-height:1.1}
+.bigbadge b{font-family:var(--head);color:var(--teal);font-size:1.1rem}
+.stamp{display:none;margin:22px auto;width:max-content;max-width:100%;white-space:nowrap;border:4px solid var(--bad);color:var(--bad);font-family:var(--head);font-weight:800;font-size:1.05rem;padding:6px 14px;border-radius:10px;transform:rotate(-6deg);letter-spacing:.06em;text-align:center}
+.stamp.show{display:block;animation:stamp .5s}
+#result{overflow:hidden}
+@keyframes stamp{0%{transform:rotate(-6deg) scale(1.8);opacity:0}100%{transform:rotate(-6deg) scale(1);opacity:1}}
+@keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.05)}}
+
+/* sheet / modal */
+.sheet-bg{position:fixed;inset:0;background:rgba(31,42,48,.4);z-index:70;display:none}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:71;background:#fff;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .25s;max-width:760px;margin:0 auto;box-shadow:0 -6px 24px rgba(0,0,0,.15)}
+.sheet.open{transform:translateY(0)}
+.sheet h3{margin-bottom:6px}
+
+/* audio */
+.audiobar{position:fixed;left:0;right:0;bottom:0;z-index:55;background:#fff;border-top:1px solid var(--line);padding:8px 16px calc(8px + env(safe-area-inset-bottom));display:none;box-shadow:0 -4px 16px rgba(0,0,0,.08)}
+.audiobar.show{display:block}
+.audiobar-in{max-width:760px;margin:0 auto;display:flex;gap:8px;align-items:center}
+.audiobar .t{flex:1;font-size:.85rem;color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.audiobar select{font:inherit;font-size:.9rem;padding:6px;border-radius:10px;border:1px solid var(--line);background:#fff;min-height:40px}
+
+details{background:#F7F4EC;border-radius:12px;padding:10px 12px;margin:10px 0}
+summary{font-family:var(--head);font-weight:700;color:var(--teal);cursor:pointer;min-height:32px}
+.src li{font-size:.88rem;margin-bottom:4px;word-break:break-word}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="xp" id="xpBox"><span class="gem">◆</span><span id="xp">0</span> XP</div>
+    <div class="prog" aria-label="Напредък"><i id="progBar"></i></div>
+    <div class="badgecount">Отговорени: <span id="ansCount">0</span> / <span id="ansTotal">60</span></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<main class="wrap">
+
+<header class="hero">
+  <div class="kicker">География и икономика · 6. клас · Входно ниво</div>
+  <h1>Входно ниво: какво помним от 5. клас</h1>
+</header>
+
+<section class="case">
+  <div class="dossier-tag">🔍 ПРОВЕРКА НА УМЕНИЯТА</div>
+  <p style="margin-top:0"><b>Преди първия случай детективът проверява уменията си.</b></p>
+  <ol class="steps">
+    <li><b>Преговор:</b> прочети 10-те кратки карти.</li>
+    <li><b>Част А:</b> тест с избор на отговор.</li>
+    <li><b>Част Б:</b> кратки отговори, които проверяваш сама.</li>
+    <li><b>Резултат:</b> виж оценката си и какво да преговориш.</li>
+  </ol>
+  <div class="jump">
+    <a href="#review">📚 Преговор</a>
+    <a href="#partA">🅰 Тест</a>
+    <a href="#partB">🅱 Отворени</a>
+    <a href="#result">🏁 Резултат</a>
+  </div>
+  <div class="note voicewarn" id="voiceWarn">
+    Телефонът няма български глас за четене. Можеш да го добавиш от настройките на телефона: <i>Език → Преобразуване на текст в говор → Услуги на Google → Инсталиране на гласови данни → Български</i> (пътят може да е малко различен).
+  </div>
+</section>
+
+<!-- ===== REVIEW ===== -->
+<div class="part-head" id="review">
+  <div class="dossier-tag">📚 ПРЕГОВОР</div>
+  <h2>Бърз преговор</h2>
+  <p>По една карта за всяка тема. Думите с <span class="term" style="pointer-events:none">точки отдолу</span> показват обяснение при докосване.</p>
+</div>
+<div id="reviewCards"></div>
+
+<!-- ===== PART A ===== -->
+<div class="part-head" id="partA">
+  <div class="dossier-tag">🅰 ЧАСТ А · ТЕСТ</div>
+  <h2>Избери верния отговор</h2>
+  <p>Всеки въпрос носи 1 точка. Внимавай: след като избереш, отговорът не може да се смени.</p>
+</div>
+<div id="partAList"></div>
+
+<!-- ===== PART B ===== -->
+<div class="part-head" id="partB">
+  <div class="dossier-tag">🅱 ЧАСТ Б · ОТВОРЕНИ ВЪПРОСИ</div>
+  <h2>Напиши кратък отговор</h2>
+  <p>Отговори с една дума или 1–2 изречения. След „Готово“ сравни с примерния отговор и се оцени честно: вярно (1 т.), частично (0,5 т.) или грешно (0 т.).</p>
+</div>
+<div id="partBList"></div>
+
+<!-- ===== RESULT ===== -->
+<section class="card" id="result">
+  <div class="dossier-tag">🏁 РЕЗУЛТАТ</div>
+  <h2>Докладът на детектива</h2>
+  <div id="resultBody"></div>
+</section>
+
+<section class="card" style="text-align:center">
+  <button class="btn ghost wide" id="resetBtn">🔄 Започни отначало</button>
+  <p class="note" style="margin-top:10px;text-align:left">Изтрива всички отговори, точки и XP. Въпросите и отговорите се разбъркват наново.</p>
+</section>
+
+<section class="card">
+  <details>
+    <summary>👤 За родителя</summary>
+    <p style="font-size:.92rem">Входното ниво е по темите от учебника „География и икономика“ за 5. клас на издателство Анубис. Снимки от учебника не са използвани, затова обхватът е съставен по публичното описание на съдържанието му. Проверява само основни понятия, факти и работа с карта. Няма точни числа за наизустяване. Оценката е ориентировъчна: част Б се самооценява от детето.</p>
+    <ul class="src">
+      <li><a href="https://www.book.store.bg/c/p-pc/id-15931/geografia-i-ikonomika-za-5-klas-anubis.html" target="_blank" rel="noopener">География и икономика за 5. клас, Анубис (описание на съдържанието)</a></li>
+      <li><a href="https://www.prosveta.bg/katalog/katalog-za-7-6-5-klas/geografiya-i-ikonomika-7-6-5-klas" target="_blank" rel="noopener">Просвета: География и икономика 5.–7. клас</a></li>
+      <li><a href="https://mon.bg/obshto-obrazovanie/uchebni-planove-i-programi-2/arhiv-na-uchebni-programi-po-klasove/uchebni-programi-za-v-klas/" target="_blank" rel="noopener">МОН: Учебни програми за V клас</a></li>
+    </ul>
+  </details>
+</section>
+
+</main>
+
+<div class="audiobar" id="audiobar">
+  <div class="audiobar-in">
+    <button class="btn small" id="aPause">⏸</button>
+    <button class="btn ghost small" id="aStop">⏹</button>
+    <span class="t" id="aText">Чета…</span>
+    <select id="aRate" aria-label="Скорост"><option value="0.8">0.8×</option><option value="1" selected>1×</option><option value="1.2">1.2×</option></select>
+  </div>
+</div>
+
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet"><h3 id="sheetT"></h3><p id="sheetD" style="margin:0 0 12px"></p><button class="btn ghost small" id="sheetClose">Разбрах</button></div>
+
+<div class="sheet-bg" id="confirmBg"></div>
+<div class="sheet" id="confirm" role="dialog" aria-modal="true">
+  <h3>Сигурна ли си?</h3>
+  <p style="margin:0 0 14px">Всички отговори ще се изтрият.</p>
+  <div class="row"><button class="btn danger" id="confirmYes">Да, изтрий</button><button class="btn ghost" id="confirmNo">Отказ</button></div>
+</div>
+
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+
+/* ================= GLOSSARY ================= */
+var G={
+  horizon:['Хоризонт','Линията, където небето сякаш се допира до земята. Колкото по-високо се качиш, толкова по-далеч е хоризонтът.'],
+  compass:['Компас','Уред за ориентиране. Магнитната му стрелка винаги сочи север.'],
+  polaris:['Полярна звезда','Звезда, която нощем показва посоката север. Лесно се намира с помощта на съзвездието Голямата мечка.'],
+  globe:['Глобус','Умален модел на Земята във формата на кълбо.'],
+  map:['Географска карта','Умалено изображение на цялата земна повърхност или на част от нея върху равна повърхност, с условни знаци.'],
+  scale:['Мащаб','Показва колко пъти разстоянията на картата са по-малки от истинските. Например 1 см на картата може да е 10 км в природата.'],
+  legend:['Легенда','Каре на картата, в което са обяснени условните знаци.'],
+  signs:['Условни знаци','Цветове, линии и значки, с които картата показва реки, градове, върхове, пътища и други обекти.'],
+  parallel:['Паралел','Кръг около Земята, успореден на Екватора. Паралелите вървят от запад на изток.'],
+  meridian:['Меридиан','Линия по повърхността на Земята от Северния до Южния полюс.'],
+  equator:['Екватор','Най-големият паралел, 0°. Дели Земята на Северно и Южно полукълбо.'],
+  greenwich:['Гринуички меридиан','Началният меридиан, 0°. Минава през Гринуич, част от Лондон. Дели Земята на Западно и Източно полукълбо.'],
+  lat:['Географска ширина','Колко градуса на север или на юг от Екватора е едно място (от 0° до 90°).'],
+  lon:['Географска дължина','Колко градуса на изток или на запад от Гринуичкия меридиан е едно място (от 0° до 180°).'],
+  coords:['Географски координати','Географската ширина и дължина заедно. По тях се намира точното място на всяка точка на Земята.'],
+  axis:['Земна ос','Въображаема линия през центъра на Земята, която свързва двата полюса. Около нея Земята се върти.'],
+  tropic:['Тропици','Два паралела: Северната и Южната тропична окръжност. Между тях е горещият пояс.'],
+  polarc:['Полярни окръжности','Два паралела близо до полюсите. След тях започват студените пояси с полярен ден и полярна нощ.'],
+  crust:['Земна кора','Най-горният, твърд и тънък слой на Земята. На него живеем.'],
+  mantle:['Мантия','Дебелият и много горещ слой под земната кора.'],
+  core:['Ядро','Централната и най-гореща част на Земята.'],
+  relief:['Релеф','Всички неравности на земната повърхност: планини, равнини, котловини, долини.'],
+  volcano:['Вулкан','Място, откъдето от вътрешността на Земята излизат лава, газове и пепел.'],
+  quake:['Земетресение','Внезапно разтърсване на земната повърхност, причинено от вътрешните сили на Земята.'],
+  minerals:['Полезни изкопаеми','Природни богатства в земната кора, които хората използват: въглища, нефт, газ, руди, сол, мрамор.'],
+  atmo:['Атмосфера','Въздушната обвивка на Земята. В нея се образуват времето и климатът.'],
+  weather:['Време','Състоянието на атмосферата на едно място сега или за кратко: час, ден, няколко дни.'],
+  climate:['Климат','Обичайното време на едно място, наблюдавано в продължение на много години.'],
+  hydro:['Хидросфера','Водната обвивка на Земята: океани, морета, реки, езера, подземни води и ледници.'],
+  bay:['Залив','Част от морето или океана, която навлиза навътре в сушата.'],
+  strait:['Проток','Тясна водна ивица между две части суша. Свързва две морета или океана.'],
+  island:['Остров','Част от сушата, заобиколена от вода от всички страни.'],
+  peninsula:['Полуостров','Суша, заобиколена от вода от три страни. С четвъртата страна е свързана със сушата.'],
+  source:['Извор','Мястото, откъдето започва реката.'],
+  mouth:['Устие','Мястото, където реката се влива в море, океан, езеро или в друга река.'],
+  tributary:['Приток','Река, която се влива в друга, по-голяма река.'],
+  glacier:['Ледник','Голяма маса лед, образувана от натрупан сняг. В ледниците е събрана най-много сладка вода.'],
+  soil:['Почва','Горният рохкав слой на земята, в който растат растенията.'],
+  humus:['Хумус','Тъмната част на почвата, образувана от изгнили растения и животни. Прави почвата плодородна.'],
+  zone:['Природна зона','Голяма територия с подобен климат, почви, растения и животни.'],
+  savanna:['Савана','Тревиста равнина с отделни дървета в горещите области. Там има дъждовен и сух сезон.'],
+  density:['Гъстота на населението','Колко души живеят средно на 1 км² площ.'],
+  settlement:['Селище','Място, където хората живеят постоянно: град или село.'],
+  state:['Държава','Територия с граници, население и власт, която я управлява. Главният ѝ град е столицата.'],
+  politmap:['Политическа карта','Карта, която показва държавите, техните граници и столици.'],
+  economy:['Стопанство (икономика)','Всички дейности, с които хората произвеждат храна, стоки и услуги.'],
+  services:['Услуги','Дейности, които не произвеждат вещи, а помагат на хората: транспорт, търговия, туризъм, образование, лечение.'],
+  suez:['Суецки канал','Изкуствен воден път в Египет. Свързва Средиземно и Червено море и отделя Африка от Азия.'],
+  gibraltar:['Гибралтарски проток','Тесен проток между Африка и Европа. Свързва Средиземно море с Атлантическия океан.']
+};
+
+/* ================= TOPICS + REVIEW ================= */
+/* [[дума|ключ]] става термин с изскачащо обяснение */
+var TOPICS=[
+ {id:'t1',ic:'🧭',n:'Географията и ориентирането',pts:[
+   'Географията изучава Земята: природата ѝ, хората и как живеят и работят те. Името идва от гръцки и значи „описание на Земята“.',
+   'Четирите <b>основни посоки</b> са север, юг, изток и запад. Между тях са междинните посоки, например североизток и югозапад.',
+   '[[Хоризонт|horizon]] е линията, където небето сякаш се допира до земята.',
+   'Ориентираме се с [[компас|compass]] (стрелката сочи север), по Слънцето (изгрява на изток, залязва на запад) и нощем по [[Полярната звезда|polaris]], която показва север.'
+ ]},
+ {id:'t2',ic:'🗺️',n:'Глобус и географска карта',pts:[
+   '[[Глобусът|globe]] е умален модел на Земята. Показва вярно формата ѝ, но не е удобен за носене и няма много подробности.',
+   '[[Географската карта|map]] изобразява Земята или част от нея върху равна повърхност. Може да се сгъне и показва повече подробности.',
+   '[[Мащабът|scale]] показва колко пъти разстоянията на картата са умалени спрямо истинските.',
+   '[[Условните знаци|signs]] са обяснени в [[легендата|legend]]. На физическата карта синьото е вода, зеленото е ниска земя, а жълтото и кафявото са все по-високи места и планини.',
+   'Физическата карта показва природата (планини, реки), а политическата показва държавите и границите им.'
+ ]},
+ {id:'t3',ic:'🌐',n:'Градусна мрежа',svg:true,pts:[
+   '[[Паралелите|parallel]] са кръгове, успоредни на Екватора. [[Екваторът|equator]] е 0° и дели Земята на Северно и Южно полукълбо. Полюсите са на 90°.',
+   '[[Меридианите|meridian]] свързват Северния и Южния полюс. Началният е [[Гринуичкият меридиан|greenwich]] (0°). Той дели Земята на Западно и Източно полукълбо.',
+   '[[Географската ширина|lat]] е северна или южна, а [[географската дължина|lon]] е източна или западна. Двете заедно са [[географските координати|coords]] на едно място.',
+   'България е в Северното и в Източното полукълбо.'
+ ]},
+ {id:'t4',ic:'🌍',n:'Планетата Земя',pts:[
+   'Земята е третата планета от Слънцето. Тя е кълбо, леко сплеснато при полюсите. Нейният естествен спътник е Луната.',
+   'Земята се върти около [[оста си|axis]] за едно денонощие (24 часа). Така се сменят денят и нощта.',
+   'Земята обикаля около Слънцето за една година. Оста ѝ е наклонена, затова има годишни времена (сезони).',
+   'Пояси на осветеност: горещ (между [[тропиците|tropic]]), два умерени и два студени (след [[полярните окръжности|polarc]]).',
+   'Земята има три основни слоя: [[земна кора|crust]] отгоре, [[мантия|mantle]] и [[ядро|core]] в центъра.'
+ ]},
+ {id:'t5',ic:'⛰️',n:'Релеф и полезни изкопаеми',pts:[
+   '[[Релефът|relief]] са всички неравности на земната повърхност. Основните форми са <b>планини</b> и <b>равнини</b>. Има още котловини, долини и плата.',
+   'Вътрешните сили на Земята издигат планини и предизвикват [[вулкани|volcano]] и [[земетресения|quake]].',
+   'Външните сили (вода, вятър, лед, слънце) бавно рушат скалите и изглаждат релефа.',
+   '[[Полезните изкопаеми|minerals]] са природни богатства: горивни (въглища, нефт, природен газ), рудни (руди на желязо, мед) и нерудни (сол, мрамор, пясък).'
+ ]},
+ {id:'t6',ic:'🌦️',n:'Климат',pts:[
+   '[[Атмосферата|atmo]] е въздушната обвивка на Земята. В нея се образува времето.',
+   '[[Времето|weather]] е какво е навън сега или днес. [[Климатът|climate]] е обичайното време на едно място за много години.',
+   'Елементи на времето: температура (мери се с термометър), валежи, вятър, атмосферно налягане (с барометър) и влажност.',
+   'Климатични пояси: екваториален (горещо и влажно), тропичен (горещо и сухо), умерен (четири сезона, в него е България) и полярен (много студено).'
+ ]},
+ {id:'t7',ic:'🌊',n:'Води',pts:[
+   '[[Хидросферата|hydro]] са всички води на Земята. Повечето е солена вода в Световния океан.',
+   'Най-големият океан е Тихият. Другите са Атлантическият, Индийският и Северният ледовит.',
+   'Части от океана са морета, [[заливи|bay]] и [[протоци|strait]]. Суша във водата са [[островите|island]] и [[полуостровите|peninsula]].',
+   'Реката започва от [[извор|source]] и завършва с [[устие|mouth]]. Реките, които се вливат в нея, са нейни [[притоци|tributary]].',
+   'Водите на сушата са реки, езера, подземни води и [[ледници|glacier]]. В ледниците е най-много сладка вода.'
+ ]},
+ {id:'t8',ic:'🌳',n:'Почви, растения, животни',pts:[
+   '[[Почвата|soil]] е горният слой на земята, в който растат растенията. [[Хумусът|humus]] я прави плодородна.',
+   'Растенията и животните зависят най-много от климата, тоест от топлината и влагата.',
+   '[[Природната зона|zone]] е голяма територия с подобен климат, почви, растения и животни.',
+   'От Екватора към полюсите: влажни екваториални гори → [[савани|savanna]] → пустини → степи и широколистни гори → иглолистни гори (тайга) → тундра → ледени пустини.'
+ ]},
+ {id:'t9',ic:'🏙️',n:'Население, държави и стопанство',pts:[
+   'На Земята живеят над 8 милиарда души. Живеят гъсто в равнините край реки и морета и рядко в пустините, високите планини и студените области.',
+   '[[Гъстотата на населението|density]] показва колко души живеят средно на 1 км².',
+   '[[Селищата|settlement]] са градове и села. [[Държавата|state]] има граници, население, власт и столица. [[Политическата карта|politmap]] показва държавите.',
+   '[[Стопанството|economy]] включва селско стопанство (земеделие и животновъдство), промишленост и [[услуги|services]] (транспорт, търговия, туризъм).'
+ ]},
+ {id:'t10',ic:'🦁',n:'Африка',pts:[
+   'Африка е вторият по големина континент след Евразия. Екваторът минава почти през средата ѝ.',
+   'Мият я Атлантическият и Индийският океан, Средиземно и Червено море. От Европа я отделя [[Гибралтарският проток|gibraltar]], а от Азия я отделя [[Суецкият канал|suez]].',
+   'Сахара е най-голямата гореща пустиня на света. Нил е най-дългата река в Африка. Най-високият връх е Килиманджаро, който е вулкан.',
+   'Природните зони се повтарят на север и на юг от Екватора. В саваните живеят лъвове, слонове, жирафи и зебри.'
+ ]}
+];
+
+/* ================= QUESTIONS ================= */
+/* Част А: o[0] винаги е верният отговор (разбърква се при показване) */
+var QA={
+ t1:[
+  {q:'Към коя посока сочи стрелката на компаса?',o:['Север','Изток','Юг'],e:'Магнитната стрелка на компаса винаги сочи север.'},
+  {q:'От коя посока изгрява Слънцето?',o:['От изток','От запад','От север'],e:'Слънцето изгрява на изток и залязва на запад.'},
+  {q:'Коя звезда показва посоката север нощем?',o:['Полярната звезда','Слънцето','Вечерница'],e:'Полярната звезда е почти точно над Северния полюс, затова показва север.'}
+ ],
+ t2:[
+  {q:'Какво е глобусът?',o:['Умален модел на Земята','Снимка на Земята от космоса','Карта на един град'],e:'Глобусът е умален модел на Земята във формата на кълбо.'},
+  {q:'Къде на картата са обяснени условните знаци?',o:['В легендата','В мащаба','В заглавието'],e:'Легендата е карето, което обяснява какво значи всеки знак и цвят.'},
+  {q:'Какво показва мащабът на картата?',o:['Колко пъти са умалени разстоянията','Каква е температурата','Колко хора живеят там'],e:'Мащабът показва колко пъти разстоянията на картата са по-малки от истинските.'},
+  {q:'С какъв цвят обикновено са водите на физическата карта?',o:['Син','Кафяв','Зелен'],e:'Океаните, моретата, реките и езерата се оцветяват в синьо.'}
+ ],
+ t3:[
+  {q:'Колко градуса е Екваторът?',o:['0°','90°','180°'],e:'Екваторът е началният паралел и е 0°.'},
+  {q:'Какво свързват меридианите?',o:['Двата полюса','Екватора и тропиците','Две съседни държави'],e:'Всеки меридиан е линия от Северния до Южния полюс.'},
+  {q:'Кой е началният меридиан (0°)?',o:['Гринуичкият','Екваторът','Полярната окръжност'],e:'Гринуичкият меридиан е 0°. Екваторът е паралел, не меридиан.'},
+  {q:'В кои полукълба е България?',o:['В Северното и Източното','В Южното и Западното','В Северното и Западното'],e:'България е на север от Екватора и на изток от Гринуичкия меридиан.'}
+ ],
+ t4:[
+  {q:'Защо се сменят денят и нощта?',o:['Земята се върти около оста си','Земята обикаля около Слънцето','Луната закрива Слънцето'],e:'Въртенето около оста за 24 часа сменя деня и нощта.'},
+  {q:'За колко време Земята обикаля около Слънцето?',o:['За една година','За едно денонощие','За един месец'],e:'Една обиколка около Слънцето трае една година.'},
+  {q:'Какво е Луната?',o:['Естественият спътник на Земята','Звезда','Най-близката планета'],e:'Луната обикаля около Земята. Тя е нейният естествен спътник.'},
+  {q:'Кой слой е в центъра на Земята?',o:['Ядрото','Земната кора','Мантията'],e:'Ядрото е в центъра. Кората е отгоре, а мантията е между тях.'}
+ ],
+ t5:[
+  {q:'Как се нарича голяма и висока издигната част от сушата?',o:['Планина','Равнина','Котловина'],e:'Планината е висока издигната част от сушата.'},
+  {q:'Как се нарича обширна и почти равна земя?',o:['Равнина','Планина','Вулкан'],e:'Равнината е голяма и почти равна територия.'},
+  {q:'Кое от тези е полезно изкопаемо?',o:['Нефтът','Дървото','Пшеницата'],e:'Нефтът се добива от земните недра. Дървото и пшеницата са растения.'},
+  {q:'Кои сили предизвикват вулкани и земетресения?',o:['Вътрешните сили на Земята','Вятърът','Дъждът'],e:'Вулканите и земетресенията идват от силите във вътрешността на Земята.'}
+ ],
+ t6:[
+  {q:'Кое изречение описва ВРЕМЕТО, а не климата?',o:['„Днес вали силен дъжд.“','„Тук зимите обикновено са студени.“','„В пустинята почти никога не вали.“'],e:'„Днес“ е кратък момент, значи това е времето. Другите две описват климата.'},
+  {q:'С какъв уред се измерва температурата на въздуха?',o:['Термометър','Барометър','Компас'],e:'Термометърът мери температурата. Барометърът мери налягането.'},
+  {q:'Как се нарича въздушната обвивка на Земята?',o:['Атмосфера','Хидросфера','Земна кора'],e:'Атмосферата е въздушната обвивка. Хидросферата е водната.'},
+  {q:'В кой климатичен пояс е България?',o:['Умерения','Екваториалния','Полярния'],e:'България е в умерения пояс. Затова има четири сезона.'}
+ ],
+ t7:[
+  {q:'Кой е най-големият океан?',o:['Тихият','Атлантическият','Индийският'],e:'Тихият океан е най-големият и най-дълбокият.'},
+  {q:'Как се нарича мястото, откъдето започва реката?',o:['Извор','Устие','Приток'],e:'Реката започва от извора и завършва с устието.'},
+  {q:'Как се нарича суша, заобиколена от вода от всички страни?',o:['Остров','Полуостров','Залив'],e:'Островът е заобиколен от вода от всички страни. Полуостровът е заобиколен само от три.'},
+  {q:'Как се нарича тясна водна ивица между две части суша?',o:['Проток','Залив','Езеро'],e:'Протокът е тесен и свързва две морета или океана.'}
+ ],
+ t8:[
+  {q:'Коя част от почвата я прави плодородна?',o:['Хумусът','Пясъкът','Камъните'],e:'Хумусът се образува от изгнили растения и животни и храни растенията.'},
+  {q:'Коя природна зона е гореща и много суха?',o:['Пустинята','Тундрата','Екваториалната гора'],e:'В пустинята почти не вали и през деня е много горещо.'},
+  {q:'Къде растат гъсти вечнозелени гори и вали почти всеки ден?',o:['Във влажните екваториални гори','В тундрата','В степта'],e:'Край Екватора е горещо и влажно целогодишно, затова горите са гъсти.'}
+ ],
+ t9:[
+  {q:'Как се нарича главният град на една държава?',o:['Столица','Село','Пристанище'],e:'Столицата е главният град. Столицата на България е София.'},
+  {q:'Какво показва политическата карта?',o:['Държавите и техните граници','Планините и равнините','Климатичните пояси'],e:'Политическата карта показва държавите, границите и столиците.'},
+  {q:'Кое от тези е услуга?',o:['Туризмът','Добивът на въглища','Отглеждането на пшеница'],e:'Туризмът е услуга. Добивът е промишленост, а пшеницата е селско стопанство.'}
+ ],
+ t10:[
+  {q:'Коя е най-голямата пустиня в Африка?',o:['Сахара','Гоби','Атакама'],e:'Сахара е в Северна Африка и е най-голямата гореща пустиня на света.'},
+  {q:'Коя е най-дългата река в Африка?',o:['Нил','Конго','Дунав'],e:'Нил тече на север и се влива в Средиземно море.'},
+  {q:'Кой е най-високият връх в Африка?',o:['Килиманджаро','Еверест','Мусала'],e:'Килиманджаро е вулкан. Еверест е в Азия, а Мусала е в България.'}
+ ]
+};
+/* Част Б: **...** се показва като маркирана ключова дума */
+var QB={
+ t1:[
+  {q:'Какво е хоризонт?',a:'Линията, където **небето** сякаш **се допира до земята**.'},
+  {q:'Назови четирите основни посоки.',a:'**Север**, **юг**, **изток** и **запад**.'}
+ ],
+ t2:[
+  {q:'Каква е разликата между глобус и карта?',a:'Глобусът е **умален модел** на Земята във форма на **кълбо**, а картата е изображение върху **равна повърхност**.'},
+  {q:'Защо при пътуване картата е по-удобна от глобуса?',a:'Картата може да се **сгъне** и носи лесно и показва **повече подробности**.'}
+ ],
+ t3:[
+  {q:'На кои две полукълба Екваторът дели Земята?',a:'На **Северно** и **Южно** полукълбо.'},
+  {q:'Каква е разликата между паралел и меридиан?',a:'Паралелите са кръгове, **успоредни на Екватора**, а меридианите са линии, които **свързват двата полюса**.'},
+  {q:'Какво са географските координати?',a:'Географската **ширина** и географската **дължина** на едно място. Те показват **точното му положение**.'}
+ ],
+ t4:[
+  {q:'Назови трите основни слоя на Земята.',a:'**Земна кора**, **мантия** и **ядро**.'},
+  {q:'Защо на Земята има годишни времена?',a:'Защото Земята **обикаля около Слънцето**, а оста ѝ е **наклонена**.'},
+  {q:'Колко часа трае едно денонощие?',a:'**24 часа**.'}
+ ],
+ t5:[
+  {q:'Какво е релеф?',a:'Всички **неравности** на земната повърхност: **планини**, **равнини**, котловини и др.'},
+  {q:'Назови едно полезно изкопаемо и за какво се използва.',a:'Например **въглища** за **гориво** и ток, **нефт** за бензин или **сол** за храна. Всеки верен пример е добър.'}
+ ],
+ t6:[
+  {q:'Каква е разликата между време и климат?',a:'Времето е какво е навън **сега или днес**, а климатът е обичайното време за **много години**.'},
+  {q:'Назови два елемента на времето.',a:'Два от тези: **температура**, **валежи**, **вятър**, **налягане**, **влажност**.'},
+  {q:'С какъв уред се измерва атмосферното налягане?',a:'С **барометър**.'}
+ ],
+ t7:[
+  {q:'Как се нарича мястото, където реката се влива в море, езеро или друга река?',a:'**Устие**.'},
+  {q:'Какво е полуостров?',a:'Суша, заобиколена от **вода от три страни** и свързана със сушата от четвъртата.'},
+  {q:'Къде на Земята има най-много сладка вода?',a:'В **ледниците**.'}
+ ],
+ t8:[
+  {q:'Какво е природна зона?',a:'Голяма територия с **подобен климат**, **почви**, **растения и животни**.'},
+  {q:'Назови едно животно от саваната.',a:'Например **лъв**, **слон**, **жираф** или **зебра**.'}
+ ],
+ t9:[
+  {q:'Назови двата вида селища.',a:'**Град** и **село**.'},
+  {q:'Назови един отрасъл на стопанството.',a:'Например **земеделие**, **животновъдство**, **промишленост**, **транспорт**, **търговия** или **туризъм**.'}
+ ],
+ t10:[
+  {q:'Коя важна линия минава почти през средата на Африка?',a:'**Екваторът**.'},
+  {q:'Какво отделя Африка от Азия?',a:'**Суецкият канал**.'}
+ ]
+};
+
+var NA=0,NB=0;TOPICS.forEach(function(t){NA+=QA[t.id].length;NB+=QB[t.id].length});
+var TOTAL=NA+NB;
+
+/* ================= STATE ================= */
+var KEY='geo6-vhodno-v1';
+function freshState(){
+  var s={xp:0,read:{},ordA:{},ordB:{},opt:{},A:{},B:{}};
+  TOPICS.forEach(function(t){
+    s.ordA[t.id]=shuffle(range(QA[t.id].length));
+    s.ordB[t.id]=shuffle(range(QB[t.id].length));
+    QA[t.id].forEach(function(q,i){s.opt[t.id+'-'+i]=shuffle(range(q.o.length))});
+  });
+  return s;
+}
+function range(n){var a=[];for(var i=0;i<n;i++)a.push(i);return a}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function load(){
+  try{var raw=sessionStorage.getItem(KEY);if(raw){var s=JSON.parse(raw);if(s&&s.ordA&&s.opt&&s.A&&s.B)return s}}catch(e){}
+  return freshState();
+}
+function save(){try{sessionStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+var S=load();
+
+/* ================= HELPERS ================= */
+function toast(msg){var t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('show')},1600)}
+function addXP(n,msg){S.xp+=n;save();$('#xp').textContent=S.xp;var b=$('#xpBox');b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump');toast('+'+n+' XP'+(msg?' · '+msg:''))}
+function termify(s){return s.replace(/\[\[([^|\]]+)\|([a-z0-9]+)\]\]/g,'<button class="term" data-t="$2">$1</button>')}
+function marks(s){return s.replace(/\*\*(.+?)\*\*/g,'<mark>$1</mark>')}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+function fmt(n){return (Math.round(n*10)/10).toLocaleString('bg-BG',{maximumFractionDigits:1})}
+function answeredA(){return Object.keys(S.A).length}
+function answeredB(){var n=0;Object.keys(S.B).forEach(function(k){if(S.B[k].g!=null)n++});return n}
+function answered(){return answeredA()+answeredB()}
+
+/* ================= SVG: градусна мрежа ================= */
+var SVG='<figure class="diagram"><svg viewBox="0 0 320 260" role="img" aria-label="Схема на паралели и меридиани">'+
+ '<defs><clipPath id="gl"><circle cx="130" cy="130" r="100"/></clipPath></defs>'+
+ '<circle cx="130" cy="130" r="100" fill="#CFE6EE" stroke="#1B6F75" stroke-width="2"/>'+
+ '<g clip-path="url(#gl)" fill="none">'+
+  '<g stroke="#7A5BA8" stroke-width="1.2">'+
+   '<ellipse cx="130" cy="80" rx="87" ry="10"/><ellipse cx="130" cy="180" rx="87" ry="10"/>'+
+   '<ellipse cx="130" cy="45" rx="56" ry="6"/><ellipse cx="130" cy="215" rx="56" ry="6"/></g>'+
+  '<g stroke="#2F6B3F" stroke-width="1.2">'+
+   '<ellipse cx="130" cy="130" rx="70" ry="100"/><ellipse cx="130" cy="130" rx="36" ry="100"/></g>'+
+  '<line x1="130" y1="30" x2="130" y2="230" stroke="#2E9E5B" stroke-width="3"/>'+
+  '<ellipse cx="130" cy="130" rx="100" ry="14" stroke="#D64545" stroke-width="3"/>'+
+ '</g>'+
+ '<circle cx="130" cy="30" r="4" fill="#1F2A30"/><circle cx="130" cy="230" r="4" fill="#1F2A30"/>'+
+ '<g font-family="system-ui,Roboto,sans-serif" font-size="11" font-weight="700">'+
+  '<text x="140" y="18" fill="#1F2A30">Северен полюс 90°</text>'+
+  '<text x="140" y="252" fill="#1F2A30">Южен полюс 90°</text>'+
+  '<line x1="232" y1="130" x2="238" y2="130" stroke="#D64545" stroke-width="2"/>'+
+  '<text x="242" y="128" fill="#C23B35">Екватор</text><text x="242" y="142" fill="#C23B35">0°</text>'+
+  '<text x="242" y="84" fill="#6A4A98">паралел</text>'+
+  '<line x1="216" y1="80" x2="238" y2="80" stroke="#7A5BA8" stroke-width="1" stroke-dasharray="3 2"/>'+
+  '<text x="242" y="190" fill="#2F6B3F">меридиан</text>'+
+  '<line x1="198" y1="160" x2="238" y2="186" stroke="#2F6B3F" stroke-width="1" stroke-dasharray="3 2"/>'+
+  '<text x="2" y="50" fill="#5B6870" font-weight="600">↑ Северно</text>'+
+  '<text x="2" y="218" fill="#5B6870" font-weight="600">↓ Южно</text>'+
+ '</g>'+
+ '<text x="136" y="68" font-family="system-ui,Roboto,sans-serif" font-size="10" font-weight="700" fill="#1F7040" transform="rotate(90 136 68)">Гринуич 0°</text>'+
+ '</svg><figcaption>Червено: Екваторът (0°). Зелено: Гринуичкият меридиан (0°). Лилави кръгове: паралели. Зелени дъги: меридиани.</figcaption></figure>';
+
+/* ================= RENDER: REVIEW ================= */
+function renderReview(){
+  $('#reviewCards').innerHTML=TOPICS.map(function(t,i){
+    var done=!!S.read[t.id];
+    return '<section class="card review" id="r-'+t.id+'"><div class="dossier-tag">КАРТА '+(i+1)+'</div>'+
+      '<h3>'+t.ic+' '+t.n+'</h3>'+
+      '<div class="row"><button class="btn ghost small" data-read="r-'+t.id+'-text">🔊 Чуй</button></div>'+
+      '<div id="r-'+t.id+'-text"><ul>'+t.pts.map(function(p){return '<li>'+termify(p)+'</li>'}).join('')+'</ul></div>'+
+      (t.svg?SVG:'')+
+      '<button class="btn readbtn'+(done?' done':'')+'" data-done="'+t.id+'"'+(done?' disabled':'')+'>'+(done?'✓ Прочетено':'✓ Прочетох · +5 XP')+'</button>'+
+      '</section>';
+  }).join('');
+}
+
+/* ================= RENDER: PART A ================= */
+var FB_OK=['Браво!','Точно!','Вярно!','Отлично, детективе!'],FB_BAD=['Не съвсем.','Почти…','Опа!'];
+function renderA(){
+  var n=0;
+  $('#partAList').innerHTML=TOPICS.map(function(t,ti){
+    var qs=S.ordA[t.id].map(function(qi){
+      n++;var id=t.id+'-'+qi,Q=QA[t.id][qi],ord=S.opt[id];
+      return '<div class="q" data-qa="'+id+'"><div class="qnum">Въпрос '+n+'</div><p class="qtext">'+Q.q+'</p><div class="opts">'+
+        ord.map(function(oi){return '<button class="opt" data-o="'+oi+'">'+Q.o[oi]+'</button>'}).join('')+
+        '</div><div class="fb"></div></div>';
+    }).join('');
+    return '<section class="card topic-card" id="a-'+t.id+'"><div class="dossier-tag">ТЕМА '+(ti+1)+'</div><h3>'+t.ic+' '+t.n+'</h3>'+qs+'</section>';
+  }).join('');
+  $$('[data-qa]').forEach(function(box){
+    var id=box.getAttribute('data-qa');
+    if(S.A[id]!=null)paintA(box,id,S.A[id],false);
+    $$('.opt',box).forEach(function(b){b.addEventListener('click',function(){
+      if(S.A[id]!=null)return;
+      var oi=+b.getAttribute('data-o');S.A[id]=oi;save();
+      paintA(box,id,oi,true);
+      if(oi===0)addXP(10);
+      update();
+    })});
+  });
+}
+function paintA(box,id,oi,fresh){
+  var p=id.split('-'),Q=QA[p[0]][+p[1]],fb=$('.fb',box);
+  $$('.opt',box).forEach(function(x){var k=+x.getAttribute('data-o');x.disabled=true;
+    if(k===0)x.classList.add('right');else if(k===oi)x.classList.add('wrong');else x.classList.add('dim')});
+  if(oi===0){fb.className='fb ok';fb.innerHTML='<b>'+(fresh?FB_OK[Math.floor(Math.random()*FB_OK.length)]:'Вярно!')+'</b> '+Q.e}
+  else{fb.className='fb bad';fb.innerHTML='<b>'+(fresh?FB_BAD[Math.floor(Math.random()*FB_BAD.length)]:'Грешно.')+'</b> Верният отговор е „'+Q.o[0]+'“. '+Q.e}
+}
+
+/* ================= RENDER: PART B ================= */
+var GR={'1':{c:'g1',t:'✓ Вярно'},'0.5':{c:'g05',t:'≈ Частично'},'0':{c:'g0',t:'✗ Грешно'}};
+function renderB(){
+  var n=0;
+  $('#partBList').innerHTML=TOPICS.map(function(t,ti){
+    var qs=S.ordB[t.id].map(function(qi){
+      n++;var id=t.id+'-'+qi,Q=QB[t.id][qi];
+      return '<div class="q" data-qb="'+id+'"><div class="qnum">Въпрос '+n+'</div><p class="qtext">'+Q.q+'</p>'+
+        '<textarea class="ans" rows="2" placeholder="Напиши отговора си тук…" aria-label="Отговор"></textarea>'+
+        '<div class="row" style="margin-top:8px"><button class="btn small bdone" disabled>Готово</button></div>'+
+        '<div class="model"><div class="lbl">ПРИМЕРЕН ОТГОВОР</div><p>'+marks(Q.a)+'</p>'+
+        '<div class="lbl">Как се справи? Сравни ключовите думи.</div>'+
+        '<div class="self"><button data-g="1">✓ Вярно<small>1 т.</small></button><button data-g="0.5">≈ Частично<small>0,5 т.</small></button><button data-g="0">✗ Грешно<small>0 т.</small></button></div>'+
+        '<p class="selfhint"></p></div></div>';
+    }).join('');
+    return '<section class="card topic-card" id="b-'+t.id+'"><div class="dossier-tag">ТЕМА '+(ti+1)+'</div><h3>'+t.ic+' '+t.n+'</h3>'+qs+'</section>';
+  }).join('');
+  $$('[data-qb]').forEach(function(box){
+    var id=box.getAttribute('data-qb'),ta=$('textarea',box),db=$('.bdone',box);
+    var st=S.B[id];
+    if(st){ta.value=st.txt||''; if(st.done)lockB(box,id); }
+    db.disabled=!ta.value.trim()||!!(st&&st.done);
+    ta.addEventListener('input',function(){
+      if(S.B[id]&&S.B[id].done)return;
+      db.disabled=!ta.value.trim();
+      S.B[id]={txt:ta.value,done:false,g:null};save();
+    });
+    db.addEventListener('click',function(){
+      if(!ta.value.trim())return;
+      S.B[id]={txt:ta.value,done:true,g:null};save();lockB(box,id);
+      $('.model',box).scrollIntoView({behavior:'smooth',block:'nearest'});
+    });
+    $$('.self button',box).forEach(function(b){b.addEventListener('click',function(){
+      var s=S.B[id];if(!s||!s.done||s.g!=null)return;
+      s.g=+b.getAttribute('data-g');save();paintGrade(box,s.g);
+      if(s.g===1)addXP(10);else if(s.g===0.5)addXP(5);
+      update();
+    })});
+  });
+}
+function lockB(box,id){
+  var ta=$('textarea',box),db=$('.bdone',box);
+  ta.readOnly=true;db.disabled=true;db.textContent='✓ Изпратено';db.classList.add('done');
+  $('.model',box).classList.add('show');
+  var s=S.B[id];if(s&&s.g!=null)paintGrade(box,s.g);
+}
+function paintGrade(box,g){
+  $$('.self button',box).forEach(function(b){b.disabled=true;if(+b.getAttribute('data-g')===g){b.classList.add('pick',GR[String(g)].c)}});
+  $('.selfhint',box).textContent='Оценката е записана: '+GR[String(g)].t+'.';
+}
+
+/* ================= RESULT ================= */
+function gradeOf(p){if(p<50)return [2,'Слаб'];if(p<63)return [3,'Среден'];if(p<75)return [4,'Добър'];if(p<88)return [5,'Много добър'];return [6,'Отличен']}
+var BADGE={2:['🔎','Стажант','Преговори картите и опитай пак. Ще се получи!'],3:['📓','Помощник на детектива','Добро начало. Преговори темите с червена отметка.'],4:['🕵️','Детектив','Добре се справи! Малко преговор и си напълно готова.'],5:['⭐','Старши детектив','Отлично! Уменията ти са в добра форма.'],6:['👑','Главен детектив','Блестящо! Знаеш почти всичко от 5. клас.']};
+function update(){
+  var a=answered();
+  $('#ansCount').textContent=a;$('#ansTotal').textContent=TOTAL;$('#xp').textContent=S.xp;
+  $('#progBar').style.width=Math.round(a/TOTAL*100)+'%';
+  renderResult();
+}
+function renderResult(){
+  var box=$('#resultBody'),la=NA-answeredA(),lb=NB-answeredB();
+  if(la+lb>0){
+    box.innerHTML='<p class="left">Остават '+(la+lb)+' '+((la+lb)===1?'въпрос':'въпроса')+'.</p>'+
+      '<p>Част А: остават <b>'+la+'</b> · Част Б: остават <b>'+lb+'</b>'+(lb?' <span style="color:var(--muted);font-size:.9rem">(въпросът се брои, когато се оцениш)</span>':'')+'</p>'+
+      '<p class="note">Резултатът ще се покаже тук, когато отговориш на всички въпроси.</p>';
+    return;
+  }
+  var pa=0,pb=0,rows=[];
+  TOPICS.forEach(function(t){
+    var ta=0,tb=0;
+    QA[t.id].forEach(function(q,i){if(S.A[t.id+'-'+i]===0)ta++});
+    QB[t.id].forEach(function(q,i){var s=S.B[t.id+'-'+i];if(s&&s.g)tb+=s.g});
+    pa+=ta;pb+=tb;
+    var max=QA[t.id].length+QB[t.id].length,got=ta+tb,pc=got/max*100;
+    rows.push('<tr><td>'+t.ic+' '+t.n+'</td><td class="num">'+fmt(got)+' / '+max+'</td><td class="num">'+(pc<70?'<a class="flag" href="#r-'+t.id+'">За преговор</a>':'<span class="okflag">✓</span>')+'</td></tr>');
+  });
+  var tot=pa+pb,p=tot/TOTAL*100,g=gradeOf(p),bd=BADGE[g[0]];
+  box.innerHTML='<div class="scores"><div><span class="n">'+fmt(pa)+'</span><small>Част А от '+NA+'</small></div><div><span class="n">'+fmt(pb)+'</span><small>Част Б от '+NB+'</small></div><div><span class="n">'+fmt(tot)+'</span><small>Общо от '+TOTAL+'</small></div></div>'+
+    '<div class="grade"><div class="pct">'+fmt(p)+' %</div><div class="big">'+g[1]+' '+g[0]+'</div><small>Оценката е по шестобалната система. В училище скалата може да е малко по-различна.</small></div>'+
+    '<div class="bigbadge"><span class="ic">'+bd[0]+'</span><b>Значка: '+bd[1]+'</b><p style="margin:.3em 0 0">'+bd[2]+'</p></div>'+
+    '<div class="stamp'+(g[0]>=5?' show':'')+'">ГОТОВ ЗА РАЗСЛЕДВАНЕ</div>'+
+    '<h3 style="margin-top:14px">Резултат по теми</h3>'+
+    '<table class="ttable"><tr><th>Тема</th><th class="num">Точки</th><th class="num"></th></tr>'+rows.join('')+'</table>'+
+    '<p class="note">„За преговор“ се показва при по-малко от 70% в темата. Докосни го, за да отидеш на картата с преговора.</p>';
+}
+
+/* ================= GLOSSARY SHEET ================= */
+var sheet=$('#sheet'),sbg=$('#sheetBg');
+function openSheet(k){if(!G[k])return;$('#sheetT').textContent=G[k][0];$('#sheetD').textContent=G[k][1];sbg.style.display='block';requestAnimationFrame(function(){sheet.classList.add('open')})}
+function closeSheet(){sheet.classList.remove('open');setTimeout(function(){sbg.style.display='none'},250)}
+document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.term[data-t]');if(t)openSheet(t.getAttribute('data-t'))});
+sbg.addEventListener('click',closeSheet);$('#sheetClose').addEventListener('click',closeSheet);
+
+/* ================= READ BUTTONS ================= */
+function bindReview(){
+  $$('[data-done]').forEach(function(b){b.addEventListener('click',function(){
+    var k=b.getAttribute('data-done');if(S.read[k])return;
+    S.read[k]=true;b.classList.add('done');b.disabled=true;b.textContent='✓ Прочетено';addXP(5);
+  })});
+  $$('[data-read]').forEach(function(b){b.addEventListener('click',function(){speak($('#'+b.getAttribute('data-read')).innerText,'bg-BG')})});
+}
+
+/* ================= SPEECH ================= */
+var synth=window.speechSynthesis, voices=[], queue=[], qi=0, speaking=false, paused=false, curLang='bg-BG', gen=0;
+function loadVoices(){if(!synth)return;voices=synth.getVoices()||[];
+  if(voices.length&&!pickVoice('bg'))$('#voiceWarn').style.display='block'; else $('#voiceWarn').style.display='none';}
+function pickVoice(lang){var l=lang.toLowerCase();var v=voices.filter(function(x){return x.lang&&x.lang.toLowerCase().replace('_','-').indexOf(l)===0});
+  var g=v.filter(function(x){return /google/i.test(x.name)});return g[0]||v[0]||null}
+if(synth){loadVoices();if(typeof synth.onvoiceschanged!=='undefined')synth.onvoiceschanged=loadVoices;}
+function splitText(t){t=t.replace(/\s+/g,' ').trim();var parts=t.match(/[^.!?…]+[.!?…]*/g)||[t];var out=[];
+  parts.forEach(function(p){p=p.trim();if(!p)return;while(p.length>180){var i=p.lastIndexOf(',',180);if(i<60)i=180;out.push(p.slice(0,i+1));p=p.slice(i+1).trim()}if(p)out.push(p)});return out}
+function speakNext(){
+  if(qi>=queue.length){stopSpeech();return}
+  var my=gen;var u=new SpeechSynthesisUtterance(queue[qi]);var v=pickVoice(curLang.slice(0,2));if(v)u.voice=v;u.lang=curLang;u.rate=+$('#aRate').value;
+  u.onend=u.onerror=function(){if(my!==gen||!speaking||paused)return;qi++;speakNext()};
+  $('#aText').textContent=queue[qi];synth.speak(u);
+}
+function speak(text,lang){
+  if(!synth){toast('Този браузър не може да чете на глас');return}
+  gen++;synth.cancel();queue=splitText(text);qi=0;speaking=true;paused=false;curLang=lang||'bg-BG';
+  $('#aPause').textContent='⏸';$('#audiobar').classList.add('show');
+  var g0=gen;setTimeout(function(){if(g0===gen)speakNext()},60);
+}
+function stopSpeech(){gen++;speaking=false;paused=false;if(synth)synth.cancel();$('#audiobar').classList.remove('show')}
+$('#aPause').addEventListener('click',function(){
+  if(!speaking)return;
+  if(!paused){paused=true;gen++;synth.cancel();this.textContent='▶'}
+  else{paused=false;gen++;this.textContent='⏸';speakNext()}
+});
+$('#aStop').addEventListener('click',stopSpeech);
+$('#aRate').addEventListener('change',function(){if(speaking&&!paused){gen++;synth.cancel();setTimeout(speakNext,60)}});
+
+/* ================= RESET ================= */
+var cf=$('#confirm'),cbg=$('#confirmBg');
+function openConfirm(){cbg.style.display='block';requestAnimationFrame(function(){cf.classList.add('open')})}
+function closeConfirm(){cf.classList.remove('open');setTimeout(function(){cbg.style.display='none'},250)}
+$('#resetBtn').addEventListener('click',openConfirm);
+$('#confirmNo').addEventListener('click',closeConfirm);cbg.addEventListener('click',closeConfirm);
+$('#confirmYes').addEventListener('click',function(){
+  try{sessionStorage.removeItem(KEY)}catch(e){}
+  stopSpeech();S=freshState();save();renderAll();closeConfirm();
+  window.scrollTo(0,0);toast('Всичко е изчистено. Успех!');
+});
+
+/* ================= INIT ================= */
+function renderAll(){renderReview();bindReview();renderA();renderB();update()}
+renderAll();
+})();
+</script>
+</body>
+</html>
