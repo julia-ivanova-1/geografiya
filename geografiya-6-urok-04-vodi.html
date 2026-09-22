@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F5257">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<title>Урок 4 · Води: реки, езера и водопади в Южна Америка</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&display=swap&subset=cyrillic" rel="stylesheet">
+<style>
+:root{
+  --teal:#0F5257; --teal-2:#1B6F75; --teal-soft:#E3EFEE;
+  --amber:#F2A541; --amber-soft:#FDEFD8; --amber-ink:#8A5300;
+  --paper:#FBF7EF; --card:#FFFFFF; --ink:#1F2A30; --muted:#5B6870; --line:#E6DFD1;
+  --ok:#2E9E5B; --ok-soft:#E3F5EA; --bad:#D64545; --bad-soft:#FBE6E6;
+  --sea:#CFE6EE; --land:#E9D9A6; --land-edge:#A8894A;
+  --r:16px; --shadow:0 2px 0 rgba(15,82,87,.10), 0 6px 18px rgba(31,42,48,.06);
+  --head:"Rubik", system-ui, "Roboto", "Segoe UI", sans-serif;
+  --body:system-ui, "Roboto", "Segoe UI", Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.6 var(--body);overflow-x:hidden}
+h1,h2,h3{font-family:var(--head);line-height:1.2;margin:0 0 .5em;color:var(--teal)}
+h1{font-size:1.75rem;font-weight:800}
+h2{font-size:1.35rem;font-weight:700}
+h3{font-size:1.1rem;font-weight:700}
+p{margin:.5em 0 .8em}
+a{color:var(--teal-2)}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 120px}
+
+/* ---------- Top bar ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:var(--teal);color:#fff;padding:8px 16px 10px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.topbar-in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:10px}
+.xp{display:flex;align-items:center;gap:6px;font-family:var(--head);font-weight:800;font-size:1.05rem;background:rgba(255,255,255,.12);padding:4px 10px;border-radius:999px;white-space:nowrap}
+.xp .gem{color:var(--amber)}
+.xp.bump{animation:bump .5s}
+@keyframes bump{30%{transform:scale(1.25)}}
+.prog{flex:1;height:12px;background:rgba(255,255,255,.2);border-radius:999px;overflow:hidden}
+.prog>i{display:block;height:100%;width:0;background:var(--amber);border-radius:999px;transition:width .6s}
+.badgecount{font-size:.95rem;white-space:nowrap;background:rgba(255,255,255,.12);padding:4px 10px;border-radius:999px}
+.toast{position:fixed;left:50%;top:64px;transform:translateX(-50%) translateY(-20px);opacity:0;background:var(--amber);color:#3A2600;font-family:var(--head);font-weight:700;padding:8px 16px;border-radius:999px;z-index:60;transition:.3s;pointer-events:none;box-shadow:var(--shadow);max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- Hero ---------- */
+.hero{padding:22px 0 6px}
+.kicker{font-family:var(--head);font-weight:700;color:var(--amber-ink);letter-spacing:.04em;text-transform:uppercase;font-size:.85rem}
+.case{background:var(--card);border:2px dashed var(--teal-2);border-radius:var(--r);padding:16px;margin:14px 0;position:relative;box-shadow:var(--shadow)}
+.case h2{display:flex;align-items:center;gap:8px}
+.clues{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.clue{border-radius:12px;padding:10px;font-size:.9rem;line-height:1.4;background:#F1EEE7;color:var(--muted);min-height:74px}
+.clue b{display:block;font-family:var(--head);color:var(--muted);font-size:.8rem;margin-bottom:2px}
+.clue.on{background:var(--amber-soft);color:var(--ink);animation:pop .4s}
+.clue.on b{color:var(--amber-ink)}
+@keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.05)}}
+
+/* ---------- Cards / dossiers ---------- */
+.card{background:var(--card);border-radius:var(--r);padding:18px 16px;margin:18px 0;box-shadow:var(--shadow);border:1px solid var(--line)}
+.dossier-tag{display:inline-block;font-family:var(--head);font-weight:700;font-size:.8rem;color:#fff;background:var(--teal);padding:3px 10px;border-radius:6px;margin-bottom:8px;letter-spacing:.05em}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{border:0;border-radius:14px;padding:12px 16px;min-height:48px;font-family:var(--head);font-weight:700;font-size:1rem;background:var(--teal);color:#fff;box-shadow:0 4px 0 #0A3A3E;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0A3A3E}
+.btn.ghost{background:var(--teal-soft);color:var(--teal);box-shadow:0 4px 0 #C4DAD8}
+.btn.amber{background:var(--amber);color:#3A2600;box-shadow:0 4px 0 #C98422}
+.btn.done{background:var(--ok);box-shadow:0 4px 0 #1F7040}
+.btn[disabled]{opacity:.55;cursor:default}
+.btn.small{min-height:40px;padding:8px 12px;font-size:.9rem}
+.readbtn{margin-top:6px}
+.listen{display:inline-flex;align-items:center;gap:6px}
+.term{background:none;border:0;padding:0 2px;color:var(--teal);font-weight:700;border-bottom:2px dotted var(--amber);font-size:inherit;line-height:inherit}
+.hl{background:var(--amber-soft);padding:0 4px;border-radius:4px}
+.fact-num{font-family:var(--head);font-weight:800;color:var(--teal);font-size:1.5rem;line-height:1}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.stat{background:var(--teal-soft);border-radius:12px;padding:12px}
+.stat small{display:block;color:var(--muted);font-size:.85rem;margin-top:4px;line-height:1.35}
+.lib{background:#EAF3EC;border:1px solid #CFE3D3}
+.lib .dossier-tag{background:#2F6B3F}
+
+/* ---------- Maps ---------- */
+.mapbox{background:var(--sea);border-radius:14px;overflow:hidden;border:1px solid #B8D6E0}
+.mapbox svg{display:block;width:100%;height:auto}
+.land-outline{fill:none;stroke:#3A2E1A;stroke-width:1.4;stroke-linejoin:round}
+.maplabel{font:600 9px var(--body);fill:#2C5D73;letter-spacing:.12em}
+.mk{cursor:pointer}
+.mk circle.dot{stroke:#fff;stroke-width:1.6}
+.mk .halo{fill:none;stroke-width:2;opacity:0}
+.mk.active .halo{opacity:1;animation:ring 1.2s infinite}
+@keyframes ring{0%{r:6;opacity:1}100%{r:16;opacity:0}}
+.mk.seen circle.dot{stroke:#1F2A30}
+.regionhit{cursor:pointer;opacity:0}
+.rband{transition:opacity .2s}
+.rband.dim{opacity:.4}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.chip{border:0;border-radius:999px;padding:8px 12px;min-height:40px;font-size:.9rem;background:#F1EEE7;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.chip.seen{background:var(--teal-soft)}
+.chip.active{background:var(--teal);color:#fff}
+.infobox{background:var(--amber-soft);border-radius:12px;padding:12px;min-height:84px;margin-top:6px}
+.infobox h3{margin:0 0 4px;color:var(--amber-ink)}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:.85rem;color:var(--muted);margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.legend i.sq{border-radius:3px}
+.legend i.ln{width:16px;height:3px;border-radius:2px}
+
+/* ---------- Did you know ---------- */
+.dyk{display:grid;gap:10px}
+.dyk div{background:#F7F4EC;border-radius:12px;padding:12px 12px 12px 48px;position:relative}
+.dyk div:before{content:attr(data-i);position:absolute;left:12px;top:10px;font-size:1.4rem}
+
+/* ---------- Pilot-style stage / quiz ---------- */
+.stage{background:#F7F4EC;border-radius:14px;padding:14px;margin-top:10px}
+.stepdots{display:flex;gap:4px;margin-bottom:10px}
+.stepdots i{flex:1;height:6px;border-radius:3px;background:#E0D8C6}
+.stepdots i.ok{background:var(--ok)}
+.stepdots i.cur{background:var(--amber)}
+.opts{display:grid;gap:10px;margin-top:10px}
+.opt{border:2px solid var(--line);border-bottom-width:4px;background:#fff;border-radius:14px;padding:12px 14px;min-height:52px;text-align:left;font-size:1rem;color:var(--ink)}
+.opt:active{transform:translateY(2px)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt[disabled]{cursor:default}
+.fb{border-radius:14px;padding:12px 14px;margin-top:12px;display:none}
+.fb.ok{display:block;background:var(--ok-soft);border:2px solid var(--ok)}
+.fb.bad{display:block;background:var(--bad-soft);border:2px solid var(--bad)}
+.fb b{font-family:var(--head)}
+.fb.ok b{color:#1F7040}.fb.bad b{color:#A42F2F}
+.path{display:flex;flex-direction:column;align-items:center;gap:6px;margin:14px 0}
+.node{width:84px;height:84px;border-radius:50%;border:0;font-family:var(--head);font-weight:800;font-size:1.6rem;color:#fff;background:var(--teal);box-shadow:0 6px 0 #0A3A3E;position:relative}
+.node:nth-child(2){margin-left:90px}.node:nth-child(3){margin-right:90px}
+.node[disabled]{background:#C9C3B5;box-shadow:0 6px 0 #A39D8F;cursor:default}
+.node.done{background:var(--amber);box-shadow:0 6px 0 #C98422;color:#3A2600}
+.node span{position:absolute;top:92px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:.8rem;color:var(--muted);font-weight:700}
+.pathwrap{padding-bottom:26px}
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.9rem;color:var(--muted)}
+.qprog{height:14px;background:#E0D8C6;border-radius:999px;overflow:hidden;margin:8px 0 12px}
+.qprog i{display:block;height:100%;width:0;background:var(--ok);transition:width .4s}
+.qtext{font-family:var(--head);font-weight:700;font-size:1.15rem;color:var(--ink)}
+
+/* flashcards */
+.flash{perspective:900px;margin:12px 0}
+.flash-in{position:relative;height:190px;transition:transform .5s;transform-style:preserve-3d;cursor:pointer}
+.flash.flip .flash-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px}
+.front{background:var(--teal);color:#fff;font-family:var(--head);font-weight:800;font-size:1.4rem}
+.back{background:var(--amber-soft);color:var(--ink);transform:rotateY(180deg);font-size:1rem;line-height:1.45}
+
+/* vocab */
+.vocab{display:grid;gap:8px}
+.word{display:flex;align-items:center;gap:10px;background:#F7F4EC;border-radius:12px;padding:10px 12px}
+.word .w{font-family:var(--head);font-weight:700;color:var(--teal);min-width:88px}
+.word .ex{font-size:.92rem;color:var(--muted);line-height:1.4}
+.word button{margin-left:auto;flex:none;border:0;background:var(--teal-soft);border-radius:10px;width:44px;height:44px;font-size:1.1rem}
+.hola .word .w{color:#B0452E}
+
+/* self-check open questions */
+.q{border-top:1px solid var(--line);padding:14px 0 6px}
+h3+.q,.sc-first{border-top:0}
+.qnum{font-family:var(--head);font-weight:700;color:var(--amber-ink);font-size:.8rem;letter-spacing:.04em;text-transform:uppercase}
+textarea.ans{width:100%;min-height:72px;font:16px/1.45 var(--body);border:2px solid var(--line);border-radius:12px;padding:10px 12px;background:#FFFDF8;color:var(--ink);resize:vertical;display:block;margin-top:6px}
+textarea.ans:focus{outline:none;border-color:var(--teal-2)}
+textarea.ans[readonly]{background:#F1EEE7;color:var(--muted)}
+.model{background:var(--amber-soft);border-radius:12px;padding:10px 12px;margin-top:10px;display:none}
+.model.show{display:block}
+.model .lbl{font-family:var(--head);font-weight:700;color:var(--amber-ink);font-size:.85rem}
+.model p{margin:.2em 0 .5em}
+.self{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:6px}
+.self button{border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;background:#fff;min-height:56px;padding:6px 4px;font-family:var(--head);font-weight:700;font-size:.9rem;line-height:1.2;color:var(--ink)}
+.self button small{display:block;font-family:var(--body);font-weight:400;font-size:.76rem;color:var(--muted)}
+.self button[disabled]{cursor:default;opacity:.45}
+.self button.pick{opacity:1}
+.self button.pick.g1{border-color:var(--ok);background:var(--ok-soft)}
+.self button.pick.g05{border-color:var(--amber);background:#FFF4DF}
+.self button.pick.g0{border-color:var(--bad);background:var(--bad-soft)}
+.selfhint{font-size:.85rem;color:var(--muted);margin-top:6px}
+
+/* reveal / badges */
+.reveal{text-align:center;position:relative}
+.stamp{display:none;margin:12px auto;width:max-content;max-width:100%;border:4px solid var(--bad);color:var(--bad);font-family:var(--head);font-weight:800;font-size:1.8rem;padding:6px 18px;border-radius:10px;transform:rotate(-8deg);letter-spacing:.08em}
+.stamp.show{display:block;animation:stamp .5s}
+@keyframes stamp{0%{transform:rotate(-8deg) scale(2.2);opacity:0}100%{transform:rotate(-8deg) scale(1);opacity:1}}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;margin-top:12px}
+.badge{background:#F1EEE7;border-radius:14px;padding:10px 6px;text-align:center;font-size:.8rem;color:var(--muted);filter:grayscale(1);opacity:.6}
+.badge .ic{font-size:2rem;display:block}
+.badge.on{filter:none;opacity:1;background:var(--amber-soft);color:var(--ink);animation:pop .4s}
+.badge b{display:block;font-family:var(--head);font-size:.85rem}
+
+/* summary */
+.sum li{margin-bottom:6px}
+textarea.plain{width:100%;min-height:200px;font:15px/1.5 var(--body);border:1px solid var(--line);border-radius:12px;padding:10px;background:#FFFDF8;color:var(--ink)}
+
+/* glossary sheet */
+.sheet-bg{position:fixed;inset:0;background:rgba(31,42,48,.4);z-index:70;display:none}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:71;background:#fff;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .25s;max-width:760px;margin:0 auto;box-shadow:0 -6px 24px rgba(0,0,0,.15)}
+.sheet.open{transform:translateY(0)}
+.sheet h3{margin-bottom:6px}
+
+/* audio panel */
+.audiobar{position:fixed;left:0;right:0;bottom:0;z-index:55;background:#fff;border-top:1px solid var(--line);padding:8px 16px calc(8px + env(safe-area-inset-bottom));display:none;box-shadow:0 -4px 16px rgba(0,0,0,.08)}
+.audiobar.show{display:block}
+.audiobar-in{max-width:760px;margin:0 auto;display:flex;gap:8px;align-items:center}
+.audiobar .t{flex:1;font-size:.85rem;color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.audiobar select{font:inherit;font-size:.9rem;padding:6px;border-radius:10px;border:1px solid var(--line);background:#fff;min-height:40px}
+.voicewarn{display:none;margin-top:8px}
+
+details{background:#F7F4EC;border-radius:12px;padding:10px 12px;margin:10px 0}
+summary{font-family:var(--head);font-weight:700;color:var(--teal);cursor:pointer;min-height:32px}
+.src li{font-size:.88rem;margin-bottom:4px;word-break:break-word}
+.note{font-size:.88rem;color:var(--muted);background:#F1EEE7;border-radius:10px;padding:8px 10px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="xp" id="xpBox"><span class="gem">◆</span><span id="xp">0</span> XP</div>
+    <div class="prog" aria-label="Напредък"><i id="progBar"></i></div>
+    <div class="badgecount">🏅 <span id="bCount">0</span>/6</div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<main class="wrap">
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="kicker">География и икономика · 6. клас · Урок 4</div>
+  <h1>Води: делта, голяма колкото България, и езеро с потопен храм</h1>
+</header>
+
+<section class="case" id="case">
+  <div class="dossier-tag">🔍 СЛУЧАЯТ НА ДЕНЯ</div>
+  <h2>„Реката, в която не се вижда отсрещният бряг“</h2>
+  <p>Стар моряшки разказ гласи: корабът навлиза в устието на една южноамериканска река — а екипажът не вижда суша нито отляво, нито отдясно, сякаш плава в открито море. <b>Как е възможно една река да изглежда като океан?</b></p>
+  <p><b>Твоята задача, детективе:</b> прочети досиетата, разгледай двете карти и събери 4 улики, за да разкриеш коя река крие тази тайна.</p>
+  <div class="clues" id="clues">
+    <div class="clue" data-clue="1"><b>УЛИКА 1</b>🔒 Досие „Отточни области“</div>
+    <div class="clue" data-clue="2"><b>УЛИКА 2</b>🔒 Карта на отточните области</div>
+    <div class="clue" data-clue="3"><b>УЛИКА 3</b>🔒 Карта на реките, езерата и водопадите</div>
+    <div class="clue" data-clue="4"><b>УЛИКА 4</b>🔒 „Знаеш ли, че…“</div>
+  </div>
+</section>
+
+<div class="card" style="padding:12px 16px">
+  <div class="row">
+    <span style="flex:1;font-size:.95rem">🔊 Всяко досие има бутон <b>„Чуй“</b>, а думите с <span class="term" style="pointer-events:none">точки отдолу</span> показват обяснение при докосване.</span>
+  </div>
+  <div class="note voicewarn" id="voiceWarn">
+    Телефонът няма български глас за четене. Можеш да го добавиш от настройките на телефона: <i>Език → Преобразуване на текст в говор → Услуги на Google → Инсталиране на гласови данни → Български</i> (пътят може да е малко различен).
+  </div>
+</div>
+
+<!-- ===== DOSSIER 1: GENERAL CHARACTERISTICS ===== -->
+<section class="card" id="s1">
+  <div class="dossier-tag">ДОСИЕ №1</div>
+  <h2>Обща характеристика на водите</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s1-text">🔊 Чуй</button></div>
+  <div id="s1-text">
+    <p>Влажният климат и преобладаващият равнинен релеф в Южна Америка благоприятстват образуването на дълги и пълноводни реки. Затова континентът е на <b>първо място в света по водно богатство</b>.</p>
+    <p>През континента минава главният <button class="term" data-t="vododel">вододел</button> — той следва билото на Андите и разделя Южна Америка на <b>две <button class="term" data-t="otochna">отточни области</button></b>: към <b>Атлантическия океан</b> и към <b>Тихия океан</b>. Към Атлантическия океан се оттичат <b>най-дългите и най-пълноводните реки</b>, докато към Тихия океан текат къси реки. <button class="term" data-t="bezotochna">Безотточните области</button> заемат само малка площ.</p>
+    <p>Повечето реки се подхранват от дъждовете. Някои реки — например тези, които извират от Андите — се подхранват и от топенето на снегове и ледници. За разлика от Африка, в континента <b>няма толкова много езера</b>, но затова пък е <b>богат на подземни води</b>.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="fact-num">№1</div><small>Южна Америка е на първо място в света по водно богатство</small></div>
+    <div class="stat"><div class="fact-num">2</div><small>отточни области, разделени от главния вододел по Андите</small></div>
+    <div class="stat"><div class="fact-num">💧</div><small>богат на подземни води, но с малко езера — за разлика от Африка</small></div>
+  </div>
+  <h3>Карта на отточните области (по фиг. 1 от учебника)</h3>
+  <p>Докосни цветна област или чип, или бутона за вододела, за да прочетеш обяснението. Разгледай и четирите, за да получиш значка.</p>
+  <div class="mapbox"><svg id="mapBasins" viewBox="0 0 400 450" role="img" aria-label="Карта на отточните области в Южна Америка"></svg></div>
+  <div class="legend" id="basinLegend"></div>
+  <div class="infobox" id="basinInfo"><h3>Избери област</h3><p style="margin:0">Тук ще се появи обяснението.</p></div>
+  <div class="chips" id="basinChips"></div>
+  <button class="btn readbtn" data-done="s1" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== DOSSIER 2: AMAZON ===== -->
+<section class="card" id="s2">
+  <div class="dossier-tag">ДОСИЕ №2</div>
+  <h2>Амазонка — реката шампион</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s2-text">🔊 Чуй</button></div>
+  <div id="s2-text">
+    <p>Най-големите речни системи на континента образуват реките <b>Амазонка</b>, <b>Ориноко</b> и <b>Парана</b>.</p>
+    <p>През континента протича <b>най-пълноводната река в света</b>, с най-голям <button class="term" data-t="vodosboren">водосборен басейн</button> на Земята — над <b>7 милиона km²</b> — <b>Амазонка</b>. Тя извира от източните склонове на Андите, пресича целия континент и се влива в Атлантическия океан.</p>
+    <p>Ако за начало на реката се приеме <button class="term" data-t="pritok">притокът</button> ѝ река <b>Мараньон</b>, дължината на Амазонка е <b>6437 km</b>, което я нарежда на <b>второ място в света след Нил</b>. Според някои изследвания обаче тя е <b>най-дългата река на Земята — 7020 km</b>.</p>
+    <p>Амазонка се влива в океана чрез <button class="term" data-t="delta">делта</button> с площ, колкото територията на <b>България</b>. При устието си реката е широка повече от <b>300 km</b> и дълбока <b>70 m</b> — точно затова моряци понякога наистина не виждат отсрещния бряг. Реката е <button class="term" data-t="plavatelna">плавателна</button> дълбоко навътре в сушата, което позволява по нея да плават дори океански кораби.</p>
+    <p>Амазонка приема притоци от Северното и от Южното полукълбо, затова е пълноводна през цялата година: <button class="term" data-t="palnovodie">пълноводието</button> на десните ѝ притоци настъпва през октомври – март, а на левите — през април – септември. По време на пълноводие нивото на водите ѝ се повишава с <b>10 – 15 m</b> и залива огромни пространства.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="fact-num">&gt;7 млн. km²</div><small>водосборен басейн на Амазонка — най-големият в света</small></div>
+    <div class="stat"><div class="fact-num">6437 / 7020 km</div><small>дължина на Амазонка — 2-ро място в света (или 1-во според други изследвания)</small></div>
+    <div class="stat"><div class="fact-num">&gt;300 km</div><small>ширина на устието; дълбочина там — 70 m</small></div>
+    <div class="stat"><div class="fact-num">10–15 m</div><small>с толкова се повишава нивото ѝ по време на пълноводие</small></div>
+  </div>
+  <h3>Хидрограма на р. Амазонка (по фиг. 2 от учебника)</h3>
+  <div class="mapbox" style="background:#fff;border-color:var(--line)"><svg id="hydroSvg" viewBox="0 0 320 175" role="img" aria-label="Опростена хидрограма на Амазонка по месеци"></svg></div>
+  <p class="note">Опростена схема: пълноводието на десните притоци (октомври – март) и на левите притоци (април – септември) се редуват и застъпват, затова реката почти не пресъхва — само около юли – август нивото е малко по-ниско.</p>
+  <button class="btn readbtn" data-done="s2" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== DOSSIER 3: ORINOCO & PARANA ===== -->
+<section class="card" id="s3">
+  <div class="dossier-tag">ДОСИЕ №3</div>
+  <h2>Ориноко, Парана и най-впечатляващите водопади</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s3-text">🔊 Чуй</button></div>
+  <div id="s3-text">
+    <p>Река <b>Парана</b> извира от <b>Бразилската планинска земя</b>, а река <b>Ориноко</b> — от <b>Гвианската планинска земя</b>. И двете се вливат в <b>Атлантическия океан</b>. За разлика от Амазонка, те са <b>пълноводни през лятото и маловодни през зимата</b>.</p>
+    <p>На река <b>Чурун</b>, приток на Ориноко, се намира <b>най-високият водопад в света</b> — <b>Анхел</b>, висок <b>1054 m</b>. По река <b>Игуасу</b>, приток на Парана, са образувани <b>най-много водопади в Южна Америка</b> — общо <b>270</b> на брой, като някои от тях са високи над <b>80 m</b>.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="fact-num">1054 m</div><small>височина на водопада Анхел на р. Чурун — най-високият в света</small></div>
+    <div class="stat"><div class="fact-num">270</div><small>водопади по р. Игуасу — най-много в Южна Америка</small></div>
+  </div>
+  <button class="btn readbtn" data-done="s3" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== DOSSIER 4: LAKES & USE ===== -->
+<section class="card" id="s4">
+  <div class="dossier-tag">ДОСИЕ №4</div>
+  <h2>Езера и значение на водите</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s4-text">🔊 Чуй</button></div>
+  <div id="s4-text">
+    <p>Най-известното езеро на континента е <b>Титикака</b> в Андите — <b>най-голямото високопланинско езеро в света</b>. Площта му е <b>8,3 хил. km²</b>, дълбочината — над <b>300 m</b>, а надморската височина — <b>3812 m</b>. Друго голямо езеро е <b>Маракайбо</b>, свързано с Карибско море.</p>
+    <p>Водите са едно от най-големите природни богатства на континента. Използват се за <b>корабоплаване</b>, за производство на <b>електрическа енергия</b>, за <b>водоснабдяване</b> и за <b>напояване</b>. Стръмните течения на реките дават възможност за производство на електроенергия — на река Парана е изграден язовир <b>„Итайпу“</b> с една от най-големите <button class="term" data-t="vec">водноелектрически централи</button> в света.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="fact-num">3812 m</div><small>надморска височина на ез. Титикака — най-голямото високопланинско езеро в света</small></div>
+    <div class="stat"><div class="fact-num">8,3 хил. km²</div><small>площ на ез. Титикака; дълбочина над 300 m</small></div>
+  </div>
+  <button class="btn readbtn" data-done="s4" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== MAP: RIVERS, LAKES, WATERFALLS ===== -->
+<section class="card" id="mapwater">
+  <div class="dossier-tag">КАРТА НА ДЕТЕКТИВА</div>
+  <h2>Реки, езера и водопади</h2>
+  <p>Докосни точка на картата, за да разбереш повече за нея. Открий и седемте, за да получиш значка.</p>
+  <div class="mapbox"><svg id="mapWater" viewBox="0 0 400 450" role="img" aria-label="Карта на реките, езерата и водопадите"></svg></div>
+  <div class="legend" id="waterLegend"></div>
+  <div class="infobox" id="waterInfo"><h3>Избери точка</h3><p style="margin:0">Тук ще се появи досието на мястото.</p></div>
+  <div class="chips" id="waterChips"></div>
+</section>
+
+<!-- ===== LIBRARY ===== -->
+<section class="card lib" id="lib">
+  <div class="dossier-tag">📚 ГЕОГРАФСКА БИБЛИОТЕКА</div>
+  <h2>Свещеното езеро на инките</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="lib-text">🔊 Чуй</button></div>
+  <div id="lib-text">
+    <p>Езерото <b>Титикака</b> е свещено място за <b>инките</b> — според техните легенди точно оттам произлизат първите им владетели. През <b>2000 г.</b> учени откриват на дъното му <b>древен храм</b>, който е <b>два пъти по-голям от футболен стадион</b>.</p>
+  </div>
+  <button class="btn readbtn" data-done="lib" data-xp="10">✓ Прочетох · +10 XP</button>
+</section>
+
+<!-- ===== DID YOU KNOW ===== -->
+<section class="card" id="dyk">
+  <div class="dossier-tag">💡 ЗНАЕШ ЛИ, ЧЕ…</div>
+  <h2>Тайни от архива</h2>
+  <div class="dyk" id="dyk-text">
+    <div data-i="🌊">Амазонка изсипва в океана толкова много прясна вода, че учените изчисляват — тя носи около <b>една пета (20%)</b> от цялата речна вода, която се влива в моретата и океаните по цялата Земя.</div>
+    <div data-i="🐬">В мътните води на Амазонка живее <b>розовият речен делфин</b> (боуто) — възрастните екземпляри наистина стават розови на цвят, а видът се среща само в реки, никъде другаде в океана.</div>
+    <div data-i="✈️">Водопадът <b>Анхел</b> е кръстен на американския пилот <b>Джими Ейнджъл</b>, който го открива за широкия свят през <b>1933 г.</b> През <b>1937 г.</b> той катастрофира с малкия си самолет на върха на планината до водопада и се налага той и спътниците му да слязат пеша — цели <b>11 дни</b> през джунглата.</div>
+    <div data-i="⚡">Язовир <b>„Итайпу“</b> дълги години е бил <b>най-голямата водноелектрическа централа в света</b> по мощност. Днес отстъпва само на язовир „Трите клисури“ в Китай, но пак произвежда около <b>90%</b> от електроенергията, консумирана в Парагвай.</div>
+    <div data-i="🌎">Водосборният басейн на Амазонка е толкова огромен, че части от него се намират в <b>девет държави</b>: Бразилия, Перу, Колумбия, Венецуела, Еквадор, Боливия, Гаяна, Суринам и Френска Гвиана.</div>
+  </div>
+  <button class="btn readbtn" data-done="dyk" data-xp="10">✓ Прочетох · +10 XP</button>
+</section>
+
+<!-- ===== ROLE: CAPTAIN ===== -->
+<section class="card" id="exped">
+  <div class="dossier-tag">🚢 РОЛЯ: КАПИТАН ПО АМАЗОНКА</div>
+  <h2>Ти си капитан на кораб</h2>
+  <p>Мисията ти е да преплаваш цялата Амазонка — от изворите ѝ в Андите до устието в Атлантическия океан. На всяка спирка отговори вярно, за да продължиш напред.</p>
+  <div class="stage" id="expedStage"></div>
+</section>
+
+<!-- ===== DRAW ===== -->
+<section class="card" id="draw">
+  <div class="dossier-tag">🎨 ТВОРЧЕСКА ЗАДАЧА</div>
+  <h2>Нанеси реките и езерата на контурна карта</h2>
+  <p>На контурна карта на Южна Америка нанеси със син цвят и напиши имената на:</p>
+  <ul>
+    <li>реките <b>Амазонка</b>, <b>Ориноко</b> и <b>Парана</b> — от извора до устието им;</li>
+    <li>притоците <b>Мараньон</b> (на Амазонка), <b>Чурун</b> (на Ориноко) и <b>Игуасу</b> (на Парана);</li>
+    <li>езерата <b>Титикака</b> и <b>Маракайбо</b>;</li>
+    <li>водопадите <b>Анхел</b> и <b>Игуасу</b> — с малка звездичка.</li>
+  </ul>
+  <p>После с оранжево оцвети главния вододел по билото на Андите.</p>
+  <button class="btn ghost readbtn" data-done="draw" data-xp="10">✓ Нанесох ги · +10 XP</button>
+</section>
+
+<!-- ===== ENGLISH ===== -->
+<section class="card" id="eng">
+  <div class="dossier-tag">🇬🇧 ENGLISH CORNER</div>
+  <h2>Words of the day</h2>
+  <p style="font-size:.95rem">Докосни 🔊, за да чуеш думата и изречението.</p>
+  <div class="vocab" id="vocabEn"></div>
+  <div class="hola" style="margin-top:18px">
+    <h3 style="color:#B0452E">¡Hola! 🇪🇸 Бонус на испански</h3>
+    <p style="font-size:.95rem;margin-top:0">Тези думи за реки и езера се използват и в испаноезичните страни на континента.</p>
+    <div class="vocab" id="vocabEs"></div>
+  </div>
+</section>
+
+<!-- ===== SELF-CHECK ===== -->
+<section class="card" id="selfcheck">
+  <div class="dossier-tag">✍️ ПРОВЕРИ СЕ САМ</div>
+  <h2>Отговори с думи</h2>
+  <p style="font-size:.95rem">Напиши кратък отговор, после натисни „Готово“, за да видиш примерен отговор, и сам се оцени.</p>
+  <div id="scList"></div>
+</section>
+
+<!-- ===== QUIZ ===== -->
+<section class="card" id="quiz">
+  <div class="dossier-tag">🎯 ПРОВЕРИ СЕ</div>
+  <h2>Изпитът на детектива</h2>
+  <p>3 нива по 3 въпроса. Всяко ниво отключва следващото. Грешните въпроси се връщат в края на нивото.</p>
+  <div class="pathwrap"><div class="path" id="path">
+    <button class="node" data-lvl="0">1<span>Новобранец</span></button>
+    <button class="node" data-lvl="1" disabled>2<span>Следовател</span></button>
+    <button class="node" data-lvl="2" disabled>3<span>Главен хидролог</span></button>
+  </div></div>
+  <div id="qArea"></div>
+
+  <h3 style="margin-top:18px">🃏 Флашкарти</h3>
+  <p style="font-size:.95rem;margin-top:0">Докосни картата, за да я обърнеш.</p>
+  <div class="flash" id="flash"><div class="flash-in"><div class="face front" id="fFront"></div><div class="face back" id="fBack"></div></div></div>
+  <div class="row"><button class="btn ghost small" id="fPrev">← Назад</button><span id="fNum" style="flex:1;text-align:center;color:var(--muted)"></span><button class="btn ghost small" id="fNext">Напред →</button></div>
+</section>
+
+<!-- ===== REVEAL ===== -->
+<section class="card reveal" id="reveal">
+  <div class="dossier-tag">🔓 РАЗКРИВАНЕ</div>
+  <h2>Коя река е „реката-океан“?</h2>
+  <p id="revealLock">Събери 4-те улики, за да отключиш разкриването.</p>
+  <div id="revealBody" style="display:none;text-align:left">
+    <p>Погледни уликите. Коя река наистина е толкова огромна, че при устието ѝ не се вижда отсрещният бряг?</p>
+    <div class="opts" id="suspects"></div>
+    <div class="fb" id="revealFb"></div>
+  </div>
+  <div class="stamp" id="stamp">РАЗКРИТО</div>
+  <h3 style="margin-top:14px">Твоите значки</h3>
+  <div class="badges" id="badges"></div>
+  <p id="finalXp" style="margin-top:12px;font-family:var(--head);font-weight:700;color:var(--teal)"></p>
+</section>
+
+<!-- ===== SUMMARY ===== -->
+<section class="card" id="sum">
+  <div class="dossier-tag">📌 ЗАПОМНИ</div>
+  <h2>Най-важното от урока</h2>
+  <div class="row" style="margin-bottom:8px"><button class="btn ghost small listen" data-read="sumList">🔊 Чуй</button></div>
+  <ol class="sum" id="sumList">
+    <li>Влажният климат и равнинният релеф дават на Южна Америка <b>първо място в света по водно богатство</b>.</li>
+    <li>Главният <b>вододел</b> минава по билото на Андите и разделя континента на <b>две отточни области</b> — към Атлантическия и към Тихия океан; <b>безотточните области</b> заемат малка площ.</li>
+    <li>Към Атлантическия океан текат <b>най-дългите и най-пълноводните</b> реки, към Тихия — <b>къси</b> реки. Повечето реки се подхранват от дъждове, а някои андски реки — и от топене на снегове и ледници. Езерата са малко, но подземните води са богати.</li>
+    <li>Най-големите речни системи: <b>Амазонка, Ориноко и Парана</b>.</li>
+    <li><b>Амазонка</b> е най-пълноводната река в света с водосборен басейн <b>над 7 млн. km²</b>. Извира от източните склонове на Андите. Дължина (от притока Мараньон): <b>6437 km</b> — 2-ро място след Нил, или според други изследвания <b>7020 km</b> — най-дългата на Земята.</li>
+    <li>Делтата на Амазонка е с площ колкото <b>България</b>; устието е широко над <b>300 km</b> и дълбоко <b>70 m</b> — плавателно е и за океански кораби.</li>
+    <li>Амазонка е пълноводна цяла година: десните притоци — октомври – март, левите — април – септември; при пълноводие нивото расте с <b>10–15 m</b>.</li>
+    <li><b>Парана</b> извира от Бразилската планинска земя, <b>Ориноко</b> — от Гвианската планинска земя; и двете се вливат в Атлантическия океан и са пълноводни лете, маловодни зиме.</li>
+    <li>На р. <b>Чурун</b> (приток на Ориноко) е водопадът <b>Анхел</b> — най-високият в света, <b>1054 m</b>. На р. <b>Игуасу</b> (приток на Парана) са образувани <b>270</b> водопада — най-много в Южна Америка.</li>
+    <li>Езерото <b>Титикака</b> в Андите е най-голямото високопланинско езеро в света: площ <b>8,3 хил. km²</b>, дълбочина над <b>300 m</b>, надм. височина <b>3812 m</b>. Друго голямо езеро е <b>Маракайбо</b>, свързано с Карибско море.</li>
+    <li>Водите се използват за <b>корабоплаване, електроенергия, водоснабдяване и напояване</b>; на р. Парана е язовир <b>„Итайпу“</b> — една от най-големите ВЕЦ в света.</li>
+  </ol>
+  <details>
+    <summary>📄 Текст за копиране (Google Docs / печат)</summary>
+    <textarea class="plain" id="plain" readonly></textarea>
+    <button class="btn small" id="copyBtn" style="margin-top:8px">📋 Копирай текста</button>
+  </details>
+</section>
+
+<!-- ===== PARENT ===== -->
+<section class="card" id="parent">
+  <details>
+    <summary>👤 За родителя: какво е добавено и източници</summary>
+    <p style="font-size:.92rem">Извън учебника са добавени: приблизителният дял на Амазонка в общия речен отток на планетата (около 20%), съществуването и особеностите на розовия речен делфин (боуто), историята на американския пилот Джими Ейнджъл и кацането му до водопада Анхел през 1937 г., сегашното класиране на язовир „Итайпу“ спрямо язовир „Трите клисури“ в Китай и делът му в електроснабдяването на Парагвай, както и списъкът на деветте държави, през които преминава водосборният басейн на Амазонка. Приблизителните местоположения на точките на картите с отточните области и с реките, езерата и водопадите, както и стойностите в хидрограмата, са опростени за учебни цели по общите данни и описания в урока.</p>
+    <ul class="src">
+      <li><a href="https://en.wikipedia.org/wiki/Amazon_River" target="_blank" rel="noopener">Amazon River (Wikipedia)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Amazon_river_dolphin" target="_blank" rel="noopener">Amazon river dolphin (Wikipedia)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Angel_Falls" target="_blank" rel="noopener">Angel Falls (Wikipedia)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Jimmie_Angel" target="_blank" rel="noopener">Jimmie Angel (Wikipedia)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Itaipu_Dam" target="_blank" rel="noopener">Itaipu Dam (Wikipedia)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Amazon_basin" target="_blank" rel="noopener">Amazon basin (Wikipedia)</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Lake_Titicaca" target="_blank" rel="noopener">Lake Titicaca (Wikipedia)</a></li>
+    </ul>
+  </details>
+</section>
+
+</main>
+
+<div class="audiobar" id="audiobar">
+  <div class="audiobar-in">
+    <button class="btn small" id="aPause">⏸</button>
+    <button class="btn ghost small" id="aStop">⏹</button>
+    <span class="t" id="aText">Чета…</span>
+    <select id="aRate" aria-label="Скорост"><option value="0.8">0.8×</option><option value="1" selected>1×</option><option value="1.2">1.2×</option></select>
+  </div>
+</div>
+
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet"><h3 id="sheetT"></h3><p id="sheetD" style="margin:0 0 12px"></p><button class="btn ghost small" id="sheetClose">Разбрах</button></div>
+
+<script>
+(function(){
+"use strict";
+var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+
+/* ================= STATE ================= */
+var S={xp:0,done:{},badges:{},basinsSeen:{},waterSeen:{},clues:{},quizDone:[false,false,false],quizFirst:0,expedDone:false,solved:false};
+
+function progress(){
+  var n=0;['s1','s2','s3','s4','lib','dyk','draw'].forEach(function(k){if(S.done[k])n++});
+  if(S.badges.basins)n++; if(S.badges.rivers)n++; if(S.badges.exped)n++;
+  S.quizDone.forEach(function(d){if(d)n++}); if(S.solved)n++;
+  $('#progBar').style.width=Math.min(100,Math.round(n/14*100))+'%';
+}
+function toast(msg){var t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('show')},1800)}
+function addXP(n,msg){S.xp+=n;$('#xp').textContent=S.xp;var b=$('#xpBox');b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump');if(msg)toast('+'+n+' XP · '+msg);else toast('+'+n+' XP');progress()}
+
+/* ================= BADGES ================= */
+var BADGES=[
+  {id:'detective',ic:'🕵️',n:'Детектив',d:'Прочети всички досиета'},
+  {id:'basins',ic:'🗺️',n:'Картограф на водите',d:'Разгледай всичките 4 отточни области'},
+  {id:'rivers',ic:'🌊',n:'Ловец на реки',d:'Открий всичките 7 точки на картата с реки, езера и водопади'},
+  {id:'exped',ic:'🚢',n:'Капитан',d:'Завърши плаването по Амазонка'},
+  {id:'polyglot',ic:'💬',n:'Полиглот',d:'Чуй 5 думи'},
+  {id:'chief',ic:'👑',n:'Главен детектив',d:'Поне 8 от 9 верни от първи опит'}
+];
+function renderBadges(){
+  $('#badges').innerHTML=BADGES.map(function(b){return '<div class="badge'+(S.badges[b.id]?' on':'')+'"><span class="ic">'+b.ic+'</span><b>'+b.n+'</b>'+b.d+'</div>'}).join('');
+  $('#bCount').textContent=Object.keys(S.badges).length;
+}
+function award(id){if(S.badges[id])return;S.badges[id]=true;var b=BADGES.filter(function(x){return x.id===id})[0];renderBadges();setTimeout(function(){toast('🏅 Нова значка: '+b.n)},900);progress()}
+
+/* ================= CLUES ================= */
+var CLUES={
+  1:'Южна Америка е на 1-во място в света по водно богатство. Главният вододел по Андите разделя континента на отточна област към Атлантическия и отточна област към Тихия океан, плюс малки безотточни области.',
+  2:'Картата на отточните области показва: към Атлантическия океан се оттичат най-дългите и пълноводни реки, към Тихия — къси реки, а в Андите има и малки безотточни участъци покрай главния вододел.',
+  3:'Картата с реките показва Амазонка, Ориноко и Парана, водопадите Анхел (1054 m) и Игуасу (270 водопада), и езерата Титикака и Маракайбо.',
+  4:'Амазонка носи около една пета от речната вода на цялата планета, а в нея живее розов речен делфин. Водопадът Анхел е кръстен на пилота Джими Ейнджъл.'
+};
+function giveClue(n){if(S.clues[n])return;S.clues[n]=true;var el=$('.clue[data-clue="'+n+'"]');el.classList.add('on');el.innerHTML='<b>УЛИКА '+n+' ✓</b>'+CLUES[n];toast('🔎 Нова улика!');checkReveal()}
+var CLUE_FOR={s1:1,dyk:4};
+
+/* ================= READ BUTTONS ================= */
+$$('[data-done]').forEach(function(b){
+  b.addEventListener('click',function(){
+    var k=b.getAttribute('data-done'); if(S.done[k])return;
+    S.done[k]=true; b.classList.add('done'); b.disabled=true; b.textContent='✓ Готово';
+    addXP(+b.getAttribute('data-xp'));
+    if(CLUE_FOR[k])setTimeout(function(){giveClue(CLUE_FOR[k])},700);
+    if(S.done.s1&&S.done.s2&&S.done.s3&&S.done.s4&&S.done.lib&&S.done.dyk&&S.done.draw)award('detective');
+  });
+});
+
+/* ================= GLOSSARY ================= */
+var G={
+  vododel:['Вододел','Линия (обикновено по билото на планина), която разделя два речни басейна или две отточни области.'],
+  otochna:['Отточна област','Част от сушата, чиито реки се вливат в един и същ океан или море.'],
+  bezotochna:['Безотточна област','Част от сушата, която няма отток към океана — водите ѝ не стигат до море или океан.'],
+  vodosboren:['Водосборен басейн','Цялата площ, от която дадена река и притоците ѝ събират водата си.'],
+  pritok:['Приток','По-малка река, която се влива в друга, по-голяма река.'],
+  delta:['Делта','Форма на устие на река, при която тя се разделя на много ръкави, преди да се влее в морето или океана.'],
+  plavatelna:['Плавателна река','Река, достатъчно дълбока и широка, за да могат по нея да плават кораби.'],
+  palnovodie:['Пълноводие','Период, в който река носи най-много вода — обикновено след дъждовен сезон или топене на снегове.'],
+  vec:['ВЕЦ','Водноелектрическа централа — съоръжение, което произвежда електроенергия от енергията на течаща вода.']
+};
+var sheet=$('#sheet'),sbg=$('#sheetBg');
+function openSheet(k){$('#sheetT').textContent=G[k][0];$('#sheetD').textContent=G[k][1];sbg.style.display='block';requestAnimationFrame(function(){sheet.classList.add('open')})}
+function closeSheet(){sheet.classList.remove('open');setTimeout(function(){sbg.style.display='none'},250)}
+$$('.term[data-t]').forEach(function(t){t.addEventListener('click',function(){openSheet(t.getAttribute('data-t'))})});
+sbg.addEventListener('click',closeSheet);$('#sheetClose').addEventListener('click',closeSheet);
+
+/* ================= SPEECH ================= */
+var synth=window.speechSynthesis, voices=[], queue=[], qi=0, speaking=false, paused=false, curLang='bg-BG', gen=0;
+function loadVoices(){if(!synth)return;voices=synth.getVoices()||[];
+  if(voices.length&&!pickVoice('bg'))$('#voiceWarn').style.display='block'; else $('#voiceWarn').style.display='none';}
+function pickVoice(lang){var l=lang.toLowerCase();var v=voices.filter(function(x){return x.lang&&x.lang.toLowerCase().replace('_','-').indexOf(l)===0});
+  var g=v.filter(function(x){return /google/i.test(x.name)});return g[0]||v[0]||null}
+if(synth){loadVoices();if(typeof synth.onvoiceschanged!=='undefined')synth.onvoiceschanged=loadVoices;}
+function splitText(t){t=t.replace(/\s+/g,' ').trim();var parts=t.match(/[^.!?…]+[.!?…]*/g)||[t];var out=[];
+  parts.forEach(function(p){p=p.trim();if(!p)return;while(p.length>180){var i=p.lastIndexOf(',',180);if(i<60)i=180;out.push(p.slice(0,i+1));p=p.slice(i+1).trim()}if(p)out.push(p)});return out}
+function speakNext(){
+  if(qi>=queue.length){stopSpeech();return}
+  var my=gen;var u=new SpeechSynthesisUtterance(queue[qi]);var v=pickVoice(curLang.slice(0,2));if(v)u.voice=v;u.lang=curLang;u.rate=+$('#aRate').value;
+  u.onend=u.onerror=function(){if(my!==gen||!speaking||paused)return;qi++;speakNext()};
+  $('#aText').textContent=queue[qi];synth.speak(u);
+}
+function speak(text,lang,showBar){
+  if(!synth){toast('Този браузър не може да чете на глас');return}
+  gen++;synth.cancel();queue=splitText(text);qi=0;speaking=true;paused=false;curLang=lang||'bg-BG';
+  $('#aPause').textContent='⏸';if(showBar!==false)$('#audiobar').classList.add('show');
+  var g0=gen;setTimeout(function(){if(g0===gen)speakNext()},60);
+}
+function stopSpeech(){gen++;speaking=false;paused=false;if(synth)synth.cancel();$('#audiobar').classList.remove('show')}
+$('#aPause').addEventListener('click',function(){
+  if(!speaking)return;
+  if(!paused){paused=true;gen++;synth.cancel();this.textContent='▶'}
+  else{paused=false;gen++;this.textContent='⏸';speakNext()}
+});
+$('#aStop').addEventListener('click',stopSpeech);
+$('#aRate').addEventListener('change',function(){if(speaking&&!paused){gen++;synth.cancel();setTimeout(speakNext,60)}});
+$$('[data-read]').forEach(function(b){b.addEventListener('click',function(){speak($('#'+b.getAttribute('data-read')).innerText,'bg-BG')})});
+
+/* ================= LAND SHAPE (shared) ================= */
+var K=6;function P(lon,lat){return [((lon+95)*K).toFixed(1),((15-lat)*K).toFixed(1)]}
+function poly(pts){return 'M'+pts.map(function(p){return P(p[0],p[1]).join(',')}).join(' L')+' Z'}
+var SA=[[-77.4,8.7],[-76,9.4],[-75.5,10.5],[-74.8,11],[-73.5,11.3],[-72.2,11.9],[-71.67,12.46],[-71.1,12],[-71.5,10.9],[-71,10.9],[-70.2,11.6],[-70,12.1],[-68.4,10.8],[-66,10.6],[-64,10.7],[-62,10.7],[-61,9.5],[-59.8,8.3],[-58,6.8],[-55,5.9],[-52,4.9],[-51,4],[-50,1.8],[-50.5,.2],[-48.5,-1],[-46,-1],[-44,-2.5],[-41.5,-2.9],[-39,-3.5],[-37.2,-4.9],[-35.3,-5.3],[-34.79,-7.15],[-35,-9],[-36.5,-10.5],[-38.5,-13],[-39,-16],[-39.7,-19.5],[-41,-22],[-43.2,-23],[-45,-23.8],[-48.5,-26.5],[-48.7,-28.5],[-50.2,-30.5],[-52.5,-33],[-53.5,-34],[-54.9,-34.9],[-56.3,-34.9],[-57.8,-34.4],[-58.5,-34.3],[-57.3,-35.5],[-56.7,-36.4],[-57.5,-38],[-59,-38.8],[-62,-39],[-62.3,-40.6],[-65,-41],[-64.2,-42.3],[-65,-43.3],[-65.5,-45],[-67.5,-46],[-66,-47.5],[-67.8,-49.5],[-68.9,-51.6],[-68.4,-52.3],[-69.5,-52.5],[-70.9,-53],[-71.3,-53.9],[-72.5,-53.5],[-73.5,-53],[-74.7,-52.7],[-75.2,-51],[-75.5,-48.5],[-74.5,-46.5],[-73.8,-44],[-73.9,-41.8],[-73.5,-40],[-73.6,-37.5],[-72.5,-35.5],[-71.7,-33],[-71.5,-30],[-71.3,-27],[-70.6,-24],[-70.2,-20],[-70.3,-18.5],[-71.5,-17.3],[-74,-15.8],[-76.3,-13.5],[-77.2,-12],[-78.5,-9.5],[-79.9,-7],[-81.33,-4.68],[-80.4,-3.4],[-80.2,-2.2],[-81,-2.2],[-80.5,-.5],[-80,.8],[-79,1.5],[-78.8,2.5],[-77.5,3.8],[-77.3,5.5],[-77.9,7.2]];
+var CA=[[-77.4,8.7],[-78.4,9.4],[-79.6,9.6],[-80.6,9],[-81.8,8.9],[-82.9,9.6],[-83.6,10.8],[-83.5,12.5],[-83.3,15],[-88,15],[-87.5,13.2],[-86,11.8],[-85.7,10.5],[-85,9.9],[-84,9.3],[-83,8.3],[-81.5,7.6],[-80.4,7.4],[-80,8.1],[-79,8.9],[-78.2,8.3],[-77.9,7.2]];
+var TDF=[[-68.5,-52.7],[-69.6,-52.8],[-70.3,-53.5],[-70.8,-54.3],[-72,-54.6],[-70.5,-55.1],[-68.5,-55.4],[-67.3,-55.9],[-66.5,-55.2],[-65.2,-54.8],[-66.5,-54.4],[-67.8,-53.6]];
+var LANDD=poly(CA)+' '+poly(SA)+' '+poly(TDF);
+
+/* ================= MAP: DRAINAGE BASINS (fig. 1) ================= */
+var BASINS=[
+  {id:'atlantic',type:'band',x0:150,x1:400,color:'#8FBF7A',n:'а) Отточна област към Атлантическия океан',
+   d:'Обхваща по-голямата част от континента — оттук текат <b>най-дългите и най-пълноводните</b> реки: Амазонка, Ориноко и Парана.'},
+  {id:'pacific',type:'band',x0:78,x1:150,color:'#2F7D5B',n:'б) Отточна област към Тихия океан',
+   d:'Тясна ивица покрай западното крайбрежие. Реките тук са <b>къси</b>, защото Андите са съвсем близо до брега.'},
+  {id:'endo',type:'circles',pts:[[156,205,20],[150,240,15]],color:'#E8C84A',n:'в) Безотточни области',
+   d:'Малки участъци високо в Андите (например около планинското плато Алтиплано), чиито води <b>не стигат до океана</b>.'},
+  {id:'divide',type:'line',n:'г) Главен вододел',
+   d:'Минава по билото на <b>Андите</b> по цялата им дължина и разделя континента на отточните области към двата океана.'}
+];
+var mapBasins=$('#mapBasins');
+(function(){
+  var mtnPts=[[-77,5],[-73,-10],[-70,-20],[-70,-35],[-72,-48]];
+  var mtnD='M'+mtnPts.map(function(p){var c=P(p[0],p[1]);return c[0]+','+c[1]}).join(' L');
+  var s='<rect width="400" height="450" fill="#CFE6EE"/><defs><clipPath id="landClipB"><path d="'+LANDD+'"/></clipPath></defs>';
+  BASINS.filter(function(b){return b.type==='band'}).forEach(function(b){
+    s+='<rect class="rband" data-id="'+b.id+'" x="'+b.x0+'" y="0" width="'+(b.x1-b.x0)+'" height="450" fill="'+b.color+'" clip-path="url(#landClipB)"/>';
+  });
+  var endo=BASINS.filter(function(b){return b.type==='circles'})[0];
+  endo.pts.forEach(function(c){s+='<circle class="rband" data-id="endo" cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'" fill="'+endo.color+'" clip-path="url(#landClipB)"/>'});
+  s+='<path class="land-outline" d="'+LANDD+'"/>';
+  s+='<path id="divideLine" data-id="divide" d="'+mtnD+'" fill="none" stroke="#8A3A1E" stroke-width="3" stroke-dasharray="2 3" stroke-linecap="round"/>';
+  BASINS.filter(function(b){return b.type==='band'}).forEach(function(b){
+    s+='<rect class="regionhit" data-id="'+b.id+'" x="'+b.x0+'" y="0" width="'+(b.x1-b.x0)+'" height="450"/>';
+  });
+  s+='<path class="regionhit" data-id="divide" d="'+mtnD+'" fill="none" stroke="#000" stroke-width="16" stroke-linecap="round"/>';
+  endo.pts.forEach(function(c){s+='<circle class="regionhit" data-id="endo" cx="'+c[0]+'" cy="'+c[1]+'" r="'+c[2]+'"/>'});
+  mapBasins.innerHTML=s;
+  $('#basinLegend').innerHTML='<span><i class="sq" style="background:#8FBF7A"></i>към Атлантическия океан</span><span><i class="sq" style="background:#2F7D5B"></i>към Тихия океан</span><span><i class="sq" style="background:#E8C84A"></i>безотточни области</span><span><i class="ln" style="background:#8A3A1E"></i>главен вододел</span>';
+  $('#basinChips').innerHTML=BASINS.map(function(b){return '<button class="chip" data-id="'+b.id+'">'+(b.type==='line'?'<i class="ln" style="background:#8A3A1E"></i>':'<i style="background:'+(b.color||'#8A3A1E')+'"></i>')+b.n+'</button>'}).join('');
+})();
+function showBasin(id){
+  var b=BASINS.filter(function(x){return x.id===id})[0];
+  if(id!=='divide'){$$('.rband',mapBasins).forEach(function(e){e.classList.toggle('dim',e.getAttribute('data-id')!==id)})}
+  else{$$('.rband',mapBasins).forEach(function(e){e.classList.remove('dim')})}
+  $$('#basinChips .chip').forEach(function(e){e.classList.toggle('active',e.getAttribute('data-id')===id)});
+  $('#basinInfo').innerHTML='<h3>'+b.n+'</h3><p style="margin:0">'+b.d+'</p>';
+  if(!S.basinsSeen[id]){S.basinsSeen[id]=true;$$('#basinChips .chip').forEach(function(e){if(e.getAttribute('data-id')===id)e.classList.add('seen')});addXP(5);
+    if(BASINS.every(function(b){return S.basinsSeen[b.id]})){award('basins');setTimeout(function(){giveClue(2)},400)}}
+}
+$$('.regionhit',mapBasins).forEach(function(e){e.addEventListener('click',function(){showBasin(e.getAttribute('data-id'))})});
+$$('#basinChips .chip').forEach(function(e){e.addEventListener('click',function(){showBasin(e.getAttribute('data-id'))})});
+
+/* ================= HYDROGRAPH (fig. 2) ================= */
+(function(){
+  var months=['Я','Ф','М','А','М','Ю','Ю','А','С','О','Н','Д'];
+  var vals=[11,7,7,8,7,7,4,3,5,7,9,11];
+  var x0=34,x1=308,y0=140,yTop=18,scale=8;
+  var slot=(x1-x0)/12,bw=slot*0.62;
+  var s='<rect width="320" height="175" fill="#fff"/>';
+  [0,5,10,15].forEach(function(g){var y=y0-g*scale;s+='<line x1="'+x0+'" y1="'+y+'" x2="'+x1+'" y2="'+y+'" stroke="#E6DFD1" stroke-width="1"/><text x="'+(x0-6)+'" y="'+(y+3)+'" text-anchor="end" class="maplabel" fill="#5B6870" style="font-size:8px;letter-spacing:0">'+g+'%</text>'});
+  vals.forEach(function(v,i){var bx=x0+i*slot+(slot-bw)/2,bh=v*scale,by=y0-bh;
+    s+='<rect x="'+bx.toFixed(1)+'" y="'+by.toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+bh.toFixed(1)+'" rx="2" fill="#1B6F75"/>';
+    s+='<text x="'+(bx+bw/2).toFixed(1)+'" y="'+(y0+14)+'" text-anchor="middle" class="maplabel" fill="#1F2A30" style="font-size:9px;letter-spacing:0">'+months[i]+'</text>';
+  });
+  s+='<line x1="'+x0+'" y1="'+y0+'" x2="'+x1+'" y2="'+y0+'" stroke="#5B6870" stroke-width="1.2"/>';
+  s+='<text x="'+x0+'" y="12" class="maplabel" fill="#5B6870" style="font-size:8px;letter-spacing:0">% от оттока</text>';
+  $('#hydroSvg').innerHTML=s;
+})();
+
+/* ================= MAP: RIVERS, LAKES, WATERFALLS (fig. 3–5) ================= */
+var RIVERLINES=[
+  {pts:[[-77,-5],[-73,-4.7],[-69,-4],[-64,-3.5],[-59,-2.7],[-54,-1.8],[-50,-1.2],[-48.5,-1]],color:'#2C6FA8'},
+  {pts:[[-64,2.5],[-67,4.5],[-69.5,6.5],[-67.5,8],[-64,8.7],[-61,9],[-60.3,8.6]],color:'#2C6FA8'},
+  {pts:[[-51,-20],[-53,-23],[-54.5,-25.4],[-56,-27.5],[-58,-31],[-58.4,-34.3]],color:'#2C6FA8'}
+];
+var WCOL={r:'#2C6FA8',w:'#8A5300',l:'#1B6F75'};
+var WATER=[
+  {id:'amazonka',kind:'r',lon:-59,lat:-3,n:'Амазонка',d:'Най-пълноводната река в света. Извира от Андите, пресича целия континент и се влива в Атлантическия океан през делта, голяма колкото България. Дължина: 6437 km (или 7020 km според други изследвания).'},
+  {id:'orinoko',kind:'r',lon:-66,lat:6.5,n:'Ориноко',d:'Извира от Гвианската планинска земя и се влива в Атлантическия океан. Пълноводна е през лятото и маловодна през зимата.'},
+  {id:'parana',kind:'r',lon:-56,lat:-28,n:'Парана',d:'Извира от Бразилската планинска земя и се влива в Атлантическия океан. На нея е изграден язовир „Итайпу“ — една от най-големите ВЕЦ в света.'},
+  {id:'angel',kind:'w',lon:-62.5,lat:6,n:'Водопадът Анхел',d:'На река Чурун, приток на Ориноко. Висок е 1054 m — най-високият водопад в света.'},
+  {id:'iguazu',kind:'w',lon:-54.5,lat:-25.5,n:'Водопадите на Игуасу',d:'На река Игуасу, приток на Парана. Общо 270 водопада — най-много в Южна Америка, някои над 80 m високи.'},
+  {id:'titicaka',kind:'l',lon:-69.3,lat:-15.9,n:'Езерото Титикака',d:'Най-голямото високопланинско езеро в света: площ 8,3 хил. km², дълбочина над 300 m, надм. височина 3812 m. Свещено място за инките.'},
+  {id:'marakaibo',kind:'l',lon:-71.6,lat:9.9,n:'Езерото Маракайбо',d:'Голямо езеро, свързано с Карибско море.'}
+];
+var mapWater=$('#mapWater');
+(function(){
+  var s='<rect width="400" height="450" fill="#CFE6EE"/><path d="'+LANDD+'" fill="#E9D9A6" stroke="#A8894A" stroke-width="1"/>';
+  RIVERLINES.forEach(function(r){var d='M'+r.pts.map(function(p){var c=P(p[0],p[1]);return c[0]+','+c[1]}).join(' L');
+    s+='<path d="'+d+'" fill="none" stroke="'+r.color+'" stroke-width="2.4" stroke-linecap="round" opacity="0.65"/>'});
+  var g='';WATER.forEach(function(p){var c=P(p.lon,p.lat),col=WCOL[p.kind];
+    g+='<g class="mk" data-id="'+p.id+'" transform="translate('+c[0]+','+c[1]+')"><circle class="halo" r="6" stroke="'+col+'"/><circle class="dot" r="6" fill="'+col+'"/><circle r="14" fill="transparent"/></g>'});
+  mapWater.innerHTML=s+g;
+  $('#waterChips').innerHTML=WATER.map(function(p){return '<button class="chip" data-id="'+p.id+'"><i style="background:'+WCOL[p.kind]+'"></i>'+p.n+'</button>'}).join('');
+  $('#waterLegend').innerHTML='<span><i style="background:'+WCOL.r+'"></i>реки</span><span><i style="background:'+WCOL.w+'"></i>водопади</span><span><i style="background:'+WCOL.l+'"></i>езера</span>';
+})();
+function showWater(id){
+  var p=WATER.filter(function(x){return x.id===id})[0];
+  $$('#mapWater .mk').forEach(function(e){e.classList.toggle('active',e.getAttribute('data-id')===id)});
+  $$('#waterChips .chip').forEach(function(e){e.classList.toggle('active',e.getAttribute('data-id')===id)});
+  $('#waterInfo').innerHTML='<h3>'+p.n+'</h3><p style="margin:0">'+p.d+'</p>';
+  if(!S.waterSeen[id]){S.waterSeen[id]=true;$$('[data-id="'+id+'"]',mapWater).forEach(function(e){e.classList.add('seen')});$$('#waterChips .chip').forEach(function(e){if(e.getAttribute('data-id')===id)e.classList.add('seen')});addXP(3);
+    if(Object.keys(S.waterSeen).length>=7){award('rivers');setTimeout(function(){giveClue(3)},400)}}
+}
+$$('#mapWater .mk').forEach(function(e){e.addEventListener('click',function(){showWater(e.getAttribute('data-id'))})});
+$$('#waterChips .chip').forEach(function(e){e.addEventListener('click',function(){showWater(e.getAttribute('data-id'))})});
+
+/* ================= ROLE: CAPTAIN ON THE AMAZON ================= */
+var EXPED=[
+  {q:'Тръгваш от изворите на реката, високо в източните склонове на Андите. Кой приток на Амазонка се приема за начало на нейната дължина?',o:['Мараньон','Ориноко','Игуасу'],a:0,e:'Ако за начало на реката се приеме притокът ѝ Мараньон, дължината на Амазонка е 6437 km.'},
+  {q:'Плаваш през огромна низина. Какъв е водосборният басейн на Амазонка?',o:['Над 7 млн. km² — най-големият в света','Около 1 млн. km²','Само 200 хил. km²'],a:0,e:'Водосборният басейн на Амазонка е над 7 млн. km² — най-големият на Земята.'},
+  {q:'От левия приток идва пълноводна вода през април – септември. Кога е пълноводието на десните притоци?',o:['Октомври – март','Само през януари','Никога'],a:0,e:'Пълноводието на десните притоци е октомври – март, а на левите — април – септември, затова реката почти не пресъхва.'},
+  {q:'Наближаваш устието. Колко широка е тук Амазонка?',o:['Над 300 km','Около 30 km','Само 3 km'],a:0,e:'При устието си Амазонка е широка над 300 km и дълбока 70 m.'},
+  {q:'Виждаш делтата на реката. С какво по площ можеш да я сравниш?',o:['С територията на България','С малко село','С футболно игрище'],a:0,e:'Делтата на Амазонка е с площ, колкото територията на България.'},
+  {q:'Покрай теб преминава океански кораб — далеч навътре в сушата! Как е възможно?',o:['Реката е плавателна дълбоко навътре в сушата','Реката е много тясна','Реката е замръзнала'],a:0,e:'Амазонка е плавателна дълбоко навътре, което позволява дори на океански кораби да плават по нея.'},
+  {q:'Настъпва пълноводие. Какво се случва с нивото на реката?',o:['Повишава се с 10–15 m и залива огромни пространства','Не се променя','Намалява рязко'],a:0,e:'По време на пълноводие нивото на Амазонка се повишава с 10–15 m и залива огромни пространства.'}
+];
+var eI=0,eStage=$('#expedStage');
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+function renderExped(){
+  if(eI>=EXPED.length){eStage.innerHTML='<div class="stepdots">'+EXPED.map(function(){return '<i class="ok"></i>'}).join('')+'</div><p style="font-family:var(--head);font-weight:700;color:var(--teal);font-size:1.15rem;margin:0">🏁 Плаването завърши в Атлантическия океан!</p>';
+    if(!S.expedDone){S.expedDone=true;award('exped');progress()}return}
+  var f=EXPED[eI],order=shuffle([0,1,2]);
+  eStage.innerHTML='<div class="stepdots">'+EXPED.map(function(_,i){return '<i class="'+(i<eI?'ok':i===eI?'cur':'')+'"></i>'}).join('')+'</div>'+
+   '<div class="qhead"><span>Спирка '+(eI+1)+' от '+EXPED.length+'</span></div><p class="qtext" style="font-size:1.02rem">'+f.q+'</p><div class="opts">'+
+   order.map(function(i){return '<button class="opt" data-i="'+i+'">'+f.o[i]+'</button>'}).join('')+'</div><div class="fb"></div>';
+  var tried=false;
+  $$('.opt',eStage).forEach(function(b){b.addEventListener('click',function(){
+    var i=+b.getAttribute('data-i'),fb=$('.fb',eStage);
+    if(i===f.a){b.classList.add('right');$$('.opt',eStage).forEach(function(x){x.disabled=true});
+      fb.className='fb ok';fb.innerHTML='<b>Точно така!</b> '+f.e+'<div style="margin-top:10px"><button class="btn small done" id="eNext">Напред →</button></div>';
+      if(!tried)addXP(5);$('#eNext').addEventListener('click',function(){eI++;renderExped()});}
+    else{tried=true;b.classList.add('wrong');b.disabled=true;fb.className='fb bad';fb.innerHTML='<b>Провери пак досието.</b> Опитай друг отговор.';}
+  })});
+}
+renderExped();
+
+/* ================= VOCAB ================= */
+var EN=[['river','Река','The Amazon is the largest river in the world by water volume.'],['lake','Езеро','Lake Titicaca is high up in the Andes.'],['waterfall','Водопад','Angel Falls is the tallest waterfall on Earth.'],['basin','Водосборен басейн','The Amazon basin covers parts of nine countries.'],['tributary','Приток','The Marañón is a tributary of the Amazon.'],['flood','Пълноводие','The river floods every year and rises by many metres.'],['navigable','Плавателен','The Amazon is navigable far inland, even for ocean ships.'],['hydroelectric','Водноелектрически','The Itaipu Dam produces hydroelectric power on the Paraná River.']];
+var ES=[['río','река'],['lago','езеро'],['catarata','водопад'],['cuenca','водосборен басейн'],['afluente','приток']];
+$('#vocabEn').innerHTML=EN.map(function(w,i){return '<div class="word"><span class="w">'+w[0]+'</span><span class="ex">'+w[1].replace(/\.$/,'')+'<br><i>'+w[2]+'</i></span><button data-en="'+i+'" aria-label="Чуй">🔊</button></div>'}).join('');
+$('#vocabEs').innerHTML=ES.map(function(w,i){return '<div class="word"><span class="w">'+w[0]+'</span><span class="ex">'+w[1]+'</span><button data-es="'+i+'" aria-label="Чуй">🔊</button></div>'}).join('');
+var heard={};
+function heardOne(k){if(heard[k])return;heard[k]=1;addXP(1);if(Object.keys(heard).length>=5)award('polyglot')}
+$$('[data-en]').forEach(function(b){b.addEventListener('click',function(){var w=EN[+b.getAttribute('data-en')];speak(w[0]+'. '+w[2],'en-US',false);heardOne('en'+b.getAttribute('data-en'))})});
+$$('[data-es]').forEach(function(b){b.addEventListener('click',function(){var w=ES[+b.getAttribute('data-es')];speak(w[0],'es-ES',false);heardOne('es'+b.getAttribute('data-es'))})});
+
+/* ================= SELF-CHECK (open questions) ================= */
+var SC=[
+  {q:'Защо Южна Америка е на първо място в света по водно богатство?',a:'Заради **влажния климат** и **равнинния релеф** — те благоприятстват образуването на дълги и пълноводни реки.'},
+  {q:'Какво представлява главният вододел на континента и какво разделя?',a:'Минава по **билото на Андите** и разделя континента на **две отточни области** — към Атлантическия и към Тихия океан.'},
+  {q:'Защо Амазонка е пълноводна през цялата година?',a:'Защото приема притоци от двете полукълба: **десните** имат пълноводие октомври – март, а **левите** — април – септември, затова винаги някой приток е пълноводен.'},
+  {q:'С какво са забележителни водопадите Анхел и Игуасу?',a:'**Анхел** на р. Чурун е най-високият водопад в света (**1054 m**); по р. Игуасу са образувани **270** водопада — най-много в Южна Америка.'},
+  {q:'С какво е забележително езерото Титикака?',a:'То е **най-голямото високопланинско езеро в света** — на **3812 m** надм. височина, с площ **8,3 хил. km²** и дълбочина над **300 m**.'},
+  {q:'За какво се използват водите на континента и кой е пример за голяма ВЕЦ?',a:'За **корабоплаване, електроенергия, водоснабдяване и напояване**; пример е язовир **„Итайпу“** на река Парана.'}
+];
+function marks(s){return s.replace(/\*\*(.+?)\*\*/g,'<mark>$1</mark>')}
+var GR={'1':{c:'g1',t:'✓ Вярно'},'0.5':{c:'g05',t:'≈ Частично'},'0':{c:'g0',t:'✗ Грешно'}};
+$('#scList').innerHTML=SC.map(function(q,i){return '<div class="q'+(i===0?' sc-first':'')+'" data-sc="'+i+'"><div class="qnum">Въпрос '+(i+1)+'</div><p class="qtext">'+q.q+'</p>'+
+  '<textarea class="ans" rows="2" placeholder="Напиши отговора си тук…" aria-label="Отговор"></textarea>'+
+  '<div class="row" style="margin-top:8px"><button class="btn small scdone" disabled>Готово</button></div>'+
+  '<div class="model"><div class="lbl">ПРИМЕРЕН ОТГОВОР</div><p>'+marks(q.a)+'</p>'+
+  '<div class="lbl">Как се справи? Сравни ключовите думи.</div>'+
+  '<div class="self"><button data-g="1">✓ Вярно<small>1 т.</small></button><button data-g="0.5">≈ Частично<small>0,5 т.</small></button><button data-g="0">✗ Грешно<small>0 т.</small></button></div>'+
+  '<p class="selfhint"></p></div></div>'}).join('');
+$$('[data-sc]').forEach(function(box){
+  var ta=$('textarea',box),db=$('.scdone',box);
+  ta.addEventListener('input',function(){db.disabled=!ta.value.trim()});
+  db.addEventListener('click',function(){
+    if(!ta.value.trim())return;
+    ta.readOnly=true;db.disabled=true;db.textContent='✓ Изпратено';db.classList.add('done');
+    $('.model',box).classList.add('show');
+    $('.model',box).scrollIntoView({behavior:'smooth',block:'nearest'});
+  });
+  $$('.self button',box).forEach(function(b){b.addEventListener('click',function(){
+    var g=+b.getAttribute('data-g');
+    $$('.self button',box).forEach(function(x){x.disabled=true;if(+x.getAttribute('data-g')===g)x.classList.add('pick',GR[String(g)].c)});
+    $('.selfhint',box).textContent='Оценката е записана: '+GR[String(g)].t+'.';
+    if(g===1)addXP(10);else if(g===0.5)addXP(5);
+  })});
+});
+
+/* ================= QUIZ ================= */
+var LV=[
+ [{q:'Кой континент е на първо място в света по водно богатство?',o:['Южна Америка','Африка','Азия'],a:0,e:'Влажният климат и равнинният релеф правят Южна Америка №1 по водно богатство.'},
+  {q:'По билото на кои планини минава главният вододел на Южна Америка?',o:['Андите','Бразилската планинска земя','Гвианската планинска земя'],a:0,e:'Главният вододел следва билото на Андите.'},
+  {q:'Какви реки текат към Тихия океан?',o:['Кратки реки','Най-дългите реки','Реки без течение'],a:0,e:'Към Тихия океан текат къси реки, защото Андите са близо до брега.'}],
+ [{q:'Колко е водосборният басейн на Амазонка?',o:['Над 7 млн. km²','Около 1 млн. km²','100 хил. km²'],a:0,e:'Водосборният басейн на Амазонка е над 7 млн. km² — най-големият в света.'},
+  {q:'На кое място в света е Амазонка по дължина, ако за начало се приеме притокът ѝ Мараньон?',o:['Второ, след Нил','Първо','Пето'],a:0,e:'С дължина 6437 km тя е втора след Нил (според други изследвания дори е първа с 7020 km).'},
+  {q:'Кога е пълноводието на десните притоци на Амазонка?',o:['Октомври – март','Само през януари','Никога'],a:0,e:'Десните притоци имат пълноводие октомври – март, а левите — април – септември.'}],
+ [{q:'Кой водопад е най-високият в света и на коя река се намира?',o:['Анхел, на р. Чурун','Игуасу, на р. Парана','Виктория, на р. Замбези'],a:0,e:'Водопадът Анхел (1054 m) е на р. Чурун, приток на Ориноко.'},
+  {q:'Кое езеро е най-голямото високопланинско езеро в света?',o:['Титикака','Маракайбо','Байкал'],a:0,e:'Езерото Титикака в Андите е на 3812 m надморска височина.'},
+  {q:'Кой язовир на река Парана е една от най-големите ВЕЦ в света?',o:['Итайпу','Асуан','Трите клисури'],a:0,e:'Язовир „Итайпу“ на река Парана е една от най-големите водноелектрически централи в света.'}]
+];
+var FB_OK=['Браво!','Точно!','Отлично, детективе!','Вярно!'],FB_BAD=['Почти…','Не съвсем.','Опа!'];
+var qState=null;
+function startLevel(l){
+  qState={l:l,queue:[0,1,2],pos:0,firstOk:0,missed:{},total:3};
+  $('#qArea').scrollIntoView({behavior:'smooth',block:'start'});renderQ();
+}
+function renderQ(){
+  var st=qState,area=$('#qArea');
+  if(!st.queue.length){finishLevel();return}
+  var qi=st.queue[0],Q=LV[st.l][qi],order=shuffle([0,1,2]);
+  area.innerHTML='<div class="stage"><div class="qhead"><span>Ниво '+(st.l+1)+'</span><button class="btn ghost small" id="qQuit">✕</button></div>'+
+   '<div class="qprog"><i style="width:'+Math.round((3-st.queue.length)/3*100)+'%"></i></div>'+
+   '<p class="qtext">'+Q.q+'</p><div class="opts">'+order.map(function(i){return '<button class="opt" data-i="'+i+'">'+Q.o[i]+'</button>'}).join('')+'</div><div class="fb" id="qfb"></div></div>';
+  $('#qQuit').addEventListener('click',function(){qState=null;area.innerHTML=''});
+  $$('.opt',area).forEach(function(b){b.addEventListener('click',function(){
+    var i=+b.getAttribute('data-i'),fb=$('#qfb');$$('.opt',area).forEach(function(x){x.disabled=true;if(+x.getAttribute('data-i')===Q.a)x.classList.add('right')});
+    if(i===Q.a){fb.className='fb ok';fb.innerHTML='<b>'+FB_OK[Math.floor(Math.random()*FB_OK.length)]+'</b> '+Q.e;
+      if(!st.missed[qi]){st.firstOk++;addXP(10)}st.queue.shift();}
+    else{b.classList.add('wrong');fb.className='fb bad';fb.innerHTML='<b>'+FB_BAD[Math.floor(Math.random()*FB_BAD.length)]+'</b> '+Q.e+' <i>Въпросът ще се върне по-късно.</i>';
+      st.missed[qi]=true;st.queue.push(st.queue.shift());}
+    fb.insertAdjacentHTML('beforeend','<div style="margin-top:10px"><button class="btn small '+(i===Q.a?'done':'')+'" id="qNext">Продължи →</button></div>');
+    $('#qNext').addEventListener('click',renderQ);
+  })});
+}
+function finishLevel(){
+  var st=qState,l=st.l,area=$('#qArea');
+  if(!S.quizDone[l]){S.quizDone[l]=true;S.quizFirst+=st.firstOk;}
+  var nodes=$$('.node');nodes[l].classList.add('done');if(nodes[l+1])nodes[l+1].disabled=false;
+  var names=['Новобранец','Следовател','Главен хидролог'];
+  area.innerHTML='<div class="stage" style="text-align:center"><div style="font-size:2.4rem">⭐</div><p class="qtext">Ниво „'+names[l]+'“ е преминато!</p><p>От първи опит: <b>'+st.firstOk+' от 3</b></p>'+
+   (l<2?'<button class="btn amber" id="qNextLvl">Към ниво '+(l+2)+' →</button>':'<p>Всички нива са готови! Сега отиди към <b>Разкриването</b> ↓</p>')+'</div>';
+  if(l<2)$('#qNextLvl').addEventListener('click',function(){startLevel(l+1)});
+  progress();
+  if(S.quizDone.every(Boolean)){if(S.quizFirst>=8)award('chief');checkReveal();}
+  qState=null;
+}
+$$('.node').forEach(function(n){n.addEventListener('click',function(){if(!n.disabled)startLevel(+n.getAttribute('data-lvl'))})});
+
+/* flashcards */
+var FC=[['Вододел','Линия по билото на планина, която разделя два речни басейна или две отточни области.'],['Отточна област','Част от сушата, чиито реки се вливат в един и същ океан.'],['Безотточна област','Част от сушата без отток към океана.'],['Водосборен басейн','Цялата площ, от която дадена река събира водата си.'],['Делта','Устие на река, разклонено на много ръкави.'],['Амазонка','Най-пълноводната река в света; басейн над 7 млн. km²; дължина 6437 или 7020 km.'],['Ориноко','Извира от Гвианската планинска земя; влива се в Атлантическия океан; пълноводна лете.'],['Парана','Извира от Бразилската планинска земя; на нея е язовир „Итайпу“.'],['Водопадът Анхел','На р. Чурун (приток на Ориноко); 1054 m — най-високият в света.'],['Водопадите на Игуасу','На р. Игуасу (приток на Парана); 270 водопада — най-много в Южна Америка.'],['Езерото Титикака','Най-голямото високопланинско езеро в света; 3812 m надм. височина.'],['ВЕЦ','Водноелектрическа централа — произвежда ток от енергията на течаща вода.']];
+var fI=0,flash=$('#flash');
+function renderFC(){flash.classList.remove('flip');setTimeout(function(){$('#fFront').textContent=FC[fI][0];$('#fBack').textContent=FC[fI][1];$('#fNum').textContent=(fI+1)+' / '+FC.length},150)}
+flash.addEventListener('click',function(){flash.classList.toggle('flip')});
+$('#fPrev').addEventListener('click',function(){fI=(fI-1+FC.length)%FC.length;renderFC()});
+$('#fNext').addEventListener('click',function(){fI=(fI+1)%FC.length;renderFC()});
+renderFC();
+
+/* ================= REVEAL ================= */
+function checkReveal(){
+  var clues=Object.keys(S.clues).length===4;
+  if(clues){$('#revealLock').textContent=S.quizDone.every(Boolean)?'Уликите са събрани, изпитът е издържан. Време е да посочиш „виновника“!':'Всички 4 улики са събрани! Можеш да разкриеш случая (а после да минеш и изпита).';$('#revealBody').style.display='block';}
+  else $('#revealLock').textContent='Събрани улики: '+Object.keys(S.clues).length+' от 4. Прочети досиетата, разгледай картите и „Знаеш ли, че…“.';
+}
+var SUS=[
+ {t:'Нил — защото в много източници е посочен за най-дългата река',ok:0,e:'Не съвсем. Нил често е сочен за най-дългата река по официалните данни, но случаят е за реката, широка като море (улика 3).'},
+ {t:'Амазонка — реката с най-голям водосборен басейн и делта, голяма колкото България',ok:1,e:'Точно така! Амазонка е най-пълноводната река в света с басейн над 7 млн. km² (улика 1 и 2). При устието е широка над 300 km и дълбока 70 m — затова моряците понякога наистина не виждат отсрещния бряг (улика 3). Тя носи и около една пета от речната вода на цялата планета (улика 4).'},
+ {t:'Мисисипи — защото е много позната река',ok:0,e:'Не. Мисисипи дори не е в Южна Америка (улика 3).'},
+ {t:'Ориноко — защото е доста буйна река',ok:0,e:'Не. Ориноко е пълноводна лете, но не е тя реката с рекордния басейн и делта (улика 1 и 3).'}
+];
+$('#suspects').innerHTML=shuffle([0,1,2,3]).map(function(i){return '<button class="opt" data-s="'+i+'">'+SUS[i].t+'</button>'}).join('');
+$$('[data-s]').forEach(function(b){b.addEventListener('click',function(){
+  var s=SUS[+b.getAttribute('data-s')],fb=$('#revealFb');
+  if(s.ok){b.classList.add('right');$$('[data-s]').forEach(function(x){x.disabled=true});fb.className='fb ok';fb.innerHTML='<b>Случаят е разкрит!</b> '+s.e;
+    $('#stamp').classList.add('show');if(!S.solved){S.solved=true;addXP(20,'Случаят е разкрит!');progress()}
+    $('#finalXp').textContent='Общо събра '+S.xp+' XP и '+Object.keys(S.badges).length+' от 6 значки.';}
+  else{b.classList.add('wrong');b.disabled=true;fb.className='fb bad';fb.innerHTML='<b>Не е той.</b> '+s.e;}
+})});
+checkReveal();
+
+/* ================= SUMMARY TEXT ================= */
+var plain='Урок 4. Води в Южна Америка\n\nЗАПОМНИ:\n'+
+ $$('#sumList li').map(function(li,i){return (i+1)+'. '+li.innerText}).join('\n')+
+ '\n\nПонятия: вододел, отточна област, безотточна област, водосборен басейн, приток, делта, плавателна река, пълноводие, ВЕЦ.';
+$('#plain').value=plain;
+$('#copyBtn').addEventListener('click',function(){
+  var ta=$('#plain');
+  function ok(){toast('Текстът е копиран ✓')}
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(plain).then(ok,function(){ta.select();document.execCommand('copy');ok()})}
+  else{ta.removeAttribute('readonly');ta.select();try{document.execCommand('copy');ok()}catch(e){toast('Маркирай текста и го копирай ръчно')}ta.setAttribute('readonly','')}
+});
+
+renderBadges();progress();
+})();
+</script>
+</body>
+</html>
