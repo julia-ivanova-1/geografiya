@@ -256,6 +256,7 @@ summary{font-family:var(--head);font-weight:700;color:var(--teal);cursor:pointer
   <div class="row">
     <span style="flex:1;font-size:.95rem">🔊 Всяко досие има бутон <b>„Чуй“</b>, а думите с <span class="term" style="pointer-events:none">точки отдолу</span> показват обяснение при докосване.</span>
   </div>
+  <div class="row" style="margin-top:10px"><button class="btn ghost small" id="resetBtn">↺ Започни урока отначало</button></div>
   <div class="note voicewarn" id="voiceWarn">
     Телефонът няма български глас за четене. Можеш да го добавиш от настройките на телефона: <i>Език → Преобразуване на текст в говор → Услуги на Google → Инсталиране на гласови данни → Български</i> (пътят може да е малко различен).
   </div>
@@ -523,7 +524,11 @@ summary{font-family:var(--head);font-weight:700;color:var(--teal);cursor:pointer
 var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
 
 /* ================= STATE ================= */
-var S={xp:0,done:{},badges:{},regionsSeen:{},mineralsSeen:{},clues:{},quizDone:[false,false,false],quizFirst:0,expedDone:false,solved:false};
+var S={xp:0,done:{},badges:{},regionsSeen:{},mineralsSeen:{},clues:{},quizDone:[false,false,false],quizFirst:0,expedDone:false,solved:false,sc:{}};
+var LSKEY='geo6-urok02-v1';
+function save(){try{localStorage.setItem(LSKEY,JSON.stringify({xp:S.xp,done:S.done,badges:S.badges,regionsSeen:S.regionsSeen,mineralsSeen:S.mineralsSeen,clues:S.clues,quizDone:S.quizDone,quizFirst:S.quizFirst,expedDone:S.expedDone,exped:(typeof eI==='number'?eI:0),solved:S.solved,sc:S.sc,heard:(typeof heard==='object'&&heard?heard:{})}))}catch(e){}}
+function load(){try{var r=localStorage.getItem(LSKEY);return r?JSON.parse(r):null}catch(e){return null}}
+function resetAll(){try{localStorage.removeItem(LSKEY)}catch(e){}location.reload()}
 
 function progress(){
   var n=0;['s1','s2','s3','s4','lib','dyk','draw'].forEach(function(k){if(S.done[k])n++});
@@ -532,7 +537,7 @@ function progress(){
   $('#progBar').style.width=Math.min(100,Math.round(n/14*100))+'%';
 }
 function toast(msg){var t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('show')},1800)}
-function addXP(n,msg){S.xp+=n;$('#xp').textContent=S.xp;var b=$('#xpBox');b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump');if(msg)toast('+'+n+' XP · '+msg);else toast('+'+n+' XP');progress()}
+function addXP(n,msg){S.xp+=n;$('#xp').textContent=S.xp;save();var b=$('#xpBox');b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump');if(msg)toast('+'+n+' XP · '+msg);else toast('+'+n+' XP');progress()}
 
 /* ================= BADGES ================= */
 var BADGES=[
@@ -547,7 +552,7 @@ function renderBadges(){
   $('#badges').innerHTML=BADGES.map(function(b){return '<div class="badge'+(S.badges[b.id]?' on':'')+'"><span class="ic">'+b.ic+'</span><b>'+b.n+'</b>'+b.d+'</div>'}).join('');
   $('#bCount').textContent=Object.keys(S.badges).length;
 }
-function award(id){if(S.badges[id])return;S.badges[id]=true;var b=BADGES.filter(function(x){return x.id===id})[0];renderBadges();setTimeout(function(){toast('🏅 Нова значка: '+b.n)},900);progress()}
+function award(id){if(S.badges[id])return;S.badges[id]=true;save();var b=BADGES.filter(function(x){return x.id===id})[0];renderBadges();setTimeout(function(){toast('🏅 Нова значка: '+b.n)},900);progress()}
 
 /* ================= CLUES ================= */
 var CLUES={
@@ -556,14 +561,15 @@ var CLUES={
   3:'Точно под високите планини на запад са скрити най-големите находища на медна руда в света.',
   4:'Андите са част от Огнения пръстен — там, където две огромни късове от земната кора се трият една в друга.'
 };
-function giveClue(n){if(S.clues[n])return;S.clues[n]=true;var el=$('.clue[data-clue="'+n+'"]');el.classList.add('on');el.innerHTML='<b>УЛИКА '+n+' ✓</b>'+CLUES[n];toast('🔎 Нова улика!');checkReveal()}
+function markClue(n){var el=$('.clue[data-clue="'+n+'"]');el.classList.add('on');el.innerHTML='<b>УЛИКА '+n+' ✓</b>'+CLUES[n]}
+function giveClue(n){if(S.clues[n])return;S.clues[n]=true;save();markClue(n);toast('🔎 Нова улика!');checkReveal()}
 var CLUE_FOR={s2:1,dyk:4};
 
 /* ================= READ BUTTONS ================= */
 $$('[data-done]').forEach(function(b){
   b.addEventListener('click',function(){
     var k=b.getAttribute('data-done'); if(S.done[k])return;
-    S.done[k]=true; b.classList.add('done'); b.disabled=true; b.textContent='✓ Готово';
+    S.done[k]=true; b.classList.add('done'); b.disabled=true; b.textContent='✓ Готово'; save();
     addXP(+b.getAttribute('data-xp'));
     if(CLUE_FOR[k])setTimeout(function(){giveClue(CLUE_FOR[k])},700);
     if(S.done.s1&&S.done.s2&&S.done.s3&&S.done.s4&&S.done.lib&&S.done.dyk)award('detective');
@@ -652,7 +658,7 @@ function showRegion(id){
   $$('.rband',mapReg).forEach(function(e){e.classList.toggle('dim',e.getAttribute('data-id')!==id)});
   $$('.chip',$('#regChips')).forEach(function(e){e.classList.toggle('active',e.getAttribute('data-id')===id)});
   $('#regInfo').innerHTML='<h3>'+r.n+'</h3><p style="margin:0">'+r.d+'</p>';
-  if(!S.regionsSeen[id]){S.regionsSeen[id]=true;$$('.chip',$('#regChips')).forEach(function(e){if(e.getAttribute('data-id')===id)e.classList.add('seen')});addXP(5);
+  if(!S.regionsSeen[id]){S.regionsSeen[id]=true;save();$$('.chip',$('#regChips')).forEach(function(e){if(e.getAttribute('data-id')===id)e.classList.add('seen')});addXP(5);
     if(['w','m','e'].every(function(k){return S.regionsSeen[k]})){award('regions');setTimeout(function(){giveClue(2)},400)}}
 }
 $$('.regionhit',mapReg).forEach(function(e){e.addEventListener('click',function(){showRegion(e.getAttribute('data-id'))})});
@@ -684,7 +690,7 @@ function showMin(id){
   $$('#mapMin .mk').forEach(function(e){e.classList.toggle('active',e.getAttribute('data-id')===id)});
   $$('#minChips .chip').forEach(function(e){e.classList.toggle('active',e.getAttribute('data-id')===id)});
   $('#minInfo').innerHTML='<h3>'+p.n+'</h3><p style="margin:0">'+p.d+'</p>';
-  if(!S.mineralsSeen[id]){S.mineralsSeen[id]=true;$$('[data-id="'+id+'"]',document).forEach(function(e){e.classList.add('seen')});addXP(3);
+  if(!S.mineralsSeen[id]){S.mineralsSeen[id]=true;save();$$('[data-id="'+id+'"]',document).forEach(function(e){e.classList.add('seen')});addXP(3);
     if(Object.keys(S.mineralsSeen).length>=6){award('prospector');setTimeout(function(){giveClue(3)},400)}}
 }
 $$('#mapMin .mk').forEach(function(e){e.addEventListener('click',function(){showMin(e.getAttribute('data-id'))})});
@@ -723,7 +729,7 @@ var eI=0,eStage=$('#expedStage');
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
 function renderExped(){
   if(eI>=EXPED.length){eStage.innerHTML='<div class="stepdots">'+EXPED.map(function(){return '<i class="ok"></i>'}).join('')+'</div><p style="font-family:var(--head);font-weight:700;color:var(--teal);font-size:1.15rem;margin:0">🏁 Експедицията завърши на ръба на водопада Анхел!</p>';
-    if(!S.expedDone){S.expedDone=true;award('exped');progress()}return}
+    if(!S.expedDone){S.expedDone=true;award('exped');progress()}save();return}
   var f=EXPED[eI],order=shuffle([0,1,2]);
   eStage.innerHTML='<div class="stepdots">'+EXPED.map(function(_,i){return '<i class="'+(i<eI?'ok':i===eI?'cur':'')+'"></i>'}).join('')+'</div>'+
    '<div class="qhead"><span>Спирка '+(eI+1)+' от '+EXPED.length+'</span></div><p class="qtext" style="font-size:1.02rem">'+f.q+'</p><div class="opts">'+
@@ -733,7 +739,7 @@ function renderExped(){
     var i=+b.getAttribute('data-i'),fb=$('.fb',eStage);
     if(i===f.a){b.classList.add('right');$$('.opt',eStage).forEach(function(x){x.disabled=true});
       fb.className='fb ok';fb.innerHTML='<b>Точно така!</b> '+f.e+'<div style="margin-top:10px"><button class="btn small done" id="eNext">Напред →</button></div>';
-      if(!tried)addXP(5);$('#eNext').addEventListener('click',function(){eI++;renderExped()});}
+      if(!tried)addXP(5);$('#eNext').addEventListener('click',function(){eI++;save();renderExped()});}
     else{tried=true;b.classList.add('wrong');b.disabled=true;fb.className='fb bad';fb.innerHTML='<b>Провери пак досието.</b> Опитай друг отговор.';}
   })});
 }
@@ -745,7 +751,7 @@ var ES=[['volcán','вулкан'],['montaña','планина'],['terremoto','�
 $('#vocabEn').innerHTML=EN.map(function(w,i){return '<div class="word"><span class="w">'+w[0]+'</span><span class="ex">'+w[1].replace(/\.$/,'')+'<br><i>'+w[2]+'</i></span><button data-en="'+i+'" aria-label="Чуй">🔊</button></div>'}).join('');
 $('#vocabEs').innerHTML=ES.map(function(w,i){return '<div class="word"><span class="w">'+w[0]+'</span><span class="ex">'+w[1]+'</span><button data-es="'+i+'" aria-label="Чуй">🔊</button></div>'}).join('');
 var heard={};
-function heardOne(k){if(heard[k])return;heard[k]=1;addXP(1);if(Object.keys(heard).length>=5)award('polyglot')}
+function heardOne(k){if(heard[k])return;heard[k]=1;save();addXP(1);if(Object.keys(heard).length>=5)award('polyglot')}
 $$('[data-en]').forEach(function(b){b.addEventListener('click',function(){var w=EN[+b.getAttribute('data-en')];speak(w[0]+'. '+w[2],'en-US',false);heardOne('en'+b.getAttribute('data-en'))})});
 $$('[data-es]').forEach(function(b){b.addEventListener('click',function(){var w=ES[+b.getAttribute('data-es')];speak(w[0],'es-ES',false);heardOne('es'+b.getAttribute('data-es'))})});
 
@@ -768,18 +774,20 @@ $('#scList').innerHTML=SC.map(function(q,i){return '<div class="q'+(i===0?' sc-f
   '<div class="self"><button data-g="1">✓ Вярно<small>1 т.</small></button><button data-g="0.5">≈ Частично<small>0,5 т.</small></button><button data-g="0">✗ Грешно<small>0 т.</small></button></div>'+
   '<p class="selfhint"></p></div></div>'}).join('');
 $$('[data-sc]').forEach(function(box){
-  var ta=$('textarea',box),db=$('.scdone',box);
+  var idx=box.getAttribute('data-sc'),ta=$('textarea',box),db=$('.scdone',box);
   ta.addEventListener('input',function(){db.disabled=!ta.value.trim()});
   db.addEventListener('click',function(){
     if(!ta.value.trim())return;
     ta.readOnly=true;db.disabled=true;db.textContent='✓ Изпратено';db.classList.add('done');
     $('.model',box).classList.add('show');
+    S.sc[idx]={a:ta.value};save();
     $('.model',box).scrollIntoView({behavior:'smooth',block:'nearest'});
   });
   $$('.self button',box).forEach(function(b){b.addEventListener('click',function(){
     var g=+b.getAttribute('data-g');
     $$('.self button',box).forEach(function(x){x.disabled=true;if(+x.getAttribute('data-g')===g)x.classList.add('pick',GR[String(g)].c)});
     $('.selfhint',box).textContent='Оценката е записана: '+GR[String(g)].t+'.';
+    if(S.sc[idx])S.sc[idx].g=g;save();
     if(g===1)addXP(10);else if(g===0.5)addXP(5);
   })});
 });
@@ -822,7 +830,7 @@ function renderQ(){
 }
 function finishLevel(){
   var st=qState,l=st.l,area=$('#qArea');
-  if(!S.quizDone[l]){S.quizDone[l]=true;S.quizFirst+=st.firstOk;}
+  if(!S.quizDone[l]){S.quizDone[l]=true;S.quizFirst+=st.firstOk;save();}
   var nodes=$$('.node');nodes[l].classList.add('done');if(nodes[l+1])nodes[l+1].disabled=false;
   var names=['Новобранец','Следовател','Главен геолог'];
   area.innerHTML='<div class="stage" style="text-align:center"><div style="font-size:2.4rem">⭐</div><p class="qtext">Ниво „'+names[l]+'“ е преминато!</p><p>От първи опит: <b>'+st.firstOk+' от 3</b></p>'+
@@ -859,7 +867,7 @@ $('#suspects').innerHTML=shuffle([0,1,2,3]).map(function(i){return '<button clas
 $$('[data-s]').forEach(function(b){b.addEventListener('click',function(){
   var s=SUS[+b.getAttribute('data-s')],fb=$('#revealFb');
   if(s.ok){b.classList.add('right');$$('[data-s]').forEach(function(x){x.disabled=true});fb.className='fb ok';fb.innerHTML='<b>Случаят е разкрит!</b> '+s.e;
-    $('#stamp').classList.add('show');if(!S.solved){S.solved=true;addXP(20,'Случаят е разкрит!');progress()}
+    $('#stamp').classList.add('show');if(!S.solved){S.solved=true;save();addXP(20,'Случаят е разкрит!');progress()}
     $('#finalXp').textContent='Общо събра '+S.xp+' XP и '+Object.keys(S.badges).length+' от 6 значки.';}
   else{b.classList.add('wrong');b.disabled=true;fb.className='fb bad';fb.innerHTML='<b>Не е той.</b> '+s.e;}
 })});
@@ -877,6 +885,41 @@ $('#copyBtn').addEventListener('click',function(){
   else{ta.removeAttribute('readonly');ta.select();try{document.execCommand('copy');ok()}catch(e){toast('Маркирай текста и го копирай ръчно')}ta.setAttribute('readonly','')}
 });
 
+/* ================= RESTORE ================= */
+$('#resetBtn').addEventListener('click',function(){
+  if(confirm('Всичко в този урок ще започне отначало: XP, значките и решените нива. Продължаваме ли?'))resetAll();
+});
+(function restore(){
+  var d=load();if(!d)return;
+  S.xp=d.xp||0;S.done=d.done||{};S.badges=d.badges||{};S.regionsSeen=d.regionsSeen||{};S.mineralsSeen=d.mineralsSeen||{};S.clues=d.clues||{};
+  S.quizDone=d.quizDone||[false,false,false];S.quizFirst=d.quizFirst||0;S.expedDone=!!d.expedDone;S.solved=!!d.solved;S.sc=d.sc||{};
+  heard=d.heard||{};
+  $('#xp').textContent=S.xp;
+  $$('[data-done]').forEach(function(b){if(S.done[b.getAttribute('data-done')]){b.classList.add('done');b.disabled=true;b.textContent='✓ Готово'}});
+  Object.keys(S.clues).forEach(function(n){markClue(n)});
+  Object.keys(S.regionsSeen).forEach(function(id){$$('.chip[data-id="'+id+'"]',$('#regChips')).forEach(function(e){e.classList.add('seen')})});
+  Object.keys(S.mineralsSeen).forEach(function(id){$$('[data-id="'+id+'"]',document).forEach(function(e){e.classList.add('seen')})});
+  var nodes=$$('.node');S.quizDone.forEach(function(done,l){if(done){nodes[l].classList.add('done');if(nodes[l+1])nodes[l+1].disabled=false}});
+  eI=(typeof d.exped==='number'?d.exped:0);renderExped();
+  Object.keys(S.sc).forEach(function(idx){
+    var rec=S.sc[idx],box=$('[data-sc="'+idx+'"]');if(!box)return;
+    var ta=$('textarea',box),db=$('.scdone',box);
+    ta.value=rec.a||'';ta.readOnly=true;db.disabled=true;db.textContent='✓ Изпратено';db.classList.add('done');
+    $('.model',box).classList.add('show');
+    if(rec.g!==undefined){
+      $$('.self button',box).forEach(function(x){x.disabled=true;if(+x.getAttribute('data-g')===rec.g)x.classList.add('pick',GR[String(rec.g)].c)});
+      $('.selfhint',box).textContent='Оценката е записана: '+GR[String(rec.g)].t+'.';
+    }
+  });
+  if(S.solved){
+    $$('[data-s]').forEach(function(x){x.disabled=true;if(SUS[+x.getAttribute('data-s')].ok)x.classList.add('right')});
+    var fb=$('#revealFb');fb.className='fb ok';fb.innerHTML='<b>Случаят е разкрит!</b> '+SUS.filter(function(x){return x.ok})[0].e;
+    $('#stamp').classList.add('show');
+    $('#finalXp').textContent='Общо събра '+S.xp+' XP и '+Object.keys(S.badges).length+' от 6 значки.';
+  }
+  checkReveal();
+  toast('Напредъкът ти е запазен: '+S.xp+' XP');
+})();
 renderBadges();progress();
 })();
 </script>

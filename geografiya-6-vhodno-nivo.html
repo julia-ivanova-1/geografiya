@@ -203,6 +203,7 @@ summary{font-family:var(--head);font-weight:700;color:var(--teal);cursor:pointer
   <div class="note voicewarn" id="voiceWarn">
     Телефонът няма български глас за четене. Можеш да го добавиш от настройките на телефона: <i>Език → Преобразуване на текст в говор → Услуги на Google → Инсталиране на гласови данни → Български</i> (пътят може да е малко различен).
   </div>
+  <div class="row" style="margin-top:10px"><button class="btn ghost wide" id="resetBtn">↺ Започни урока отначало</button></div>
 </section>
 
 <!-- ===== REVIEW ===== -->
@@ -236,10 +237,6 @@ summary{font-family:var(--head);font-weight:700;color:var(--teal);cursor:pointer
   <div id="resultBody"></div>
 </section>
 
-<section class="card" style="text-align:center">
-  <button class="btn ghost wide" id="resetBtn">🔄 Започни отначало</button>
-  <p class="note" style="margin-top:10px;text-align:left">Изтрива всички отговори, точки и XP. Въпросите и отговорите се разбъркват наново.</p>
-</section>
 
 <section class="card">
   <details>
@@ -270,7 +267,7 @@ summary{font-family:var(--head);font-weight:700;color:var(--teal);cursor:pointer
 <div class="sheet-bg" id="confirmBg"></div>
 <div class="sheet" id="confirm" role="dialog" aria-modal="true">
   <h3>Сигурна ли си?</h3>
-  <p style="margin:0 0 14px">Всички отговори ще се изтрият.</p>
+  <p style="margin:0 0 14px">Всичко в този урок ще започне отначало: XP и решените въпроси. Продължаваме ли?</p>
   <div class="row"><button class="btn danger" id="confirmYes">Да, изтрий</button><button class="btn ghost" id="confirmNo">Отказ</button></div>
 </div>
 
@@ -525,10 +522,10 @@ function freshState(){
 function range(n){var a=[];for(var i=0;i<n;i++)a.push(i);return a}
 function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
 function load(){
-  try{var raw=sessionStorage.getItem(KEY);if(raw){var s=JSON.parse(raw);if(s&&s.ordA&&s.opt&&s.A&&s.B)return s}}catch(e){}
+  try{var raw=localStorage.getItem(KEY);if(raw){var s=JSON.parse(raw);if(s&&s.ordA&&s.opt&&s.A&&s.B)return s}}catch(e){}
   return freshState();
 }
-function save(){try{sessionStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 var S=load();
 
 /* ================= HELPERS ================= */
@@ -758,9 +755,8 @@ function closeConfirm(){cf.classList.remove('open');setTimeout(function(){cbg.st
 $('#resetBtn').addEventListener('click',openConfirm);
 $('#confirmNo').addEventListener('click',closeConfirm);cbg.addEventListener('click',closeConfirm);
 $('#confirmYes').addEventListener('click',function(){
-  try{sessionStorage.removeItem(KEY)}catch(e){}
-  stopSpeech();S=freshState();save();renderAll();closeConfirm();
-  window.scrollTo(0,0);toast('Всичко е изчистено. Успех!');
+  try{localStorage.removeItem(KEY)}catch(e){}
+  location.reload();
 });
 
 /* ================= INIT ================= */
