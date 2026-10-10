@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0F5257">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<title>Урок 5–6 · Част 2: Природни зони — сухите зони и Андите</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&display=swap&subset=cyrillic" rel="stylesheet">
+<style>
+:root{
+  --teal:#0F5257; --teal-2:#1B6F75; --teal-soft:#E3EFEE;
+  --amber:#F2A541; --amber-soft:#FDEFD8; --amber-ink:#8A5300;
+  --paper:#FBF7EF; --card:#FFFFFF; --ink:#1F2A30; --muted:#5B6870; --line:#E6DFD1;
+  --ok:#2E9E5B; --ok-soft:#E3F5EA; --bad:#D64545; --bad-soft:#FBE6E6;
+  --sea:#CFE6EE; --land:#E9D9A6; --land-edge:#A8894A;
+  --r:16px; --shadow:0 2px 0 rgba(15,82,87,.10), 0 6px 18px rgba(31,42,48,.06);
+  --head:"Rubik", system-ui, "Roboto", "Segoe UI", sans-serif;
+  --body:system-ui, "Roboto", "Segoe UI", Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.6 var(--body);overflow-x:hidden}
+h1,h2,h3{font-family:var(--head);line-height:1.2;margin:0 0 .5em;color:var(--teal)}
+h1{font-size:1.75rem;font-weight:800}
+h2{font-size:1.35rem;font-weight:700}
+h3{font-size:1.1rem;font-weight:700}
+p{margin:.5em 0 .8em}
+a{color:var(--teal-2)}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 120px}
+
+/* ---------- Top bar ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:var(--teal);color:#fff;padding:8px 16px 10px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.topbar-in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:10px}
+.xp{display:flex;align-items:center;gap:6px;font-family:var(--head);font-weight:800;font-size:1.05rem;background:rgba(255,255,255,.12);padding:4px 10px;border-radius:999px;white-space:nowrap}
+.xp .gem{color:var(--amber)}
+.xp.bump{animation:bump .5s}
+@keyframes bump{30%{transform:scale(1.25)}}
+.prog{flex:1;height:12px;background:rgba(255,255,255,.2);border-radius:999px;overflow:hidden}
+.prog>i{display:block;height:100%;width:0;background:var(--amber);border-radius:999px;transition:width .6s}
+.badgecount{font-size:.95rem;white-space:nowrap;background:rgba(255,255,255,.12);padding:4px 10px;border-radius:999px}
+.toast{position:fixed;left:50%;top:64px;transform:translateX(-50%) translateY(-20px);opacity:0;background:var(--amber);color:#3A2600;font-family:var(--head);font-weight:700;padding:8px 16px;border-radius:999px;z-index:60;transition:.3s;pointer-events:none;box-shadow:var(--shadow);max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- Hero ---------- */
+.hero{padding:22px 0 6px}
+.kicker{font-family:var(--head);font-weight:700;color:var(--amber-ink);letter-spacing:.04em;text-transform:uppercase;font-size:.85rem}
+.case{background:var(--card);border:2px dashed var(--teal-2);border-radius:var(--r);padding:16px;margin:14px 0;position:relative;box-shadow:var(--shadow)}
+.case h2{display:flex;align-items:center;gap:8px}
+.clues{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.clue{border-radius:12px;padding:10px;font-size:.9rem;line-height:1.4;background:#F1EEE7;color:var(--muted);min-height:74px}
+.clue b{display:block;font-family:var(--head);color:var(--muted);font-size:.8rem;margin-bottom:2px}
+.clue.on{background:var(--amber-soft);color:var(--ink);animation:pop .4s}
+.clue.on b{color:var(--amber-ink)}
+@keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.05)}}
+
+/* ---------- Cards / dossiers ---------- */
+.card{background:var(--card);border-radius:var(--r);padding:18px 16px;margin:18px 0;box-shadow:var(--shadow);border:1px solid var(--line)}
+.dossier-tag{display:inline-block;font-family:var(--head);font-weight:700;font-size:.8rem;color:#fff;background:var(--teal);padding:3px 10px;border-radius:6px;margin-bottom:8px;letter-spacing:.05em}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{border:0;border-radius:14px;padding:12px 16px;min-height:48px;font-family:var(--head);font-weight:700;font-size:1rem;background:var(--teal);color:#fff;box-shadow:0 4px 0 #0A3A3E;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0A3A3E}
+.btn.ghost{background:var(--teal-soft);color:var(--teal);box-shadow:0 4px 0 #C4DAD8}
+.btn.amber{background:var(--amber);color:#3A2600;box-shadow:0 4px 0 #C98422}
+.btn.done{background:var(--ok);box-shadow:0 4px 0 #1F7040}
+.btn[disabled]{opacity:.55;cursor:default}
+.btn.small{min-height:40px;padding:8px 12px;font-size:.9rem}
+.readbtn{margin-top:6px}
+.listen{display:inline-flex;align-items:center;gap:6px}
+.term{background:none;border:0;padding:0 2px;color:var(--teal);font-weight:700;border-bottom:2px dotted var(--amber);font-size:inherit;line-height:inherit}
+.hl{background:var(--amber-soft);padding:0 4px;border-radius:4px}
+.fact-num{font-family:var(--head);font-weight:800;color:var(--teal);font-size:1.5rem;line-height:1}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.stat{background:var(--teal-soft);border-radius:12px;padding:12px}
+.stat small{display:block;color:var(--muted);font-size:.85rem;margin-top:4px;line-height:1.35}
+.lib{background:#EAF3EC;border:1px solid #CFE3D3}
+.lib .dossier-tag{background:#2F6B3F}
+
+/* ---------- Maps ---------- */
+.mapbox{background:var(--sea);border-radius:14px;overflow:hidden;border:1px solid #B8D6E0}
+.mapbox svg{display:block;width:100%;height:auto}
+.land-outline{fill:none;stroke:#3A2E1A;stroke-width:1.4;stroke-linejoin:round}
+.maplabel{font:600 9px var(--body);fill:#2C5D73;letter-spacing:.12em}
+.mk{cursor:pointer}
+.mk circle.dot{stroke:#fff;stroke-width:1.6}
+.mk .halo{fill:none;stroke-width:2;opacity:0}
+.mk.active .halo{opacity:1;animation:ring 1.2s infinite}
+@keyframes ring{0%{r:6;opacity:1}100%{r:16;opacity:0}}
+.mk.seen circle.dot{stroke:#1F2A30}
+.regionhit{cursor:pointer;opacity:0}
+.rband{transition:opacity .2s}
+.rband.dim{opacity:.4}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.chip{border:0;border-radius:999px;padding:8px 12px;min-height:40px;font-size:.9rem;background:#F1EEE7;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.chip.seen{background:var(--teal-soft)}
+.chip.active{background:var(--teal);color:#fff}
+.infobox{background:var(--amber-soft);border-radius:12px;padding:12px;min-height:84px;margin-top:6px}
+.infobox h3{margin:0 0 4px;color:var(--amber-ink)}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:.85rem;color:var(--muted);margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.legend i.sq{border-radius:3px}
+.legend i.ln{width:16px;height:3px;border-radius:2px}
+
+/* ---------- Did you know ---------- */
+.dyk{display:grid;gap:10px}
+.dyk div{background:#F7F4EC;border-radius:12px;padding:12px 12px 12px 48px;position:relative}
+.dyk div:before{content:attr(data-i);position:absolute;left:12px;top:10px;font-size:1.4rem}
+
+/* ---------- Pilot-style stage / quiz ---------- */
+.stage{background:#F7F4EC;border-radius:14px;padding:14px;margin-top:10px}
+.stepdots{display:flex;gap:4px;margin-bottom:10px}
+.stepdots i{flex:1;height:6px;border-radius:3px;background:#E0D8C6}
+.stepdots i.ok{background:var(--ok)}
+.stepdots i.cur{background:var(--amber)}
+.opts{display:grid;gap:10px;margin-top:10px}
+.opt{border:2px solid var(--line);border-bottom-width:4px;background:#fff;border-radius:14px;padding:12px 14px;min-height:52px;text-align:left;font-size:1rem;color:var(--ink)}
+.opt:active{transform:translateY(2px)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt[disabled]{cursor:default}
+.fb{border-radius:14px;padding:12px 14px;margin-top:12px;display:none}
+.fb.ok{display:block;background:var(--ok-soft);border:2px solid var(--ok)}
+.fb.bad{display:block;background:var(--bad-soft);border:2px solid var(--bad)}
+.fb b{font-family:var(--head)}
+.fb.ok b{color:#1F7040}.fb.bad b{color:#A42F2F}
+.path{display:flex;flex-direction:column;align-items:center;gap:6px;margin:14px 0}
+.node{width:84px;height:84px;border-radius:50%;border:0;font-family:var(--head);font-weight:800;font-size:1.6rem;color:#fff;background:var(--teal);box-shadow:0 6px 0 #0A3A3E;position:relative}
+.node:nth-child(2){margin-left:90px}.node:nth-child(3){margin-right:90px}
+.node[disabled]{background:#C9C3B5;box-shadow:0 6px 0 #A39D8F;cursor:default}
+.node.done{background:var(--amber);box-shadow:0 6px 0 #C98422;color:#3A2600}
+.node span{position:absolute;top:92px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:.8rem;color:var(--muted);font-weight:700}
+.pathwrap{padding-bottom:26px}
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.9rem;color:var(--muted)}
+.qprog{height:14px;background:#E0D8C6;border-radius:999px;overflow:hidden;margin:8px 0 12px}
+.qprog i{display:block;height:100%;width:0;background:var(--ok);transition:width .4s}
+.qtext{font-family:var(--head);font-weight:700;font-size:1.15rem;color:var(--ink)}
+
+/* flashcards */
+.flash{perspective:900px;margin:12px 0}
+.flash-in{position:relative;height:190px;transition:transform .5s;transform-style:preserve-3d;cursor:pointer}
+.flash.flip .flash-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px}
+.front{background:var(--teal);color:#fff;font-family:var(--head);font-weight:800;font-size:1.4rem}
+.back{background:var(--amber-soft);color:var(--ink);transform:rotateY(180deg);font-size:1rem;line-height:1.45}
+
+/* vocab */
+.vocab{display:grid;gap:8px}
+.word{display:flex;align-items:center;gap:10px;background:#F7F4EC;border-radius:12px;padding:10px 12px;min-width:0}
+.word .w{font-family:var(--head);font-weight:700;color:var(--teal);min-width:88px}
+.word .ex{font-size:.92rem;color:var(--muted);line-height:1.4;min-width:0;overflow-wrap:break-word}
+.word button{margin-left:auto;flex:none;border:0;background:var(--teal-soft);border-radius:10px;width:44px;height:44px;font-size:1.1rem}
+.hola .word .w{color:#B0452E}
+
+/* self-check open questions */
+.q{border-top:1px solid var(--line);padding:14px 0 6px}
+h3+.q,.sc-first{border-top:0}
+.qnum{font-family:var(--head);font-weight:700;color:var(--amber-ink);font-size:.8rem;letter-spacing:.04em;text-transform:uppercase}
+textarea.ans{width:100%;min-height:72px;font:16px/1.45 var(--body);border:2px solid var(--line);border-radius:12px;padding:10px 12px;background:#FFFDF8;color:var(--ink);resize:vertical;display:block;margin-top:6px}
+textarea.ans:focus{outline:none;border-color:var(--teal-2)}
+textarea.ans[readonly]{background:#F1EEE7;color:var(--muted)}
+.model{background:var(--amber-soft);border-radius:12px;padding:10px 12px;margin-top:10px;display:none}
+.model.show{display:block}
+.model .lbl{font-family:var(--head);font-weight:700;color:var(--amber-ink);font-size:.85rem}
+.model p{margin:.2em 0 .5em}
+.self{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:6px}
+.self button{border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;background:#fff;min-height:56px;padding:6px 4px;font-family:var(--head);font-weight:700;font-size:.9rem;line-height:1.2;color:var(--ink)}
+.self button small{display:block;font-family:var(--body);font-weight:400;font-size:.76rem;color:var(--muted)}
+.self button[disabled]{cursor:default;opacity:.45}
+.self button.pick{opacity:1}
+.self button.pick.g1{border-color:var(--ok);background:var(--ok-soft)}
+.self button.pick.g05{border-color:var(--amber);background:#FFF4DF}
+.self button.pick.g0{border-color:var(--bad);background:var(--bad-soft)}
+.selfhint{font-size:.85rem;color:var(--muted);margin-top:6px}
+
+/* reveal / badges */
+.reveal{text-align:center;position:relative}
+.stamp{display:none;margin:12px auto;width:max-content;max-width:100%;border:4px solid var(--bad);color:var(--bad);font-family:var(--head);font-weight:800;font-size:1.8rem;padding:6px 18px;border-radius:10px;transform:rotate(-8deg);letter-spacing:.08em}
+.stamp.show{display:block;animation:stamp .5s}
+@keyframes stamp{0%{transform:rotate(-8deg) scale(2.2);opacity:0}100%{transform:rotate(-8deg) scale(1);opacity:1}}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;margin-top:12px}
+.badge{background:#F1EEE7;border-radius:14px;padding:10px 6px;text-align:center;font-size:.8rem;color:var(--muted);filter:grayscale(1);opacity:.6}
+.badge .ic{font-size:2rem;display:block}
+.badge.on{filter:none;opacity:1;background:var(--amber-soft);color:var(--ink);animation:pop .4s}
+.badge b{display:block;font-family:var(--head);font-size:.85rem}
+
+/* summary */
+.sum li{margin-bottom:6px}
+textarea.plain{width:100%;min-height:200px;font:15px/1.5 var(--body);border:1px solid var(--line);border-radius:12px;padding:10px;background:#FFFDF8;color:var(--ink)}
+
+/* glossary sheet */
+.sheet-bg{position:fixed;inset:0;background:rgba(31,42,48,.4);z-index:70;display:none}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:71;background:#fff;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .25s;max-width:760px;margin:0 auto;box-shadow:0 -6px 24px rgba(0,0,0,.15)}
+.sheet.open{transform:translateY(0)}
+.sheet h3{margin-bottom:6px}
+
+/* audio panel */
+.audiobar{position:fixed;left:0;right:0;bottom:0;z-index:55;background:#fff;border-top:1px solid var(--line);padding:8px 16px calc(8px + env(safe-area-inset-bottom));display:none;box-shadow:0 -4px 16px rgba(0,0,0,.08)}
+.audiobar.show{display:block}
+.audiobar-in{max-width:760px;margin:0 auto;display:flex;gap:8px;align-items:center}
+.audiobar .t{flex:1;font-size:.85rem;color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.audiobar select{font:inherit;font-size:.9rem;padding:6px;border-radius:10px;border:1px solid var(--line);background:#fff;min-height:40px}
+.voicewarn{display:none;margin-top:8px}
+
+details{background:#F7F4EC;border-radius:12px;padding:10px 12px;margin:10px 0}
+summary{font-family:var(--head);font-weight:700;color:var(--teal);cursor:pointer;min-height:32px}
+.src li{font-size:.88rem;margin-bottom:4px;word-break:break-word}
+.note{font-size:.88rem;color:var(--muted);background:#F1EEE7;border-radius:10px;padding:8px 10px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- Gallery ---------- */
+.gallery{display:grid;gap:14px}
+figure{margin:0;background:var(--card);border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+figure img{display:block;width:100%;height:auto;max-height:75vh;object-fit:contain;background:#E8E2D4;cursor:zoom-in}
+.zoomhint{font-size:.78rem;color:var(--muted)}
+figure .noimg{height:120px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.9rem;padding:12px;text-align:center;background:#EFE9DC}
+figcaption{padding:10px 12px;font-size:.95rem;line-height:1.45}
+figcaption small{display:block;color:var(--muted);font-size:.78rem;margin-top:4px}
+
+
+/* ---------- Natural zones map ---------- */
+.zone{transition:opacity .25s}
+.zone.off{opacity:.22}
+.zone.on{opacity:1}
+.zone.dimz{opacity:.45}
+.zone.sel{opacity:1;filter:drop-shadow(0 0 2px rgba(0,0,0,.55))}
+.zhit{opacity:0;cursor:pointer}
+.zchip.off{opacity:.45}
+
+/* ---------- Cross-sections (jungle layers / Andes belts) ---------- */
+.xsec{display:block;width:100%;height:auto}
+.layer{cursor:pointer}
+.layer .lbg{transition:opacity .2s}
+.layer.dimz .lbg{opacity:.45}
+.layer.sel .lbg{stroke:#1F2A30;stroke-width:3}
+.layer.seen .tick{opacity:1}
+.layer .tick{opacity:0}
+.sxlabel{font:700 11px var(--head);fill:#fff;pointer-events:none}
+.sxsmall{font:600 9.5px var(--body);fill:#fff;pointer-events:none}
+.xlist{display:grid;gap:8px;margin-top:10px}
+.xlist .chip{justify-content:flex-start;text-align:left;border-radius:14px;min-height:46px;width:100%}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{background:#fff;border-radius:999px;padding:4px 10px;font-size:.85rem;border:1px solid #E6D3A8}
+
+/* ---------- Slider ---------- */
+.yearbox{background:#F7F4EC;border-radius:14px;padding:12px 14px;margin-top:10px}
+.yearbox .ytop{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--head);font-weight:800;color:var(--teal)}
+.yearbox .ytop big{font-size:1.7rem}
+input[type=range]{width:100%;height:44px;accent-color:var(--teal);margin:6px 0 0}
+
+/* ---------- Games ---------- */
+.gcard{background:#fff;border:2px solid var(--line);border-radius:16px;padding:16px;text-align:center;margin:10px 0;font-family:var(--head);font-weight:800;font-size:1.35rem;color:var(--teal)}
+.gcard small{display:block;font:400 .9rem var(--body);color:var(--muted);margin-top:4px}
+.gopts{display:grid;gap:10px}
+.gopts.g3{grid-template-columns:1fr 1fr 1fr}
+.gopts .opt{text-align:center;padding:10px 6px;font-weight:700}
+.ladder{display:grid;gap:8px;margin:10px 0}
+.ladder .opt{text-align:left}
+.ladder .opt.picked{border-color:var(--ok);background:var(--ok-soft)}
+.ladder .opt .n{display:inline-block;min-width:1.6em;font-family:var(--head);font-weight:800;color:var(--ok)}
+
+/* ---------- Tables ---------- */
+.cmp{width:100%;border-collapse:collapse;font-size:.92rem;margin:10px 0}
+.cmp th,.cmp td{border:1px solid var(--line);padding:8px;vertical-align:top;text-align:left}
+.cmp th{background:var(--teal-soft);color:var(--teal);font-family:var(--head);font-size:.85rem}
+.cmp{table-layout:fixed;font-size:.88rem}
+.cmp td{overflow-wrap:break-word;width:50%}
+.cmp td.k{font-weight:700;background:#F7F4EC;font-family:var(--head);color:var(--teal)}
+.tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* ---------- Rain shadow scheme ---------- */
+.rainstep .opt{min-height:48px}
+.sbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.sbtns button{border:2px solid var(--line);border-bottom-width:4px;background:#fff;border-radius:12px;min-height:48px;font-family:var(--head);font-weight:700;font-size:.9rem;color:var(--ink)}
+.sbtns button.act{border-color:var(--teal);background:var(--teal-soft);color:var(--teal)}
+.sbtns button.seen{border-color:var(--ok)}
+.air{transition:opacity .4s}
+
+.keywords b{background:var(--amber-soft);padding:0 4px;border-radius:4px}
+.partnav{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.partnav a.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.imgsrc{font-size:.8rem;color:var(--muted)}
+figure img{min-height:60px}
+
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="xp" id="xpBox"><span class="gem">◆</span><span id="xp">0</span> XP</div>
+    <div class="prog" aria-label="Напредък"><i id="progBar"></i></div>
+    <div class="badgecount">🏅 <span id="bCount">0</span>/8</div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<main class="wrap">
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="kicker">География и икономика · 6. клас · Урок 5–6 · Част 2</div>
+  <h1>Природни зони: сухите зони и Андите</h1>
+</header>
+
+<section class="card" id="intro">
+  <p style="margin-top:0">Южна Америка се простира по-на юг от Африка, затова природата ѝ е по-разнообразна. Повечето природни зони са ти познати от Африка, но тук имат свои особености и различни имена.</p>
+  <div class="partnav" style="margin:10px 0 0"><a class="btn ghost small" href="geografiya-6-urok-05-prirodni-zoni-1.html" style="text-decoration:none;display:inline-flex;align-items:center">← Към част 1</a></div>
+</section>
+
+<section class="case" id="case">
+  <div class="dossier-tag">🔍 СЛУЧАЯТ НА ДЕНЯ</div>
+  <h2>„Пустинята до океана“</h2>
+  <p>На картата пустинята Атакама лежи почти на самия бряг на Тихия океан. Океанът е огромен резервоар от вода. Все пак учебникът я нарича <b>най-сухото място на континента и на Земята</b>. <b>Защо Атакама е най-сухото място, въпреки че е на брега на океана?</b></p>
+  <p><b>Твоята задача, детективе:</b> прочети досиетата, разгледай картата и схемите, и събери 4 улики.</p>
+  <div class="clues" id="clues">
+    <div class="clue" data-clue="1"><b>УЛИКА 1</b>🔒 Досие „Полупустини и пустини“</div>
+    <div class="clue" data-clue="2"><b>УЛИКА 2</b>🔒 Карта на природните зони</div>
+    <div class="clue" data-clue="3"><b>УЛИКА 3</b>🔒 Схема „Защо Патагония е суха“</div>
+    <div class="clue" data-clue="4"><b>УЛИКА 4</b>🔒 „Знаеш ли, че…“</div>
+  </div>
+</section>
+
+
+<div class="card" style="padding:12px 16px">
+  <div class="row">
+    <span style="flex:1;font-size:.95rem">🔊 Всяко досие има бутон <b>„Чуй“</b>, а думите с <span class="term" style="pointer-events:none">точки отдолу</span> показват обяснение при докосване.</span>
+  </div>
+  <div class="row" style="margin-top:10px"><button class="btn ghost small" id="resetBtn">↺ Започни урока отначало</button></div>
+  <div class="note voicewarn" id="voiceWarn">
+    Телефонът няма български глас за четене. Можеш да го добавиш от настройките на телефона: <i>Език → Преобразуване на текст в говор → Услуги на Google → Инсталиране на гласови данни → Български</i> (пътят може да е малко различен).
+  </div>
+</div>
+
+
+<!-- ===== DOSSIER 1: DRY ZONES ===== -->
+<section class="card" id="s1">
+  <div class="dossier-tag">ДОСИЕ №1</div>
+  <h2>Полупустини и пустини</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s1-text">🔊 Чуй</button></div>
+  <div id="s1-text">
+    <p>На юг от пампата, в умерения пояс, се намира зоната на <button class="term" data-t="polupust">полупустините</button>. Те заемат <b>Патагония</b> — от южната част на Андите до Атлантическия океан.</p>
+    <p>Полупустините се образуват, защото тук вали много малко: <b>Андите преграждат пътя</b> на влажния въздух от <b>Тихия океан</b>. Почвите не са плодородни, а растителността е оскъдна. Характерен обитател е <b>равнинната вискача</b> — гризач с големи уши и дълга опашка. Местните ловци я изтребват заради ценната ѝ кожа.</p>
+    <p>Единствената пустиня в Южна Америка е <b>Атакама</b>. Тя е близо до Тихия океан, но е <b>най-сухото място</b> на континента и на Земята. През лятото каменистата ѝ повърхност е под ярко слънце и няма растителност. През зимните месеци пустинята е покрита с <b>гъста мъгла</b> — единствения източник на влага. Тогава тя „се събужда“: бързорастящи растения цъфтят и дават семена, от които ще поникнат отново следващата зима.</p>
+  </div>
+    <figure>
+    <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/37/Amanecer_en_la_estepa_de_Jeinimeni.jpg/960px-Amanecer_en_la_estepa_de_Jeinimeni.jpg" data-full="https://upload.wikimedia.org/wikipedia/commons/3/37/Amanecer_en_la_estepa_de_Jeinimeni.jpg" alt="Суха патагонска равнина">
+    <figcaption>Суха равнина в Патагония (район Хейнимени, Чили) с оскъдна растителност.<small>Автор: Lin linao · лиценз: CC BY-SA 4.0 · <a href="https://commons.wikimedia.org/wiki/File:Amanecer_en_la_estepa_de_Jeinimeni.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+    <figure>
+    <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/Lagostomus_maximus_-_Parc_National_El_Palmar_en_Argentine_(Entre-Rios).jpg/960px-Lagostomus_maximus_-_Parc_National_El_Palmar_en_Argentine_(Entre-Rios).jpg" data-full="https://upload.wikimedia.org/wikipedia/commons/6/60/Lagostomus_maximus_-_Parc_National_El_Palmar_en_Argentine_(Entre-Rios).jpg" alt="Равнинна вискача">
+    <figcaption>Равнинна вискача — гризач, обитаващ сухите равнини.<small>Автор: Eric Bousquet · лиценз: CC BY-SA 3.0 · <a href="https://commons.wikimedia.org/wiki/File:Lagostomus_maximus_-_Parc_National_El_Palmar_en_Argentine_(Entre-Rios).jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+    <figure>
+    <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/El_Valle_de_la_Luna_(Chile).jpg/960px-El_Valle_de_la_Luna_(Chile).jpg" data-full="https://upload.wikimedia.org/wikipedia/commons/b/b8/El_Valle_de_la_Luna_(Chile).jpg" alt="Пясъчни дюни и скали в пустинята Атакама">
+    <figcaption>Дюни и скали в пустинята Атакама (Валье де ла Луна, Чили).<small>Автор: CARLOS TEIXIDOR CADENAS · лиценз: CC BY 4.0 · <a href="https://commons.wikimedia.org/wiki/File:El_Valle_de_la_Luna_(Chile).jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+  <div class="stats">
+    <div class="stat"><div class="fact-num">🌧️</div><small>в Патагония вали малко, защото Андите спират влажния въздух</small></div>
+    <div class="stat"><div class="fact-num">🌫️</div><small>в Атакама мъглата през зимата е единствената влага</small></div>
+  </div>
+  <button class="btn readbtn" data-done="s1" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== SCHEME: RAIN SHADOW ===== -->
+<section class="card" id="rain">
+  <div class="dossier-tag">КАРТА НА ДЕТЕКТИВА</div>
+  <h2>Защо Патагония е суха?</h2>
+  <p>Докосни трите стъпки по ред и гледай как се променя схемата. Разгледай и трите, за да получиш значка.</p>
+  <div class="mapbox" style="background:#fff;border-color:var(--line)"><svg class="xsec" id="svgRain" viewBox="0 0 400 210" role="img" aria-label="Схема: Андите спират влажния въздух от Тихия океан"></svg></div>
+  <div class="sbtns" id="rainBtns">
+    <button data-s="1">1 · Влажен въздух</button><button data-s="2">2 · Андите</button><button data-s="3">3 · Сухо</button>
+  </div>
+  <div class="infobox" id="rainInfo"><h3>Избери стъпка</h3><p style="margin:0">Тук ще се появи обяснението.</p></div>
+  <p class="note" style="margin-top:10px">Опростена схема. Показва само идеята: планината е преграда за влажния въздух.</p>
+</section>
+
+<!-- ===== DOSSIER 2: FORESTS ===== -->
+<section class="card" id="s2">
+  <div class="dossier-tag">ДОСИЕ №2</div>
+  <h2>Твърдолистни и широколистни гори</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s2-text">🔊 Чуй</button></div>
+  <div id="s2-text">
+    <p>Зоната на <b>твърдолистните гори и храсти</b> и зоната на <b>широколистните и смесените гори</b> имат ограничено разпространение — заемат <b>тясна ивица по южното тихоокеанско крайбрежие</b>.</p>
+    <p>Климатът там е благоприятен — <button class="term" data-t="krajbrezhie">океански</button> субтропичен и умерен. Затова тези земи са почти напълно усвоени от човека. Дивите растения и животни в тях не са много.</p>
+  </div>
+  <button class="btn readbtn" data-done="s2" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== MAP: ZONES ===== -->
+<section class="card" id="mapzones">
+  <div class="dossier-tag">КАРТА НА ДЕТЕКТИВА</div>
+  <h2>Природни зони на Южна Америка</h2>
+  <p>Цялата карта е по фиг. 1 от учебника. В тази част се докосват <b>сухите зони, горите на юг и планинската област</b>. Горещите зони са бледи — те са в <a href="geografiya-6-urok-05-prirodni-zoni-1.html">част 1</a>. Докосни зона или бутон, за да прочетеш обяснението. Разгледай и четирите, за да получиш значка.</p>
+  <div class="mapbox"><svg id="mapZones" viewBox="0 0 400 450" role="img" aria-label="Карта на природните зони на Южна Америка"></svg></div>
+  <div class="legend" id="zoneLegend"></div>
+  <div class="infobox" id="zoneInfo"><h3>Избери зона</h3><p style="margin:0">Тук ще се появи обяснението.</p></div>
+  <div class="chips" id="zoneChips"></div>
+</section>
+
+<!-- ===== DOSSIER 3: MOUNTAIN REGION ===== -->
+<section class="card" id="s3">
+  <div class="dossier-tag">ДОСИЕ №3</div>
+  <h2>Планинска област — Андите</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s3-text">🔊 Чуй</button></div>
+  <div id="s3-text">
+    <p>Планинската област е най-добре представена в <b>Андите</b>. Заради голямата надморска височина тук се образуват няколко <button class="term" data-t="visoch">височинни пояса</button>.</p>
+    <p>До около <b>3 хил. m</b> растат гъсти гори. Над тях се простира поясът на <b>високопланинските ливади</b> с гъста и висока трева. На около <b>4,5 хил. m</b> растителността изчезва и преобладават <b>голи скали</b>. Над <b>5 хил. m</b> е поясът на <button class="term" data-t="vechni">вечните снегове</button> и на <button class="term" data-t="lednik">ледниците</button>.</p>
+    <p>В най-долния пояс природата е приблизително същата като в съседните равнини. По-нагоре се срещат видове, характерни за планината. Такава е <b>пумата</b> (наричана още планински лъв), която живее и в Северна Америка. Други диви животни са <b>очилатата мечка</b> и <b>гривестият вълк</b>.</p>
+    <p>Най-забележителното животно в Андите е <b>ламата</b> — далечен роднина на камилите. Заради дългата и мека козина хората я отглеждат от хилядолетия като домашно животно. Най-близкият до нея вид е <b>гуанако</b>. Друг представител на дивата природа е малкото диво животно <b>чинчила</b> — гризач с много гъста козина. Сред птиците най-впечатляващ е <b>кондорът</b> — огромна хищна птица с размах на крилата над <b>3 метра</b>.</p>
+  </div>
+    <figure>
+    <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Lama_glama_Laguna_Colorada_2.jpg/960px-Lama_glama_Laguna_Colorada_2.jpg" data-full="https://upload.wikimedia.org/wikipedia/commons/2/2e/Lama_glama_Laguna_Colorada_2.jpg" alt="Лами на високопланинско плато">
+    <figcaption>Лами край лагуната Колорада в Боливия.<small>Автор: kallerna · лиценз: CC BY-SA 4.0 · <a href="https://commons.wikimedia.org/wiki/File:Lama_glama_Laguna_Colorada_2.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+    <figure>
+    <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Guanaco_(Lama_guanicoe)_pastando_en_paisaje_invernal_de_Torres_del_Paine.jpg/960px-Guanaco_(Lama_guanicoe)_pastando_en_paisaje_invernal_de_Torres_del_Paine.jpg" data-full="https://upload.wikimedia.org/wikipedia/commons/c/cb/Guanaco_(Lama_guanicoe)_pastando_en_paisaje_invernal_de_Torres_del_Paine.jpg" alt="Гуанако в националния парк Торес дел Паине">
+    <figcaption>Гуанако в зимен пейзаж в националния парк „Сините кули“.<small>Автор: Javiercamposg7 · лиценз: CC BY-SA 4.0 · <a href="https://commons.wikimedia.org/wiki/File:Guanaco_(Lama_guanicoe)_pastando_en_paisaje_invernal_de_Torres_del_Paine.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+    <figure>
+    <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Andean_condor_at_Colca_Canyon.jpg/960px-Andean_condor_at_Colca_Canyon.jpg" data-full="https://upload.wikimedia.org/wikipedia/commons/7/77/Andean_condor_at_Colca_Canyon.jpg" alt="Андски кондор в полет">
+    <figcaption>Андски кондор над каньона Колка в Перу.<small>Автор: Hans Brian Brandsberg Berg · лиценз: CC BY 2.0 · <a href="https://commons.wikimedia.org/wiki/File:Andean_condor_at_Colca_Canyon.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+    <figure>
+    <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Puma_-_49044464307.jpg/960px-Puma_-_49044464307.jpg" data-full="https://upload.wikimedia.org/wikipedia/commons/c/c1/Puma_-_49044464307.jpg" alt="Пума">
+    <figcaption>Пума, наричана още планински лъв.<small>Автор: Carlos · лиценз: CC BY 2.0 · <a href="https://commons.wikimedia.org/wiki/File:Puma_-_49044464307.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+    <figure>
+    <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/Tremarctos_ornatus,_Duisburg_(DE)_--_2023_--_0123.jpg/960px-Tremarctos_ornatus,_Duisburg_(DE)_--_2023_--_0123.jpg" data-full="https://upload.wikimedia.org/wikipedia/commons/4/45/Tremarctos_ornatus,_Duisburg_(DE)_--_2023_--_0123.jpg" alt="Очилата мечка">
+    <figcaption>Очилата мечка (на снимката — в зоопарк).<small>Автор: Anil Öztas · лиценз: Free Art License (свободен лиценз) · <a href="https://commons.wikimedia.org/wiki/File:Tremarctos_ornatus,_Duisburg_(DE)_--_2023_--_0123.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+    <figure>
+    <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Lobo_Guar%C3%A1_andando.jpg/960px-Lobo_Guar%C3%A1_andando.jpg" data-full="https://upload.wikimedia.org/wikipedia/commons/a/a3/Lobo_Guar%C3%A1_andando.jpg" alt="Гривест вълк">
+    <figcaption>Гривест вълк.<small>Автор: Jonathan Wilkins · лиценз: CC BY-SA 3.0 · <a href="https://commons.wikimedia.org/wiki/File:Lobo_Guar%C3%A1_andando.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+    <figure>
+    <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Chinchilla_lanigera_(Wroclaw_zoo)-2.JPG/960px-Chinchilla_lanigera_(Wroclaw_zoo)-2.JPG" data-full="https://upload.wikimedia.org/wikipedia/commons/1/18/Chinchilla_lanigera_(Wroclaw_zoo)-2.JPG" alt="Чинчила">
+    <figcaption>Чинчила — малко животно с много гъста козина (на снимката — в зоопарк).<small>Автор: Guérin Nicolas (messages) · лиценз: CC BY-SA 3.0 · <a href="https://commons.wikimedia.org/wiki/File:Chinchilla_lanigera_(Wroclaw_zoo)-2.JPG" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+  <button class="btn readbtn" data-done="s3" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== CROSS-SECTION: ANDES ===== -->
+<section class="card" id="belts">
+  <div class="dossier-tag">⛰️ ГЛАВНА КАРТА</div>
+  <h2>Разрез на Андите по височинни пояси</h2>
+  <p>Докосни пояс на разреза или бутон под него, за да видиш растенията и животните там. Открий и четирите пояса, за да получиш значка.</p>
+  <div class="mapbox" style="background:#fff;border-color:var(--line)"><svg class="xsec" id="svgBelts" viewBox="0 0 400 330" role="img" aria-label="Разрез на Андите по височинни пояси от 0 до над 5 хил. метра"></svg></div>
+  <div class="infobox" id="beltInfo"><h3>Избери пояс</h3><p style="margin:0">Тук ще се появи обяснението.</p></div>
+  <div class="xlist" id="beltList"></div>
+  <p class="note" style="margin-top:10px">Опростена схема. Границите на поясите са по данните от учебника и в различните части на Андите са на различна височина. Животните са показани там, където се срещат най-често.</p>
+    <figure>
+    <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Miscanti_Lagoon_near_San_Pedro_de_Atacama_Chile_Luca_Galuzzi_2006.jpg/960px-Miscanti_Lagoon_near_San_Pedro_de_Atacama_Chile_Luca_Galuzzi_2006.jpg" data-full="https://upload.wikimedia.org/wikipedia/commons/a/a3/Miscanti_Lagoon_near_San_Pedro_de_Atacama_Chile_Luca_Galuzzi_2006.jpg" alt="Високопланинско езеро в Андите">
+    <figcaption>Лагуна Мискани — високопланинско езеро в Андите, Чили.<small>Автор: Luca Galuzzi (Lucag) · лиценз: CC BY-SA 2.5 · <a href="https://commons.wikimedia.org/wiki/File:Miscanti_Lagoon_near_San_Pedro_de_Atacama_Chile_Luca_Galuzzi_2006.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+</section>
+
+<!-- ===== GAME: CLIMB ===== -->
+<section class="card" id="gclimb">
+  <div class="dossier-tag">🎮 ИГРА</div>
+  <h2>Изкачи Андите</h2>
+  <p>Първо подреди поясите от най-долния нагоре. После кажи кой пояс е на дадена височина.</p>
+  <div class="stage" id="climbStage"></div>
+</section>
+
+<!-- ===== LIBRARY ===== -->
+<section class="card lib" id="lib">
+  <div class="dossier-tag">📚 ГЕОГРАФСКА БИБЛИОТЕКА</div>
+  <h2>Национален парк „Сините кули“</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="lib-text">🔊 Чуй</button></div>
+  <div id="lib-text">
+    <p>Националният парк „Сините кули“ е в <b>Чили</b>. Природата му се охранява <b>много строго</b> от чилийски екологични организации. Тук могат да се видят красиви планини, водопади, ледници, езера и стада гуанако.</p>
+    <p>Паркът носи името си от <b>трите гранитни кули</b>, оформени от ледниците. Най-високата от тях е около <b>2500 m</b>.</p>
+  </div>
+    <figure>
+    <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Cuernos_del_Paine_in_Torres_del_Paine_National_Park.jpg/960px-Cuernos_del_Paine_in_Torres_del_Paine_National_Park.jpg" data-full="https://upload.wikimedia.org/wikipedia/commons/7/76/Cuernos_del_Paine_in_Torres_del_Paine_National_Park.jpg" alt="Скалите на масива Паине в националния парк „Сините кули“">
+    <figcaption>Скали в масива Паине, националния парк „Сините кули“, Чили (на снимката е връх Кюернос дел Паине).<small>Автор: Pedro Szekely from Los Angeles, USA · лиценз: CC BY-SA 2.0 · <a href="https://commons.wikimedia.org/wiki/File:Cuernos_del_Paine_in_Torres_del_Paine_National_Park.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+  <button class="btn readbtn" data-done="lib" data-xp="10">✓ Прочетох · +10 XP</button>
+</section>
+
+<!-- ===== DID YOU KNOW ===== -->
+<section class="card" id="dyk">
+  <div class="dossier-tag">💡 ЗНАЕШ ЛИ, ЧЕ…</div>
+  <h2>Тайни от архива</h2>
+  <div class="dyk" id="dyk-text">
+    <div data-i="🏜️">В Атакама падат средно около <b>15 mm дъжд</b> годишно. На някои места метеорологичните станции <b>никога не са отчитали дъжд</b>.</div>
+    <div data-i="🧊">Край брега на Атакама минава студено течение — <b>Перуанското</b> (наричано и Хумболтово). То охлажда въздуха над брега, затова там почти не се образуват облаци, които да дадат дъжд. Научи повече в урок 3.</div>
+    <div data-i="💙">„Паине“ на езика на местния народ тюелче (аоникенк) означава <b>„синьо“</b> — оттам идва и името „Сините кули“.</div>
+    <div data-i="🦅">Размахът на крилата на кондора е над <b>3 m</b> — един от най-големите при птиците на Земята.</div>
+    <div data-i="🦙">Ламата е опитомена от дивия <b>гуанако</b> преди няколко хиляди години. Учените дават различни дати — от около 4 до около 6 хил. години.</div>
+  </div>
+  <button class="btn readbtn" data-done="dyk" data-xp="10">✓ Прочетох · +10 XP</button>
+</section>
+
+<!-- ===== ROLE: GUIDE ===== -->
+<section class="card" id="guide">
+  <div class="dossier-tag">🧭 РОЛЯ: ЕКСКУРЗОВОД</div>
+  <h2>Туристите те чакат в „Сините кули“</h2>
+  <p>Ти си екскурзовод в националния парк. Отговори вярно на въпросите на туристите, за да ги заведеш до кулите.</p>
+  <div class="stage" id="guideStage"></div>
+</section>
+
+<!-- ===== DRAW ===== -->
+<section class="card" id="draw">
+  <div class="dossier-tag">🎨 ТВОРЧЕСКА ЗАДАЧА</div>
+  <h2>Нарисувай височинните пояси или лама и кондор</h2>
+  <p>Избери едно от двете на лист хартия:</p>
+  <ul>
+    <li><b>Височинни пояси на Андите</b> — нарисувай планина и я раздели на четири пояса с цветове и надписи: гори (до около 3 хил. m), ливади, голи скали (около 4,5 хил. m), вечни снегове и ледници (над 5 хил. m). Добави животно във всеки пояс.</li>
+    <li><b>Лама или кондор</b> — нарисувай животното и напиши три факта за него (например: роднина на камилите; размах на крилата над 3 m; най-близък вид — гуанако).</li>
+  </ul>
+  <p class="note">По желание, от учебника: направи постер със снимки на представители на дивата природа на Андите и кратка информация за всеки вид. Организирайте изложба от най-добрите постери.</p>
+  <button class="btn ghost readbtn" data-done="draw" data-xp="10">✓ Нарисувах го · +10 XP</button>
+</section>
+
+<!-- ===== ENGLISH ===== -->
+<section class="card" id="eng">
+  <div class="dossier-tag">🇬🇧 ENGLISH CORNER</div>
+  <h2>Words of the day</h2>
+  <p style="font-size:.95rem">Докосни 🔊, за да чуеш думата и изречението.</p>
+  <div class="vocab" id="vocabEn"></div>
+  <div class="hola" style="margin-top:18px">
+    <h3 style="color:#B0452E">¡Hola! 🇪🇸 Бонус на испански</h3>
+    <p style="font-size:.95rem;margin-top:0">Тези думи се използват в испаноезичните страни на континента.</p>
+    <div class="vocab" id="vocabEs"></div>
+  </div>
+</section>
+
+<!-- ===== SELF-CHECK ===== -->
+<section class="card" id="selfcheck">
+  <div class="dossier-tag">✍️ ПРОВЕРИ СЕ САМ</div>
+  <h2>Отговори с думи</h2>
+  <p style="font-size:.95rem">Напиши кратък отговор, после натисни „Готово“, за да видиш примерен отговор, и сам се оцени.</p>
+  <div id="scList"></div>
+</section>
+
+<!-- ===== QUIZ ===== -->
+<section class="card" id="quiz">
+  <div class="dossier-tag">🎯 ПРОВЕРИ СЕ</div>
+  <h2>Изпитът на детектива</h2>
+  <p>3 нива по 3 въпроса. Всяко ниво отключва следващото. Грешните въпроси се връщат в края на нивото.</p>
+  <div class="pathwrap"><div class="path" id="path">
+    <button class="node" data-lvl="0">1<span>Новобранец</span></button>
+    <button class="node" data-lvl="1" disabled>2<span>Следовател</span></button>
+    <button class="node" data-lvl="2" disabled>3<span>Покорител на Андите</span></button>
+  </div></div>
+  <div id="qArea"></div>
+
+  <h3 style="margin-top:18px">🃏 Флашкарти</h3>
+  <p style="font-size:.95rem;margin-top:0">Докосни картата, за да я обърнеш.</p>
+  <div class="flash" id="flash"><div class="flash-in"><div class="face front" id="fFront"></div><div class="face back" id="fBack"></div></div></div>
+  <div class="row"><button class="btn ghost small" id="fPrev">← Назад</button><span id="fNum" style="flex:1;text-align:center;color:var(--muted)"></span><button class="btn ghost small" id="fNext">Напред →</button></div>
+</section>
+
+<!-- ===== REVEAL ===== -->
+<section class="card reveal" id="reveal">
+  <div class="dossier-tag">🔓 РАЗКРИВАНЕ</div>
+  <h2>Защо Атакама е най-сухата?</h2>
+  <p id="revealLock">Събери 4-те улики, за да отключиш разкриването.</p>
+  <div id="revealBody" style="display:none;text-align:left">
+    <p>Погледни уликите. Защо Атакама е най-сухото място, въпреки че е на брега на океана?</p>
+    <div class="opts" id="suspects"></div>
+    <div class="fb" id="revealFb"></div>
+  </div>
+  <div class="stamp" id="stamp">РАЗКРИТО</div>
+  <h3 style="margin-top:14px">Твоите значки</h3>
+  <div class="badges" id="badges"></div>
+  <p id="finalXp" style="margin-top:12px;font-family:var(--head);font-weight:700;color:var(--teal)"></p>
+  <div class="partnav"><a class="btn ghost" href="geografiya-6-urok-05-prirodni-zoni-1.html" style="text-decoration:none;display:inline-flex;align-items:center">← Към част 1</a><a class="btn ghost" href="index.html" style="text-decoration:none;display:inline-flex;align-items:center">Всички уроци</a></div>
+</section>
+
+<!-- ===== SUMMARY ===== -->
+<section class="card" id="sum">
+  <div class="dossier-tag">📌 ЗАПОМНИ</div>
+  <h2>Най-важното от урока</h2>
+  <div class="row" style="margin-bottom:8px"><button class="btn ghost small listen" data-read="sumList">🔊 Чуй</button></div>
+  <ol class="sum" id="sumList">
+    <li>На юг от пампата, в умерения пояс, са <b>полупустините</b>. Те заемат <b>Патагония</b> — от южната част на Андите до Атлантическия океан.</li>
+    <li>Полупустините се образуват, защото <b>Андите преграждат пътя на влажния въздух от Тихия океан</b> и вали малко. Почвите са неплодородни, растителността е оскъдна. Характерна е <b>равнинната вискача</b> (гризач с големи уши и дълга опашка), която се изтребва заради ценната ѝ кожа.</li>
+    <li>Единствената пустиня в континента е <b>Атакама</b>. До Тихия океан е, но е <b>най-сухото място</b> на континента и на Земята. Лятото е камениста и без растителност. През зимата <b>гъстата мъгла</b> е единственият източник на влага и пустинята „се събужда“: растения цъфтят и дават семена.</li>
+    <li><b>Твърдолистните гори и храсти</b> и <b>широколистните и смесените гори</b> са в тясна ивица по южното тихоокеанско крайбрежие, с океански субтропичен и умерен климат. Почти напълно са усвоени от човека, затова дивите растения и животни не са много.</li>
+    <li><b>Планинската област</b> е най-добре представена в <b>Андите</b>. Заради голямата надморска височина се образуват <b>височинни пояси</b>.</li>
+    <li>До около <b>3 хил. m</b> — гъсти гори; над тях — <b>високопланински ливади</b> с гъста и висока трева; на около <b>4,5 хил. m</b> растителността изчезва, преобладават <b>голи скали</b>; над <b>5 хил. m</b> — <b>вечни снегове и ледници</b>.</li>
+    <li>В най-долния пояс природата е като в околните равнини. По-нагоре: <b>пума</b> (планински лъв, среща се и в Северна Америка), <b>очилата мечка</b>, <b>гривест вълк</b>.</li>
+    <li><b>Ламата</b> е най-забележителното животно в Андите — далечен роднина на камилите, отглежда се от хилядолетия заради дългата и мека козина. Най-близкият ѝ вид е <b>гуанако</b>. Живее и <b>чинчилата</b>.</li>
+    <li><b>Кондорът</b> е огромна хищна птица с размах на крилата над <b>3 m</b>.</li>
+    <li>Национален парк <b>„Сините кули“</b> в Чили: строго охраняван от чилийски екологични организации; планини, водопади, ледници, езера, стада гуанако; три гранитни кули, оформени от ледниците — най-високата е около <b>2500 m</b>.</li>
+
+  </ol>
+  <details>
+    <summary>📄 Текст за копиране (Google Docs / печат)</summary>
+    <textarea class="plain" id="plain" readonly></textarea>
+    <button class="btn small" id="copyBtn" style="margin-top:8px">📋 Копирай текста</button>
+  </details>
+</section>
+
+<!-- ===== PARENT ===== -->
+<section class="card" id="parent">
+  <details>
+    <summary>👤 За родителя: какво е добавено и източници</summary>
+    <p style="font-size:.92rem"><b>Извън учебника</b> в тази част са добавени: схемата „Защо Патагония е суха“ (идеята е от учебника, а подробностите — западните ветрове и издигането на въздуха по склона — са добавени за яснота); обяснението защо Атакама е толкова суха (студеното Перуанско течение край брега и Андите като преграда — вж. и урок 3); петте факта в „Знаеш ли, че…“ (средните валежи в Атакама, Перуанското течение, значението на „Паине“, размахът на крилата на кондора, опитомяването на ламата); играта „Изкачи Андите“ (построена върху височините от учебника); роля „Екскурзовод“ и всички надписи в разреза на Андите. Картата на природните зони, разрезът на Андите и схемата са <b>опростени чертежи за учебни цели</b>.</p>
+    <p style="font-size:.88rem"><b>Бележки за точността.</b> Според учебника Атакама е „най-сухото място на Земята“. По-точно, тя е <b>най-сухата непполярна пустиня</b>; някои места в сухите долини на Антарктида са още по-сухи. Гривестият вълк е показан в планинската област, както е в учебника. По други източници той живее главно в равнини и по ниските склонове. Размахът на крилата на кондора в различните източници е около 3–3,3 m (учебникът: над 3 m). За датата на опитомяването на ламата учените дават различни стойности. Названието „Сините кули“ в учебника отговаря на националния парк Torres del Paine; на снимката е връх Кюернос дел Паине — „рогата“, а не трите „кули“. Чинчилата в учебника е наречена „див заек“, но е гризач; в урока е „малко диво животно“.</p>
+    <ul class="src">
+      <li><a href="https://en.wikipedia.org/wiki/Andean_condor" target="_blank" rel="noopener">Andean condor (Wikipedia)</a> — размах на крилата до около 3,3 m</li>
+      <li><a href="https://en.wikipedia.org/wiki/Atacama_Desert" target="_blank" rel="noopener">Atacama Desert (Wikipedia)</a> — най-сухата непполярна пустиня, средно около 15 mm валежи годишно, на някои места не е отчитан дъжд</li>
+      <li><a href="https://www.smithsonianmag.com/smart-news/rare-blanket-of-snow-falls-in-chiles-atacama-the-worlds-driest-desert-180986921/" target="_blank" rel="noopener">Smithsonian: Atacama — студеното течение и мъглата</a></li>
+      <li><a href="https://en.wikipedia.org/wiki/Torres_del_Paine_National_Park" target="_blank" rel="noopener">Torres del Paine National Park (Wikipedia)</a> — „Паине“ значи „синьо“ на езика тюелче, парк от 1959 г., гуанако</li>
+      <li><a href="https://en.wikipedia.org/wiki/Llama" target="_blank" rel="noopener">Llama (Wikipedia)</a> и <a href="https://en.wikipedia.org/wiki/Guanaco" target="_blank" rel="noopener">Guanaco (Wikipedia)</a> — ламата произхожда от гуанако</li>
+      <li><a href="https://en.wikipedia.org/wiki/Rain_shadow" target="_blank" rel="noopener">Rain shadow (Wikipedia)</a></li>
+      <li>Снимките са от <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a>. Авторът и лицензът са под всяка снимка.</li>
+    </ul>
+
+  </details>
+</section>
+
+</main>
+
+<div class="audiobar" id="audiobar">
+  <div class="audiobar-in">
+    <button class="btn small" id="aPause">⏸</button>
+    <button class="btn ghost small" id="aStop">⏹</button>
+    <span class="t" id="aText">Чета…</span>
+    <select id="aRate" aria-label="Скорост"><option value="0.8">0.8×</option><option value="1" selected>1×</option><option value="1.2">1.2×</option></select>
+  </div>
+</div>
+
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet"><h3 id="sheetT"></h3><p id="sheetD" style="margin:0 0 12px"></p><button class="btn ghost small" id="sheetClose">Разбрах</button></div>
+
+<script>
+(function(){
+"use strict";
+var CFG={};
+CFG.key='geo6-urok06-v1';
+CFG.reads=['s1','s2','s3','lib','dyk','draw'];
+CFG.progBadges=['zones','belts','rain','climb','guide'];
+CFG.clueFor={s1:1,dyk:4};
+CFG.levelNames=['Новобранец','Следовател','Покорител на Андите'];
+CFG.badges=[
+  {id:'detective',ic:'🕵️',n:'Детектив',d:'Прочети всички досиета'},
+  {id:'zones',ic:'🗺️',n:'Картограф',d:'Разгледай всичките 4 зони на картата'},
+  {id:'belts',ic:'🏔️',n:'Алпинист',d:'Разгледай всичките 4 височинни пояса на Андите'},
+  {id:'rain',ic:'🌧️',n:'Метеоролог',d:'Разгледай схемата „Защо Патагония е суха“'},
+  {id:'climb',ic:'🧗',n:'Покорител',d:'Реши играта „Изкачи Андите“'},
+  {id:'guide',ic:'🧭',n:'Екскурзовод',d:'Заведи туристите в „Сините кули“'},
+  {id:'polyglot',ic:'💬',n:'Полиглот',d:'Чуй 5 думи'},
+  {id:'chief',ic:'👑',n:'Главен детектив',d:'Поне 8 от 9 верни от първи опит'}
+];
+CFG.clues={
+  1:'Атакама е до Тихия океан, но е най-сухото място на континента. През лятото е камениста и без растителност, а през зимата гъстата мъгла е единственият ѝ източник на влага.',
+  2:'Картата показва пустинята Атакама като тясна ивица на тихоокеанския бряг, точно до Андите.',
+  3:'Схемата показва: високата планина спира влажния въздух. От другата ѝ страна остава сухо.',
+  4:'Студеното Перуанско течение охлажда въздуха над брега, затова там почти не се образуват дъждовни облаци.'
+};
+CFG.glossary={
+  polupust:['Полупустиня','Суха област, която е по-малко безводна от пустинята. Растителността е оскъдна, но все пак има храсти и треви.'],
+  visoch:['Височинни пояси','Зони, които се редуват по склона на планината — с височината се сменят температурата, растенията и животните.'],
+  lednik:['Ледник','Голяма маса лед, която бавно се придвижва по склона или долината.'],
+  vechni:['Вечни снегове','Височини, на които снегът не се топи през цялата година.'],
+  podvetr:['Подветрена страна','Страната на планината, която е срещу вятъра. Там въздухът слиза надолу и е сух.'],
+  krajbrezhie:['Океански климат','Климат близо до океана — умерен, с малки разлики между лятото и зимата и повече влага.']
+};
+CFG.zoneInfo={
+  desert:'Пустини и полупустини. В Патагония, на юг от пампата, са полупустините. Единствената пустиня в континента е Атакама — по тихоокеанското крайбрежие, в северната част на Чили.',
+  hard:'Твърдолистни гори и храсти. Тясна ивица по южното тихоокеанско крайбрежие — области с океански субтропичен климат. Земите са почти напълно усвоени от човека.',
+  broad:'Широколистни и смесени гори. Тясна ивица по южното тихоокеанско крайбрежие, с океански умерен климат. Земите са почти напълно усвоени от човека, затова дивите растения и животни не са много.',
+  mount:'Планинска област. Най-добре е представена в Андите. Заради голямата надморска височина тук се образуват няколко височинни пояса.'
+};
+CFG.EN=[['desert','Пустиня','The Atacama is a very dry desert.'],['dry','Сух','The air is dry in the desert.'],['mountain','Планина','The Andes are a long mountain range.'],['valley','Долина','We walked through a green valley.'],['snow','Сняг','There is snow on top of the mountain.'],['glacier','Ледник','A glacier is a river of ice.'],['bird','Птица','The condor is a very big bird.'],['cold','Студен','It is cold high in the mountains.']];
+CFG.ES=[['desierto','пустиня'],['montaña','планина'],['nieve','сняг'],['cóndor','кондор'],['llama','лама']];
+CFG.SC=[
+  {q:'Защо Патагония е суха?',a:'Андите **преграждат пътя** на влажния въздух от **Тихия океан**. Затова в Патагония вали **малко**, почвите не са плодородни, а растителността е **оскъдна**.'},
+  {q:'Какво е Атакама и защо е толкова суха, въпреки че е до океана?',a:'Атакама е **единствената пустиня** на континента. Тя е на брега на Тихия океан, но е **най-сухото място** на континента. Влагата ѝ идва само от **гъстата мъгла** през зимните месеци. По-далеч от учебника: **студеното Перуанско течение** и **Андите** не пускат дъждовни облаци.'},
+  {q:'Къде са твърдолистните и широколистните гори и защо дивата природа в тях е малко?',a:'Те са **тясна ивица** по южното **тихоокеанско крайбрежие**. Климатът е благоприятен, затова земите са **почти напълно усвоени от човека** и дивите растения и животни не са много.'},
+  {q:'Характеризирай природата на височинните пояси в Андите.',a:'Най-долу е като в околните равнини. До около **3 хил. m** има **гъсти гори**. Над тях са **високопланинските ливади**. На **4,5 хил. m** растителността изчезва и има **голи скали**. Над **5 хил. m** са **вечните снегове и ледниците**.'},
+  {q:'Кои животни живеят в планинската област и с какво е забележителна ламата?',a:'Пума, очилата мечка, гривест вълк, лама, гуанако, чинчила и **кондор**. **Ламата** е далечен роднина на камилите и от **хилядолетия** се отглежда заради **дългата и мека козина**. Най-близкият ѝ вид е **гуанако**.'},
+  {q:'Какво представлява националният парк „Сините кули“ и как се охранява?',a:'Парк в **Чили** с планини, водопади, ледници, езера и стада гуанако. Охранява се **много строго** от **чилийски екологични организации**. **Трите гранитни кули** са оформени от ледниците и дават името на парка.'}
+];
+CFG.LV=[
+ [{q:'Коя е единствената пустиня в Южна Америка?',o:['Атакама','Сахара','Гоби'],a:0,e:'Единствената пустиня в Южна Америка е Атакама.'},
+  {q:'Какво преграждат Андите пред Патагония?',o:['Влажния въздух от Тихия океан','Реките','Слънчевата светлина'],a:0,e:'Андите преграждат пътя на влажния въздух от Тихия океан, затова в Патагония вали малко.'},
+  {q:'Кой гризач с големи уши и дълга опашка обитава полупустините?',o:['Равнинната вискача','Капибарата','Опосумът'],a:0,e:'Равнинната вискача е гризач с големи уши и дълга опашка.'}],
+ [{q:'Кога пустинята Атакама „се събужда за живот“?',o:['През зимните месеци, когато има гъста мъгла','През лятото, когато вали','Никога'],a:0,e:'През зимата гъстата мъгла е единственият източник на влага и пустинята се събужда.'},
+  {q:'До около каква височина са разпространени гъстите гори в Андите?',o:['До около 3 хил. m','До 300 m','До 6 хил. m'],a:0,e:'До около 3 хил. m в Андите има гъсти гори.'},
+  {q:'Какво преобладава в Андите на височина 4,5 хил. m?',o:['Голи скали','Гъсти гори','Високи треви'],a:0,e:'На 4,5 хил. m растителността изчезва и преобладават голи скали.'}],
+ [{q:'Какво има над 5 хил. m в Андите?',o:['Вечни снегове и ледници','Гъсти гори','Високопланински ливади'],a:0,e:'Над 5 хил. m е поясът на вечните снегове и ледниците.'},
+  {q:'Кой е най-близкият вид до ламата?',o:['Гуанако','Кондорът','Чинчилата'],a:0,e:'Най-близкият до ламата вид е гуанако.'},
+  {q:'Коя птица в Андите има размах на крилата над 3 m?',o:['Кондорът','Колибрито','Папагалът ара'],a:0,e:'Кондорът е огромна хищна птица с размах на крилата над 3 m.'}]
+];
+CFG.FC=[['Патагония','Суха област на юг — от южната част на Андите до Атлантическия океан. Тук са полупустините.'],['Атакама','Единствената пустиня в Южна Америка. До Тихия океан, но най-сухото място на континента.'],['Височинни пояси','Зони по склона на Андите: гори (до около 3 хил. m), ливади, голи скали (над 4,5 хил. m), вечни снегове (над 5 хил. m).'],['Гуанако','Диво животно, най-близкият вид до ламата.'],['Кондор','Огромна хищна птица в Андите с размах на крилата над 3 m.'],['„Сините кули“','Национален парк в Чили. Три гранитни кули, оформени от ледниците; най-високата е около 2500 m.'],['Равнинна вискача','Гризач с големи уши и дълга опашка, обитава полупустините.'],['Лама','Далечен роднина на камилите; отглежда се от хилядолетия заради дългата мека козина.'],['Пума','Планински лъв; среща се и в Северна Америка.']];
+CFG.SUS=[
+ {t:'Студено течение край брега, а Андите спират влажния въздух — затова вали почти никога, а влагата идва само от мъглата',ok:1,e:'Точно така! Атакама е до океана (улика 1), но Андите са преграда за влажния въздух (улика 3), а студеното Перуанско течение охлажда въздуха над брега и пречи на облаците (улика 4). Влага носи само мъглата през зимата (улика 1).'},
+ {t:'Океанът до нея е толкова горещ, че водата изпарява всичко',ok:0,e:'Не. Океанът край Атакама е студен, а не горещ (улика 4).'},
+ {t:'В Атакама валежите са силни, но почвата ги поглъща мигновено',ok:0,e:'Не. Там почти не вали (улика 1).'},
+ {t:'Атакама е толкова далеч от океана, че влажният въздух не стига',ok:0,e:'Не. Атакама е на самия бряг на Тихия океан (улика 2).'}
+];
+CFG.plainTitle='Урок 5–6, част 2. Сухите зони и Андите';
+CFG.plainTerms='полупустиня, височинни пояси, ледник, вечни снегове, подветрена страна, океански климат';
+
+var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+
+/* ================= STATE ================= */
+var S={xp:0,done:{},badges:{},clues:{},quizDone:[false,false,false],quizFirst:0,solved:false,sc:{},x:{}};
+var heard={};
+var LSKEY=CFG.key;
+function save(){try{localStorage.setItem(LSKEY,JSON.stringify({xp:S.xp,done:S.done,badges:S.badges,clues:S.clues,quizDone:S.quizDone,quizFirst:S.quizFirst,solved:S.solved,sc:S.sc,heard:heard,x:S.x}))}catch(e){}}
+function load(){try{var r=localStorage.getItem(LSKEY);return r?JSON.parse(r):null}catch(e){return null}}
+function resetAll(){try{localStorage.removeItem(LSKEY)}catch(e){}location.reload()}
+
+function progress(){
+  var n=0;CFG.reads.forEach(function(k){if(S.done[k])n++});
+  CFG.progBadges.forEach(function(k){if(S.badges[k])n++});
+  S.quizDone.forEach(function(d){if(d)n++}); if(S.solved)n++;
+  var tot=CFG.reads.length+CFG.progBadges.length+3+1;
+  $('#progBar').style.width=Math.min(100,Math.round(n/tot*100))+'%';
+}
+function toast(msg){var t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('show')},1800)}
+function addXP(n,msg){S.xp+=n;$('#xp').textContent=S.xp;save();var b=$('#xpBox');b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump');if(msg)toast('+'+n+' XP · '+msg);else toast('+'+n+' XP');progress()}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+
+/* ================= BADGES ================= */
+var BADGES=CFG.badges;
+function renderBadges(){
+  $('#badges').innerHTML=BADGES.map(function(b){return '<div class="badge'+(S.badges[b.id]?' on':'')+'"><span class="ic">'+b.ic+'</span><b>'+b.n+'</b>'+b.d+'</div>'}).join('');
+  $('#bCount').textContent=Object.keys(S.badges).length;
+}
+function award(id){if(S.badges[id])return;S.badges[id]=true;save();var b=BADGES.filter(function(x){return x.id===id})[0];renderBadges();setTimeout(function(){toast('🏅 Нова значка: '+b.n)},900);progress()}
+
+/* ================= CLUES ================= */
+var CLUES=CFG.clues;
+function markClue(n){var el=$('.clue[data-clue="'+n+'"]');el.classList.add('on');el.innerHTML='<b>УЛИКА '+n+' ✓</b>'+CLUES[n]}
+function giveClue(n){if(S.clues[n])return;S.clues[n]=true;save();markClue(n);toast('🔎 Нова улика!');checkReveal()}
+
+/* ================= READ BUTTONS ================= */
+$$('[data-done]').forEach(function(b){
+  b.addEventListener('click',function(){
+    var k=b.getAttribute('data-done'); if(S.done[k])return;
+    S.done[k]=true; b.classList.add('done'); b.disabled=true; b.textContent='✓ Готово'; save();
+    addXP(+b.getAttribute('data-xp'));
+    if(CFG.clueFor[k])setTimeout(function(){giveClue(CFG.clueFor[k])},700);
+    if(CFG.reads.every(function(r){return S.done[r]}))award('detective');
+  });
+});
+
+/* ================= GLOSSARY ================= */
+var G=CFG.glossary;
+var sheet=$('#sheet'),sbg=$('#sheetBg');
+function openSheet(k){$('#sheetT').textContent=G[k][0];$('#sheetD').textContent=G[k][1];sbg.style.display='block';requestAnimationFrame(function(){sheet.classList.add('open')})}
+function closeSheet(){sheet.classList.remove('open');setTimeout(function(){sbg.style.display='none'},250)}
+$$('.term[data-t]').forEach(function(t){t.addEventListener('click',function(){openSheet(t.getAttribute('data-t'))})});
+sbg.addEventListener('click',closeSheet);$('#sheetClose').addEventListener('click',closeSheet);
+
+/* ================= SPEECH ================= */
+var synth=window.speechSynthesis, voices=[], queue=[], qi=0, speaking=false, paused=false, curLang='bg-BG', gen=0;
+function loadVoices(){if(!synth)return;voices=synth.getVoices()||[];
+  if(voices.length&&!pickVoice('bg'))$('#voiceWarn').style.display='block'; else $('#voiceWarn').style.display='none';}
+function pickVoice(lang){var l=lang.toLowerCase();var v=voices.filter(function(x){return x.lang&&x.lang.toLowerCase().replace('_','-').indexOf(l)===0});
+  var g=v.filter(function(x){return /google/i.test(x.name)});return g[0]||v[0]||null}
+if(synth){loadVoices();if(typeof synth.onvoiceschanged!=='undefined')synth.onvoiceschanged=loadVoices;}
+function splitText(t){t=t.replace(/\s+/g,' ').trim();var parts=t.match(/[^.!?…]+[.!?…]*/g)||[t];var out=[];
+  parts.forEach(function(p){p=p.trim();if(!p)return;while(p.length>180){var i=p.lastIndexOf(',',180);if(i<60)i=180;out.push(p.slice(0,i+1));p=p.slice(i+1).trim()}if(p)out.push(p)});return out}
+function speakNext(){
+  if(qi>=queue.length){stopSpeech();return}
+  var my=gen;var u=new SpeechSynthesisUtterance(queue[qi]);var v=pickVoice(curLang.slice(0,2));if(v)u.voice=v;u.lang=curLang;u.rate=+$('#aRate').value;
+  u.onend=u.onerror=function(){if(my!==gen||!speaking||paused)return;qi++;speakNext()};
+  $('#aText').textContent=queue[qi];synth.speak(u);
+}
+function speak(text,lang,showBar){
+  if(!synth){toast('Този браузър не може да чете на глас');return}
+  gen++;synth.cancel();queue=splitText(text);qi=0;speaking=true;paused=false;curLang=lang||'bg-BG';
+  $('#aPause').textContent='⏸';if(showBar!==false)$('#audiobar').classList.add('show');
+  var g0=gen;setTimeout(function(){if(g0===gen)speakNext()},60);
+}
+function stopSpeech(){gen++;speaking=false;paused=false;if(synth)synth.cancel();$('#audiobar').classList.remove('show')}
+$('#aPause').addEventListener('click',function(){
+  if(!speaking)return;
+  if(!paused){paused=true;gen++;synth.cancel();this.textContent='▶'}
+  else{paused=false;gen++;this.textContent='⏸';speakNext()}
+});
+$('#aStop').addEventListener('click',stopSpeech);
+$('#aRate').addEventListener('change',function(){if(speaking&&!paused){gen++;synth.cancel();setTimeout(speakNext,60)}});
+$$('[data-read]').forEach(function(b){b.addEventListener('click',function(){speak($('#'+b.getAttribute('data-read')).innerText,'bg-BG')})});
+
+/* ================= LAND SHAPE + ZONE MAP (shared) ================= */
+var K=6;function P(lon,lat){return [((lon+95)*K).toFixed(1),((15-lat)*K).toFixed(1)]}
+function poly(pts){return 'M'+pts.map(function(p){return P(p[0],p[1]).join(',')}).join(' L')+' Z'}
+function pline(pts){return 'M'+pts.map(function(p){return P(p[0],p[1]).join(',')}).join(' L')}
+var SA=[[-77.4,8.7],[-76,9.4],[-75.5,10.5],[-74.8,11],[-73.5,11.3],[-72.2,11.9],[-71.67,12.46],[-71.1,12],[-71.5,10.9],[-71,10.9],[-70.2,11.6],[-70,12.1],[-68.4,10.8],[-66,10.6],[-64,10.7],[-62,10.7],[-61,9.5],[-59.8,8.3],[-58,6.8],[-55,5.9],[-52,4.9],[-51,4],[-50,1.8],[-50.5,.2],[-48.5,-1],[-46,-1],[-44,-2.5],[-41.5,-2.9],[-39,-3.5],[-37.2,-4.9],[-35.3,-5.3],[-34.79,-7.15],[-35,-9],[-36.5,-10.5],[-38.5,-13],[-39,-16],[-39.7,-19.5],[-41,-22],[-43.2,-23],[-45,-23.8],[-48.5,-26.5],[-48.7,-28.5],[-50.2,-30.5],[-52.5,-33],[-53.5,-34],[-54.9,-34.9],[-56.3,-34.9],[-57.8,-34.4],[-58.5,-34.3],[-57.3,-35.5],[-56.7,-36.4],[-57.5,-38],[-59,-38.8],[-62,-39],[-62.3,-40.6],[-65,-41],[-64.2,-42.3],[-65,-43.3],[-65.5,-45],[-67.5,-46],[-66,-47.5],[-67.8,-49.5],[-68.9,-51.6],[-68.4,-52.3],[-69.5,-52.5],[-70.9,-53],[-71.3,-53.9],[-72.5,-53.5],[-73.5,-53],[-74.7,-52.7],[-75.2,-51],[-75.5,-48.5],[-74.5,-46.5],[-73.8,-44],[-73.9,-41.8],[-73.5,-40],[-73.6,-37.5],[-72.5,-35.5],[-71.7,-33],[-71.5,-30],[-71.3,-27],[-70.6,-24],[-70.2,-20],[-70.3,-18.5],[-71.5,-17.3],[-74,-15.8],[-76.3,-13.5],[-77.2,-12],[-78.5,-9.5],[-79.9,-7],[-81.33,-4.68],[-80.4,-3.4],[-80.2,-2.2],[-81,-2.2],[-80.5,-.5],[-80,.8],[-79,1.5],[-78.8,2.5],[-77.5,3.8],[-77.3,5.5],[-77.9,7.2]];
+var CA=[[-77.4,8.7],[-78.4,9.4],[-79.6,9.6],[-80.6,9],[-81.8,8.9],[-82.9,9.6],[-83.6,10.8],[-83.5,12.5],[-83.3,15],[-88,15],[-87.5,13.2],[-86,11.8],[-85.7,10.5],[-85,9.9],[-84,9.3],[-83,8.3],[-81.5,7.6],[-80.4,7.4],[-80,8.1],[-79,8.9],[-78.2,8.3],[-77.9,7.2]];
+var TDF=[[-68.5,-52.7],[-69.6,-52.8],[-70.3,-53.5],[-70.8,-54.3],[-72,-54.6],[-70.5,-55.1],[-68.5,-55.4],[-67.3,-55.9],[-66.5,-55.2],[-65.2,-54.8],[-66.5,-54.4],[-67.8,-53.6]];
+var LANDD=poly(CA)+' '+poly(SA)+' '+poly(TDF);
+
+/* Природни зони (опростени очертания по фиг. 1 от учебника) */
+var ZONES={
+ forest:{n:'Екваториални и тропични гори',c:'#8CC152',
+  polys:[
+   [[-79,2],[-76,1],[-73,3],[-68,3],[-64,4.5],[-62,7],[-58,7],[-55,6],[-51,4.5],[-50,1],[-48,-1],[-46,-2],[-48,-4],[-50,-7],[-54,-9],[-57,-10],[-62,-11],[-66,-11],[-70,-12],[-73,-10],[-75,-6],[-78,-4]],
+   [[-79,8.5],[-77,8.7],[-76,6],[-77,4],[-79,1.5],[-80.5,0],[-81,-3],[-79,-3.5],[-78.4,0],[-78,4],[-78.8,7]],
+   [[-38.5,-13],[-39,-16],[-39.7,-19.5],[-41,-22],[-43.2,-23],[-45,-23.8],[-48.5,-26.5],[-48.7,-28.5],[-51,-28.5],[-50,-25.5],[-47,-23],[-44.5,-22],[-43,-20],[-42,-17],[-41,-13]]]},
+ savanna:{n:'Савана',c:'#E8742A',
+  polys:[
+   [[-73,4],[-73.5,8.5],[-72,11],[-67,10.6],[-62,10.4],[-62,7.5],[-63.5,5],[-68,3.2]],
+   [[-66,-11],[-62,-11],[-61,-14],[-60,-17],[-58,-20],[-63,-19],[-65,-17],[-66,-14]],
+   [[-62,-11],[-57,-10],[-54,-9],[-50,-7],[-48,-4],[-44,-3],[-41,-3],[-37.5,-5],[-35,-7],[-35.5,-9.5],[-37,-11],[-39,-13],[-41,-13],[-42,-17],[-43,-20],[-44.5,-22],[-47,-23],[-50,-25.5],[-53,-25],[-55,-22],[-58,-20],[-60,-17],[-61,-14]],
+   [[-63,-19],[-58,-20],[-55,-22],[-57,-27],[-60,-29],[-63,-28],[-65,-24]]]},
+ steppe:{n:'Степи (пампа)',c:'#D9DC3A',
+  polys:[[[-62,-31],[-57,-30],[-53,-32],[-53,-34],[-54.9,-34.9],[-58,-34.4],[-57.3,-35.5],[-56.7,-36.4],[-57.5,-38],[-59,-38.8],[-62,-39],[-64,-37],[-64.5,-33]]]},
+ desert:{n:'Пустини и полупустини',c:'#EBB98E',
+  polys:[
+   [[-70,-39],[-62,-39],[-62.3,-40.6],[-65,-41],[-64.2,-42.3],[-65,-43.3],[-65.5,-45],[-67.5,-46],[-66,-47.5],[-67.8,-49.5],[-68.9,-51.6],[-69.5,-52.5],[-70,-51],[-70.2,-47],[-70,-42.5],[-69.6,-39.8]],
+   [[-68.3,-26],[-65,-24],[-64.5,-33],[-64,-37],[-62,-39],[-70,-39],[-70,-33],[-69.5,-30]],
+   [[-81.4,-4.7],[-79.9,-7],[-78.5,-9.5],[-77.2,-12],[-76.3,-13.5],[-74,-15.8],[-71.5,-17.3],[-70.3,-18.5],[-70.2,-20],[-70.6,-24],[-71.3,-27],[-71.5,-30],[-69,-30],[-68.3,-26],[-68.3,-21],[-70,-17.5],[-73,-14.5],[-76,-11.5],[-78.5,-8],[-80.5,-5.2]]]},
+ hard:{n:'Твърдолистни гори и храсти',c:'#1E6B2E',
+  polys:[[[-71.4,-30],[-71.7,-33],[-72.5,-35.5],[-73.4,-37.2],[-72,-37.5],[-70.3,-36],[-70,-33],[-70.5,-30.5]]]},
+ broad:{n:'Широколистни и смесени гори',c:'#3FA34D',
+  polys:[[[-73.6,-37.5],[-73.5,-40],[-73.9,-41.8],[-73.8,-44],[-74.5,-46.5],[-72.8,-46.5],[-71.2,-45],[-71,-42],[-71.2,-39],[-72,-37.5]]]},
+ mount:{n:'Планинска област',c:'#C99A62',
+  line:[[-77,8],[-75.5,5],[-77,1],[-78.5,-2],[-77.5,-8],[-75,-12],[-72,-15],[-69.5,-18],[-68.5,-22],[-68.3,-27],[-69.8,-31],[-70.2,-35],[-71.3,-40],[-72.2,-45],[-73.2,-50],[-72,-53]]}
+};
+var ZORDER=['forest','savanna','steppe','mount','desert','broad','hard'];
+/* рисува картата в svg елемент; active = списък от активни зони */
+function drawZoneMap(svgSel,active,onPick,idp){
+  var svg=$(svgSel),s='<rect width="400" height="450" fill="#CFE6EE"/><defs><clipPath id="'+idp+'Clip"><path d="'+LANDD+'"/></clipPath></defs><path d="'+LANDD+'" fill="#F1E9D2"/><g clip-path="url(#'+idp+'Clip)">';
+  ZORDER.forEach(function(id){var z=ZONES[id],on=active.indexOf(id)>-1;
+    s+='<g class="zone'+(on?' on':' off')+'" data-z="'+id+'" fill="'+z.c+'">';
+    if(z.polys)z.polys.forEach(function(p){s+='<path d="'+poly(p)+'"/>'});
+    if(z.line)s+='<path d="'+pline(z.line)+'" fill="none" stroke="'+z.c+'" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>';
+    s+='</g>'});
+  s+='</g><path class="land-outline" d="'+LANDD+'"/>';
+  /* паралели */
+  [[0,'Екватор','0°'],[-20,'','20°'],[-40,'','40°']].forEach(function(l){var y=P(0,l[0])[1];s+='<line x1="0" y1="'+y+'" x2="400" y2="'+y+'" stroke="#2C5D73" stroke-width="'+(l[0]===0?1.2:.6)+'" stroke-dasharray="'+(l[0]===0?'5 3':'2 4')+'" opacity=".55"/><text x="394" y="'+(y-3)+'" text-anchor="end" class="maplabel" style="font-size:9px;letter-spacing:0">'+(l[1]||l[2])+'</text>'});
+  s+='<text x="60" y="440" class="maplabel" style="font-size:9px">ТИХИ ОКЕАН</text><text x="262" y="330" class="maplabel" style="font-size:9px">АТЛАНТИЧЕСКИ</text><text x="262" y="342" class="maplabel" style="font-size:9px">ОКЕАН</text>';
+  /* хит-зони (по-дебели, за пръст) */
+  s+='<g clip-path="url(#'+idp+'Clip)">';
+  active.forEach(function(id){var z=ZONES[id];
+    if(z.polys)z.polys.forEach(function(p){s+='<path class="zhit" data-z="'+id+'" d="'+poly(p)+'" fill="#000" stroke="#000" stroke-width="'+((id==='hard'||id==='broad')?16:8)+'" stroke-linejoin="round"/>'});
+    if(z.line)s+='<path class="zhit" data-z="'+id+'" d="'+pline(z.line)+'" fill="none" stroke="#000" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/>'});
+  s+='</g>';
+  svg.innerHTML=s;
+  $$('.zhit',svg).forEach(function(e){e.addEventListener('click',function(){onPick(e.getAttribute('data-z'))})});
+}
+function markZone(svgSel,id){$$(svgSel+' .zone').forEach(function(g){g.classList.toggle('sel',g.getAttribute('data-z')===id);});$$(svgSel+' .zone').forEach(function(g){g.classList.toggle('dimz',!!id&&g.classList.contains('on')&&g.getAttribute('data-z')!==id)})}
+
+/* ================= PAGE 2: интерактивни елементи ================= */
+var ACTIVE=['desert','hard','broad','mount'];
+function tags(a){return '<div class="tags">'+a.map(function(t){return '<span class="tag">'+t+'</span>'}).join('')+'</div>'}
+
+/* ----- карта на зоните ----- */
+function showZone(id){
+  markZone('#mapZones',id);
+  $$('#zoneChips .chip').forEach(function(e){e.classList.toggle('active',e.getAttribute('data-z')===id)});
+  $('#zoneInfo').innerHTML='<h3>'+ZONES[id].n+'</h3><p style="margin:0">'+CFG.zoneInfo[id]+'</p>';
+  S.x.zones=S.x.zones||{};
+  if(!S.x.zones[id]){S.x.zones[id]=1;save();$$('#zoneChips .chip[data-z="'+id+'"]').forEach(function(e){e.classList.add('seen')});addXP(5);
+    if(ACTIVE.every(function(z){return S.x.zones[z]})){award('zones');setTimeout(function(){giveClue(2)},400)}}
+}
+function drawZones(){
+  drawZoneMap('#mapZones',ACTIVE,showZone,'zB');
+  $('#zoneLegend').innerHTML=ZORDER.map(function(id){return '<span style="'+(ACTIVE.indexOf(id)>-1?'':'opacity:.45')+'"><i class="sq" style="background:'+ZONES[id].c+'"></i>'+ZONES[id].n+'</span>'}).join('');
+  $('#zoneChips').innerHTML=ACTIVE.map(function(id){return '<button class="chip" data-z="'+id+'"><i style="background:'+ZONES[id].c+'"></i>'+ZONES[id].n+'</button>'}).join('');
+  $$('#zoneChips .chip').forEach(function(e){e.addEventListener('click',function(){showZone(e.getAttribute('data-z'))})});
+}
+
+/* ----- разрез на Андите ----- */
+function Y(h){return 300-h*0.046}
+var BELTS=[
+ {id:'b1',n:'Гъсти гори',h:'до около 3 хил. m',y0:Y(3000),y1:300,c:'#2F7D3A',
+  d:'Най-долният пояс. Природата в самото му подножие е приблизително като в околните равнини. До около 3 хил. m растат <b>гъсти гори</b>.',
+  pl:['гъсти гори'],an:['пума (планински лъв)','очилата мечка','гривест вълк (по учебника)']},
+ {id:'b2',n:'Високопланински ливади',h:'над гората, до около 4,5 хил. m',y0:Y(4500),y1:Y(3000),c:'#9BC25A',
+  d:'Над гората започва поясът на <b>високопланинските ливади</b> с гъста и висока трева. Тук най-често се срещат <b>ламата</b>, нейният най-близък вид <b>гуанако</b> и малкото диво животно <b>чинчила</b>.',
+  pl:['гъста и висока трева'],an:['лама','гуанако','чинчила']},
+ {id:'b3',n:'Голи скали',h:'около 4,5–5 хил. m',y0:Y(5000),y1:Y(4500),c:'#8C8A84',
+  d:'На около 4,5 хил. m растителността <b>напълно изчезва</b> и преобладават <b>голи скали</b>. Над скалите кръжи <b>кондорът</b> — огромна хищна птица с размах на крилата над 3 m.',
+  pl:['няма растителност'],an:['кондор']},
+ {id:'b4',n:'Вечни снегове и ледници',h:'над 5 хил. m',y0:Y(6000),y1:Y(5000),c:'#F4F8FB',
+  d:'Над 5 хил. m е поясът на <b>вечните снегове</b> и на <b>ледниците</b>. Тук не расте нищо и почти няма животни.',
+  pl:['няма растителност'],an:['почти няма животни']}
+];
+var BELTSVG=$('#svgBelts');
+var MTN='M20 300 L95 205 L125 185 L160 130 L200 24 L238 95 L262 120 L300 190 L330 215 L385 300 Z';
+function drawBelts(){
+  var s='<rect width="400" height="330" fill="#CDE8F6"/><defs><clipPath id="mtnClip"><path d="'+MTN+'"/></clipPath></defs>';
+  s+='<rect x="0" y="300" width="400" height="30" fill="#8A6B3F"/><g clip-path="url(#mtnClip)">';
+  BELTS.forEach(function(B){s+='<g class="layer" data-id="'+B.id+'"><rect class="lbg" x="0" y="'+B.y0.toFixed(1)+'" width="400" height="'+(B.y1-B.y0).toFixed(1)+'" fill="'+B.c+'"/></g>'});
+  s+='</g><path d="'+MTN+'" fill="none" stroke="#3A2E1A" stroke-width="1.6" stroke-linejoin="round"/>';
+  /* линии за границите */
+  [3000,4500,5000].forEach(function(h){s+='<line x1="0" y1="'+Y(h).toFixed(1)+'" x2="400" y2="'+Y(h).toFixed(1)+'" stroke="#1F2A30" stroke-width=".7" stroke-dasharray="3 3" opacity=".55"/>'});
+  /* етикети вдясно */
+  BELTS.forEach(function(B){var ym=(B.y0+B.y1)/2,F='font-family="Rubik,system-ui,sans-serif" font-weight="700"';
+    if(B.id==='b1')s+='<text x="394" y="212" text-anchor="end" '+F+' font-size="11" fill="#1F2A30">Гори</text><text x="394" y="224" text-anchor="end" font-size="9.5" fill="#1F2A30">до 3 хил. m</text>';
+    else if(B.id==='b2')s+='<text x="394" y="'+(ym-1).toFixed(1)+'" text-anchor="end" '+F+' font-size="11" fill="#1F2A30">Ливади</text><text x="394" y="'+(ym+11).toFixed(1)+'" text-anchor="end" font-size="9.5" fill="#1F2A30">до 4,5 хил. m</text>';
+    else if(B.id==='b3')s+='<text x="394" y="'+(ym+4).toFixed(1)+'" text-anchor="end" '+F+' font-size="10.5" fill="#1F2A30">Голи скали · <tspan font-weight="400" font-size="9.5">4,5–5 хил. m</tspan></text>';
+    else s+='<text x="394" y="'+(ym+4).toFixed(1)+'" text-anchor="end" '+F+' font-size="10.5" fill="#1F2A30">Снегове · <tspan font-weight="400" font-size="9.5">над 5 хил. m</tspan></text>'});
+  s+='<g pointer-events="none" font-size="18"><text x="140" y="262">🌲</text><text x="175" y="248">🌲</text><text x="215" y="262">🌲</text><text x="250" y="240">🌲</text><text x="110" y="283">🐆</text><text x="270" y="282">🐻</text><text x="195" y="146">🦙</text><text x="168" y="112">🦙</text><text x="188" y="87" font-size="17">🦅</text><text x="192" y="54" font-size="15">❄️</text></g>';
+  s+='<text x="8" y="321" font-size="9.5" fill="#fff" font-weight="700">0 m</text><text x="8" y="'+(Y(3000)-3).toFixed(1)+'" font-size="9.5" fill="#1F2A30">3 000 m</text>';
+  /* хит-зони (цели ленти) */
+  BELTS.forEach(function(B){s+='<rect class="lhit" data-id="'+B.id+'" x="0" y="'+B.y0.toFixed(1)+'" width="400" height="'+(B.y1-B.y0).toFixed(1)+'" fill="transparent" style="cursor:pointer"/>'});
+  BELTSVG.innerHTML=s;
+  /* тънките ленти (скали, снегове) - по-голяма цел */
+  $$('.lhit',BELTSVG).forEach(function(e){e.addEventListener('click',function(){showBelt(e.getAttribute('data-id'))})});
+  $('#beltList').innerHTML=BELTS.slice().reverse().map(function(B){return '<button class="chip" data-id="'+B.id+'"><i style="background:'+B.c+';border:1px solid #888"></i>'+B.n+' <small style="color:inherit;opacity:.75">'+B.h+'</small></button>'}).join('');
+  $$('#beltList .chip').forEach(function(e){e.addEventListener('click',function(){showBelt(e.getAttribute('data-id'))})});
+}
+function showBelt(id){
+  var B=BELTS.filter(function(x){return x.id===id})[0];
+  $$('.layer',BELTSVG).forEach(function(g){g.classList.toggle('sel',g.getAttribute('data-id')===id)});
+  $$('#beltList .chip').forEach(function(e){e.classList.toggle('active',e.getAttribute('data-id')===id)});
+  $('#beltInfo').innerHTML='<h3>'+B.n+' <small style="font-weight:400;color:var(--muted)">'+B.h+'</small></h3><p style="margin:0 0 6px">'+B.d+'</p><b style="font-size:.85rem">Растителност:</b>'+tags(B.pl)+'<b style="font-size:.85rem;display:block;margin-top:8px">Животни:</b>'+tags(B.an);
+  S.x.belts=S.x.belts||{};
+  if(!S.x.belts[id]){S.x.belts[id]=1;save();markBeltSeen(id);addXP(4);
+    if(BELTS.every(function(b){return S.x.belts[b.id]})){award('belts')}}
+}
+function markBeltSeen(id){$$('#beltList .chip[data-id="'+id+'"]').forEach(function(e){e.classList.add('seen')})}
+
+/* ----- схема: защо Патагония е суха ----- */
+var RAINTXT={
+ 1:['Влажен въздух от Тихия океан','Влажен въздух идва от Тихия океан. В тези ширини ветровете духат главно от запад, към Андите.'],
+ 2:['Андите го спират','Андите преграждат пътя му. Въздухът се издига по склона и се охлажда. Влагата му пада като дъжд и сняг по западните склонове.'],
+ 3:['Отзад остава сухо','От другата страна на планината въздухът слиза надолу вече сух. Затова в Патагония вали много малко и се образуват полупустини.']
+};
+function drawRain(step){
+  var s='<rect width="400" height="210" fill="#EAF4FA"/>';
+  s+='<rect x="0" y="150" width="120" height="60" fill="#6FB3D9"/><path d="M0 156 q15 -8 30 0 t30 0 t30 0 t30 0" stroke="#fff" stroke-width="2" fill="none" opacity=".7"/>';
+  s+='<rect x="270" y="170" width="130" height="40" fill="#E8C98A"/>';
+  s+='<path d="M105 210 L190 40 L218 62 L275 210 Z" fill="#8B6B4A"/><path d="M178 62 L190 40 L206 52 L200 60 L190 56 Z" fill="#fff"/>';
+  s+='<text x="8" y="196" font-size="10" font-weight="700" fill="#0E3B52">ТИХИ ОКЕАН</text><text x="150" y="200" font-size="10" font-weight="700" fill="#fff">АНДИ</text><text x="300" y="196" font-size="10" font-weight="700" fill="#5B3A00">ПАТАГОНИЯ</text>';
+  s+='<defs><marker id="arB" viewBox="0 0 8 8" refX="6" refY="4" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#1B6FA8"/></marker><marker id="arO" viewBox="0 0 8 8" refX="6" refY="4" markerUnits="userSpaceOnUse" markerWidth="12" markerHeight="12" orient="auto"><path d="M0 0 L8 4 L0 8 Z" fill="#D97A12"/></marker></defs>';
+  if(step>=1)s+='<g class="air"><path d="M12 118 L96 118" stroke="#1B6FA8" stroke-width="4" marker-end="url(#arB)"/><path d="M12 138 L96 138" stroke="#1B6FA8" stroke-width="4" marker-end="url(#arB)" opacity=".7"/><text x="10" y="106" font-size="11" font-weight="700" fill="#1B6FA8">влажен въздух</text><text x="46" y="92" font-size="20">☁️</text></g>';
+  if(step>=2)s+='<g class="air"><path d="M104 118 Q150 112 176 66" stroke="#1B6FA8" stroke-width="4" fill="none" marker-end="url(#arB)"/><text x="190" y="28" font-size="20">☁️</text>'+
+    [[128,100],[142,86],[156,72],[134,116],[150,104],[120,128]].map(function(p){return '<line x1="'+p[0]+'" y1="'+p[1]+'" x2="'+(p[0]-3)+'" y2="'+(p[1]+9)+'" stroke="#1B6FA8" stroke-width="2.4" stroke-linecap="round"/>'}).join('')+
+    '<text x="36" y="70" font-size="11" font-weight="700" fill="#1B6FA8">дъжд и сняг</text><path d="M84 66 L116 80" stroke="#1B6FA8" stroke-width="1.2"/></g>';
+  if(step>=3)s+='<g class="air"><path d="M222 66 Q262 84 318 140" stroke="#D97A12" stroke-width="4" fill="none" marker-end="url(#arO)"/><text x="262" y="52" font-size="11" font-weight="700" fill="#D97A12">сух въздух</text><text x="338" y="44" font-size="22">☀️</text><text x="330" y="164" font-size="16">🌵</text></g>';
+  $('#svgRain').innerHTML=s;
+}
+$$('#rainBtns button').forEach(function(b){b.addEventListener('click',function(){
+  var st=+b.getAttribute('data-s');
+  $$('#rainBtns button').forEach(function(x){x.classList.toggle('act',x===b)});
+  drawRain(st);
+  $('#rainInfo').innerHTML='<h3>'+st+'. '+RAINTXT[st][0]+'</h3><p style="margin:0">'+RAINTXT[st][1]+'</p>';
+  S.x.rain=S.x.rain||{};
+  if(!S.x.rain[st]){S.x.rain[st]=1;save();b.classList.add('seen');addXP(3);
+    if(S.x.rain[1]&&S.x.rain[2]&&S.x.rain[3]){award('rain');setTimeout(function(){giveClue(3)},400)}}
+})});
+
+/* ----- игра: изкачи Андите ----- */
+var BN=['Гъсти гори','Високопланински ливади','Голи скали','Вечни снегове и ледници'];
+var HQ=[[1500,0],[2500,0],[3500,1],[4000,1],[4700,2],[5300,3],[5800,3]];
+var cl=null;
+function newClimb(){cl={a:shuffle([0,1,2,3]),step:0,list:shuffle(HQ).slice(0,6),i:0,ok:0};renderClimbA()}
+function renderClimbA(){
+  var box=$('#climbStage');
+  box.innerHTML='<div class="qhead"><span>Част 1 от 2 · Подреди поясите от долу нагоре</span></div><p class="qtext" style="font-size:1.02rem">Докосвай по ред: кой е най-долният пояс, после следващият…</p><div class="ladder" id="ladder">'+
+    cl.a.map(function(i){return '<button class="opt" data-i="'+i+'">'+BN[i]+'</button>'}).join('')+'</div><div class="fb"></div>';
+  $$('#ladder .opt').forEach(function(b){b.addEventListener('click',function(){
+    var i=+b.getAttribute('data-i'),fb=$('.fb',box);
+    if(i===cl.step){b.classList.add('picked');b.disabled=true;b.innerHTML='<span class="n">'+(cl.step+1)+'.</span> '+BN[i];cl.step++;fb.className='fb';fb.innerHTML='';
+      if(cl.step===4){fb.className='fb ok';fb.innerHTML='<b>Точно така!</b> Подредбата е от гората до вечните снегове.<div style="margin-top:10px"><button class="btn small done" id="cNextB">Към част 2 →</button></div>';addXP(5);$('#cNextB').addEventListener('click',renderClimbB)}}
+    else{fb.className='fb bad';fb.innerHTML='<b>Още не.</b> Помисли кой пояс е по-долу.'}
+  })});
+}
+function renderClimbB(){
+  var box=$('#climbStage');
+  if(cl.i>=cl.list.length){
+    box.innerHTML='<div style="text-align:center"><div style="font-size:2.2rem">🏔️</div><p class="qtext">Покори Андите! От първи опит: <b>'+cl.ok+' от '+cl.list.length+'</b></p><button class="btn amber" id="clAgain">Играй пак</button></div>';
+    $('#clAgain').addEventListener('click',newClimb);
+    if(!S.badges.climb)award('climb');return}
+  var q=cl.list[cl.i],tried=false;
+  box.innerHTML='<div class="stepdots">'+cl.list.map(function(_,i){return '<i class="'+(i<cl.i?'ok':i===cl.i?'cur':'')+'"></i>'}).join('')+'</div>'+
+    '<div class="qhead"><span>Част 2 от 2</span></div><div class="gcard">'+q[0]+' m<small>Какво има на тази височина?</small></div><div class="opts">'+
+    shuffle([0,1,2,3]).map(function(i){return '<button class="opt" data-i="'+i+'">'+BN[i]+'</button>'}).join('')+'</div><div class="fb"></div>';
+  $$('.opt',box).forEach(function(b){b.addEventListener('click',function(){
+    var i=+b.getAttribute('data-i'),fb=$('.fb',box);
+    if(i===q[1]){b.classList.add('right');$$('.opt',box).forEach(function(x){x.disabled=true});
+      fb.className='fb ok';fb.innerHTML='<b>Точно така!</b><div style="margin-top:10px"><button class="btn small done" id="hNext">Напред →</button></div>';
+      if(!tried){cl.ok++;addXP(3)}$('#hNext').addEventListener('click',function(){cl.i++;renderClimbB()})}
+    else{tried=true;b.classList.add('wrong');b.disabled=true;fb.className='fb bad';fb.innerHTML='<b>Опитай пак.</b> Помни: гори до около 3 хил. m, ливади до 4,5 хил. m, голи скали до 5 хил. m, над това — вечни снегове.'}
+  })});
+}
+
+/* ----- роля: екскурзовод ----- */
+var GD=[
+ {q:'Туристите питат: в коя държава се намира националният парк „Сините кули“?',o:['Чили','Перу','Бразилия'],a:0,e:'Националният парк „Сините кули“ е в Чили.'},
+ {q:'Какво е оформило трите гранитни кули?',o:['Ледниците','Морските вълни','Пустинният вятър'],a:0,e:'Трите гранитни кули са оформени от ледниците и дават името на парка.'},
+ {q:'Колко е височината на най-високата кула?',o:['Около 2500 m','Около 250 m','Около 25 000 m'],a:0,e:'Най-високата от трите кули е около 2500 m.'},
+ {q:'Кои животни можем да видим на стада в парка?',o:['Стада гуанако','Лъвове','Слонове'],a:0,e:'В парка има стада гуанако — близки роднини на ламата.'},
+ {q:'Кой пази природата на парка много строго?',o:['Чилийски екологични организации','Само туристите','Никой'],a:0,e:'Природата на парка се охранява много строго от чилийски екологични организации.'}
+];
+var gI=0,gStage=$('#guideStage');
+function renderGuide(){
+  if(gI>=GD.length){gStage.innerHTML='<div class="stepdots">'+GD.map(function(){return '<i class="ok"></i>'}).join('')+'</div><p style="font-family:var(--head);font-weight:700;color:var(--teal);font-size:1.15rem;margin:0">🧭 Туристите са във възторг от обиколката!</p>';
+    if(!S.badges.guide)award('guide');return}
+  var f=GD[gI],tried=false;
+  gStage.innerHTML='<div class="stepdots">'+GD.map(function(_,i){return '<i class="'+(i<gI?'ok':i===gI?'cur':'')+'"></i>'}).join('')+'</div>'+
+   '<div class="qhead"><span>Въпрос '+(gI+1)+' от '+GD.length+'</span></div><p class="qtext" style="font-size:1.02rem">'+f.q+'</p><div class="opts">'+
+   shuffle([0,1,2]).map(function(i){return '<button class="opt" data-i="'+i+'">'+f.o[i]+'</button>'}).join('')+'</div><div class="fb"></div>';
+  $$('.opt',gStage).forEach(function(b){b.addEventListener('click',function(){
+    var i=+b.getAttribute('data-i'),fb=$('.fb',gStage);
+    if(i===f.a){b.classList.add('right');$$('.opt',gStage).forEach(function(x){x.disabled=true});
+      fb.className='fb ok';fb.innerHTML='<b>Точно така!</b> '+f.e+'<div style="margin-top:10px"><button class="btn small done" id="gNext">Напред →</button></div>';
+      if(!tried)addXP(5);$('#gNext').addEventListener('click',function(){gI++;S.x.guide=gI;save();renderGuide()})}
+    else{tried=true;b.classList.add('wrong');b.disabled=true;fb.className='fb bad';fb.innerHTML='<b>Провери пак библиотеката.</b> Опитай друг отговор.'}
+  })});
+}
+
+CFG.init=function(){drawZones();drawBelts();drawRain(0)};
+CFG.render=function(){
+  Object.keys(S.x.zones||{}).forEach(function(id){$$('#zoneChips .chip[data-z="'+id+'"]').forEach(function(e){e.classList.add('seen')})});
+  Object.keys(S.x.belts||{}).forEach(markBeltSeen);
+  Object.keys(S.x.rain||{}).forEach(function(st){$$('#rainBtns button[data-s="'+st+'"]').forEach(function(e){e.classList.add('seen')})});
+  gI=S.x.guide||0;renderGuide();newClimb();
+};
+
+
+/* ================= VOCAB ================= */
+var EN=CFG.EN, ES=CFG.ES;
+$('#vocabEn').innerHTML=EN.map(function(w,i){return '<div class="word"><span class="w">'+w[0]+'</span><span class="ex">'+w[1].replace(/\.$/,'')+'<br><i>'+w[2]+'</i></span><button data-en="'+i+'" aria-label="Чуй">🔊</button></div>'}).join('');
+$('#vocabEs').innerHTML=ES.map(function(w,i){return '<div class="word"><span class="w">'+w[0]+'</span><span class="ex">'+w[1]+'</span><button data-es="'+i+'" aria-label="Чуй">🔊</button></div>'}).join('');
+function heardOne(k){if(heard[k])return;heard[k]=1;save();addXP(1);if(Object.keys(heard).length>=5)award('polyglot')}
+$$('[data-en]').forEach(function(b){b.addEventListener('click',function(){var w=EN[+b.getAttribute('data-en')];speak(w[0]+'. '+w[2],'en-US',false);heardOne('en'+b.getAttribute('data-en'))})});
+$$('[data-es]').forEach(function(b){b.addEventListener('click',function(){var w=ES[+b.getAttribute('data-es')];speak(w[0],'es-ES',false);heardOne('es'+b.getAttribute('data-es'))})});
+
+/* ================= SELF-CHECK (open questions) ================= */
+var SC=CFG.SC;
+function marks(s){return s.replace(/\*\*(.+?)\*\*/g,'<mark>$1</mark>')}
+var GR={'1':{c:'g1',t:'✓ Вярно'},'0.5':{c:'g05',t:'≈ Частично'},'0':{c:'g0',t:'✗ Грешно'}};
+$('#scList').innerHTML=SC.map(function(q,i){return '<div class="q'+(i===0?' sc-first':'')+'" data-sc="'+i+'"><div class="qnum">Въпрос '+(i+1)+'</div><p class="qtext">'+q.q+'</p>'+
+  '<textarea class="ans" rows="2" placeholder="Напиши отговора си тук…" aria-label="Отговор"></textarea>'+
+  '<div class="row" style="margin-top:8px"><button class="btn small scdone" disabled>Готово</button></div>'+
+  '<div class="model"><div class="lbl">ПРИМЕРЕН ОТГОВОР</div><p>'+marks(q.a)+'</p>'+
+  '<div class="lbl">Как се справи? Сравни ключовите думи.</div>'+
+  '<div class="self"><button data-g="1">✓ Вярно<small>1 т.</small></button><button data-g="0.5">≈ Частично<small>0,5 т.</small></button><button data-g="0">✗ Грешно<small>0 т.</small></button></div>'+
+  '<p class="selfhint"></p></div></div>'}).join('');
+$$('[data-sc]').forEach(function(box){
+  var idx=box.getAttribute('data-sc'),ta=$('textarea',box),db=$('.scdone',box);
+  ta.addEventListener('input',function(){db.disabled=!ta.value.trim()});
+  db.addEventListener('click',function(){
+    if(!ta.value.trim())return;
+    ta.readOnly=true;db.disabled=true;db.textContent='✓ Изпратено';db.classList.add('done');
+    $('.model',box).classList.add('show');
+    S.sc[idx]={a:ta.value};save();
+    $('.model',box).scrollIntoView({behavior:'smooth',block:'nearest'});
+  });
+  $$('.self button',box).forEach(function(b){b.addEventListener('click',function(){
+    var g=+b.getAttribute('data-g');
+    $$('.self button',box).forEach(function(x){x.disabled=true;if(+x.getAttribute('data-g')===g)x.classList.add('pick',GR[String(g)].c)});
+    $('.selfhint',box).textContent='Оценката е записана: '+GR[String(g)].t+'.';
+    if(S.sc[idx])S.sc[idx].g=g;save();
+    if(g===1)addXP(10);else if(g===0.5)addXP(5);
+  })});
+});
+
+/* ================= QUIZ ================= */
+var LV=CFG.LV;
+var FB_OK=['Браво!','Точно!','Отлично, детективе!','Вярно!'],FB_BAD=['Почти…','Не съвсем.','Опа!'];
+var qState=null;
+function startLevel(l){
+  qState={l:l,queue:[0,1,2],pos:0,firstOk:0,missed:{},total:3};
+  $('#qArea').scrollIntoView({behavior:'smooth',block:'start'});renderQ();
+}
+function renderQ(){
+  var st=qState,area=$('#qArea');
+  if(!st.queue.length){finishLevel();return}
+  var qi=st.queue[0],Q=LV[st.l][qi],order=shuffle([0,1,2]);
+  area.innerHTML='<div class="stage"><div class="qhead"><span>Ниво '+(st.l+1)+'</span><button class="btn ghost small" id="qQuit">✕</button></div>'+
+   '<div class="qprog"><i style="width:'+Math.round((3-st.queue.length)/3*100)+'%"></i></div>'+
+   '<p class="qtext">'+Q.q+'</p><div class="opts">'+order.map(function(i){return '<button class="opt" data-i="'+i+'">'+Q.o[i]+'</button>'}).join('')+'</div><div class="fb" id="qfb"></div></div>';
+  $('#qQuit').addEventListener('click',function(){qState=null;area.innerHTML=''});
+  $$('.opt',area).forEach(function(b){b.addEventListener('click',function(){
+    var i=+b.getAttribute('data-i'),fb=$('#qfb');$$('.opt',area).forEach(function(x){x.disabled=true;if(+x.getAttribute('data-i')===Q.a)x.classList.add('right')});
+    if(i===Q.a){fb.className='fb ok';fb.innerHTML='<b>'+FB_OK[Math.floor(Math.random()*FB_OK.length)]+'</b> '+Q.e;
+      if(!st.missed[qi]){st.firstOk++;addXP(10)}st.queue.shift();}
+    else{b.classList.add('wrong');fb.className='fb bad';fb.innerHTML='<b>'+FB_BAD[Math.floor(Math.random()*FB_BAD.length)]+'</b> '+Q.e+' <i>Въпросът ще се върне по-късно.</i>';
+      st.missed[qi]=true;st.queue.push(st.queue.shift());}
+    fb.insertAdjacentHTML('beforeend','<div style="margin-top:10px"><button class="btn small '+(i===Q.a?'done':'')+'" id="qNext">Продължи →</button></div>');
+    $('#qNext').addEventListener('click',renderQ);
+  })});
+}
+function finishLevel(){
+  var st=qState,l=st.l,area=$('#qArea');
+  if(!S.quizDone[l]){S.quizDone[l]=true;S.quizFirst+=st.firstOk;save();}
+  var nodes=$$('.node');nodes[l].classList.add('done');if(nodes[l+1])nodes[l+1].disabled=false;
+  area.innerHTML='<div class="stage" style="text-align:center"><div style="font-size:2.4rem">⭐</div><p class="qtext">Ниво „'+CFG.levelNames[l]+'“ е преминато!</p><p>От първи опит: <b>'+st.firstOk+' от 3</b></p>'+
+   (l<2?'<button class="btn amber" id="qNextLvl">Към ниво '+(l+2)+' →</button>':'<p>Всички нива са готови! Сега отиди към <b>Разкриването</b> ↓</p>')+'</div>';
+  if(l<2)$('#qNextLvl').addEventListener('click',function(){startLevel(l+1)});
+  progress();
+  if(S.quizDone.every(Boolean)){if(S.quizFirst>=8)award('chief');checkReveal();}
+  qState=null;
+}
+$$('.node').forEach(function(n){n.addEventListener('click',function(){if(!n.disabled)startLevel(+n.getAttribute('data-lvl'))})});
+
+/* flashcards */
+var FC=CFG.FC;
+var fI=0,flash=$('#flash');
+function renderFC(){flash.classList.remove('flip');setTimeout(function(){$('#fFront').textContent=FC[fI][0];$('#fBack').textContent=FC[fI][1];$('#fNum').textContent=(fI+1)+' / '+FC.length},150)}
+flash.addEventListener('click',function(){flash.classList.toggle('flip')});
+$('#fPrev').addEventListener('click',function(){fI=(fI-1+FC.length)%FC.length;renderFC()});
+$('#fNext').addEventListener('click',function(){fI=(fI+1)%FC.length;renderFC()});
+renderFC();
+
+/* ================= REVEAL ================= */
+function checkReveal(){
+  var clues=Object.keys(S.clues).length===4;
+  if(clues){$('#revealLock').textContent=S.quizDone.every(Boolean)?'Уликите са събрани, изпитът е издържан. Време е да разкриеш тайната!':'Всички 4 улики са събрани! Можеш да разкриеш случая (а после да минеш и изпита).';$('#revealBody').style.display='block';}
+  else $('#revealLock').textContent='Събрани улики: '+Object.keys(S.clues).length+' от 4. Прочети досиетата, разгледай картата и разреза, и „Знаеш ли, че…“.';
+}
+var SUS=CFG.SUS;
+$('#suspects').innerHTML=shuffle(SUS.map(function(_,i){return i})).map(function(i){return '<button class="opt" data-s="'+i+'">'+SUS[i].t+'</button>'}).join('');
+function finalLine(){$('#finalXp').textContent='Общо събра '+S.xp+' XP и '+Object.keys(S.badges).length+' от '+BADGES.length+' значки.'}
+$$('[data-s]').forEach(function(b){b.addEventListener('click',function(){
+  var s=SUS[+b.getAttribute('data-s')],fb=$('#revealFb');
+  if(s.ok){b.classList.add('right');$$('[data-s]').forEach(function(x){x.disabled=true});fb.className='fb ok';fb.innerHTML='<b>Случаят е разкрит!</b> '+s.e;
+    $('#stamp').classList.add('show');if(!S.solved){S.solved=true;save();addXP(20,'Случаят е разкрит!');progress()}
+    finalLine();}
+  else{b.classList.add('wrong');b.disabled=true;fb.className='fb bad';fb.innerHTML='<b>Не е това.</b> '+s.e;}
+})});
+
+/* ================= SUMMARY TEXT ================= */
+var plain=CFG.plainTitle+'\n\nЗАПОМНИ:\n'+
+ $$('#sumList li').map(function(li,i){return (i+1)+'. '+li.innerText}).join('\n')+
+ '\n\nПонятия: '+CFG.plainTerms+'.';
+$('#plain').value=plain;
+$('#copyBtn').addEventListener('click',function(){
+  var ta=$('#plain');
+  function ok(){toast('Текстът е копиран ✓')}
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(plain).then(ok,function(){ta.select();document.execCommand('copy');ok()})}
+  else{ta.removeAttribute('readonly');ta.select();try{document.execCommand('copy');ok()}catch(e){toast('Маркирай текста и го копирай ръчно')}ta.setAttribute('readonly','')}
+});
+
+/* ================= IMAGES ================= */
+$$('figure img').forEach(function(img){img.addEventListener('click',function(){window.open(img.getAttribute('data-full')||img.src,'_blank','noopener')});
+  var cap=img.parentNode.querySelector('figcaption small');if(cap)cap.insertAdjacentHTML('beforeend','<span class="zoomhint"><br>🔍 Докосни снимката, за да я видиш в пълен размер.</span>');
+  img.addEventListener('error',function(){var d=document.createElement('div');d.className='noimg';d.textContent='📷 Снимката се показва, когато има интернет.';img.replaceWith(d)})});
+
+/* ================= PAGE-SPECIFIC ================= */
+CFG.init();
+
+/* ================= RESTORE ================= */
+$('#resetBtn').addEventListener('click',function(){
+  if(confirm('Всичко в този урок ще започне отначало: XP, значките и решените нива. Продължаваме ли?'))resetAll();
+});
+(function restore(){
+  var d=load();if(!d){CFG.render();return}
+  S.xp=d.xp||0;S.done=d.done||{};S.badges=d.badges||{};S.clues=d.clues||{};
+  S.quizDone=d.quizDone||[false,false,false];S.quizFirst=d.quizFirst||0;S.solved=!!d.solved;S.sc=d.sc||{};S.x=d.x||{};
+  heard=d.heard||{};
+  $('#xp').textContent=S.xp;
+  $$('[data-done]').forEach(function(b){if(S.done[b.getAttribute('data-done')]){b.classList.add('done');b.disabled=true;b.textContent='✓ Готово'}});
+  Object.keys(S.clues).forEach(function(n){markClue(n)});
+  var nodes=$$('.node');S.quizDone.forEach(function(done,l){if(done){nodes[l].classList.add('done');if(nodes[l+1])nodes[l+1].disabled=false}});
+  Object.keys(S.sc).forEach(function(idx){
+    var rec=S.sc[idx],box=$('[data-sc="'+idx+'"]');if(!box)return;
+    var ta=$('textarea',box),db=$('.scdone',box);
+    ta.value=rec.a||'';ta.readOnly=true;db.disabled=true;db.textContent='✓ Изпратено';db.classList.add('done');
+    $('.model',box).classList.add('show');
+    if(rec.g!==undefined){
+      $$('.self button',box).forEach(function(x){x.disabled=true;if(+x.getAttribute('data-g')===rec.g)x.classList.add('pick',GR[String(rec.g)].c)});
+      $('.selfhint',box).textContent='Оценката е записана: '+GR[String(rec.g)].t+'.';
+    }
+  });
+  CFG.render();
+  if(S.solved){
+    $$('[data-s]').forEach(function(x){x.disabled=true;if(SUS[+x.getAttribute('data-s')].ok)x.classList.add('right')});
+    var fb=$('#revealFb');fb.className='fb ok';fb.innerHTML='<b>Случаят е разкрит!</b> '+SUS.filter(function(x){return x.ok})[0].e;
+    $('#stamp').classList.add('show');finalLine();
+  }
+  checkReveal();
+  toast('Напредъкът ти е запазен: '+S.xp+' XP');
+})();
+renderBadges();progress();
+
+})();
+</script>
+</body>
+</html>
