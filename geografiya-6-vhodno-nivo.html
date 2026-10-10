@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
 <meta name="theme-color" content="#0F5257">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <link rel="icon" href="favicon.ico" sizes="any">
@@ -668,7 +669,7 @@ function paintGrade(box,g){
 
 /* ================= RESULT ================= */
 function gradeOf(p){if(p<50)return [2,'Слаб'];if(p<63)return [3,'Среден'];if(p<75)return [4,'Добър'];if(p<88)return [5,'Много добър'];return [6,'Отличен']}
-var BADGE={2:['🔎','Стажант','Преговори картите и опитай пак. Ще се получи!'],3:['📓','Помощник на детектива','Добро начало. Преговори темите с червена отметка.'],4:['🕵️','Детектив','Добре се справи! Малко преговор и си напълно готова.'],5:['⭐','Старши детектив','Отлично! Уменията ти са в добра форма.'],6:['👑','Главен детектив','Блестящо! Знаеш почти всичко от 5. клас.']};
+var BADGE={2:['🔎','Стажант','Преговори картите и опитай пак. Ще се получи!'],3:['📓','Помощник на детектива','Добро начало. Преговори темите с червена отметка.'],4:['🕵️','Детектив','Добре се справи! Малко преговор и всичко ще е наред.'],5:['⭐','Старши детектив','Отлично! Уменията ти са в добра форма.'],6:['👑','Главен детектив','Блестящо! Знаеш почти всичко от 5. клас.']};
 function update(){
   var a=answered();
   $('#ansCount').textContent=a;$('#ansTotal').textContent=TOTAL;$('#xp').textContent=S.xp;
