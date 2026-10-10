@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0F5257">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="site.webmanifest">
+<title>Урок 7 · Население и политическа карта</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700;800&display=swap&subset=cyrillic" rel="stylesheet">
+<style>
+:root{
+  --teal:#0F5257; --teal-2:#1B6F75; --teal-soft:#E3EFEE;
+  --amber:#F2A541; --amber-soft:#FDEFD8; --amber-ink:#8A5300;
+  --paper:#FBF7EF; --card:#FFFFFF; --ink:#1F2A30; --muted:#5B6870; --line:#E6DFD1;
+  --ok:#2E9E5B; --ok-soft:#E3F5EA; --bad:#D64545; --bad-soft:#FBE6E6;
+  --sea:#CFE6EE; --land:#E9D9A6; --land-edge:#A8894A;
+  --r:16px; --shadow:0 2px 0 rgba(15,82,87,.10), 0 6px 18px rgba(31,42,48,.06);
+  --head:"Rubik", system-ui, "Roboto", "Segoe UI", sans-serif;
+  --body:system-ui, "Roboto", "Segoe UI", Arial, sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font:18px/1.6 var(--body);overflow-x:hidden}
+h1,h2,h3{font-family:var(--head);line-height:1.2;margin:0 0 .5em;color:var(--teal)}
+h1{font-size:1.75rem;font-weight:800}
+h2{font-size:1.35rem;font-weight:700}
+h3{font-size:1.1rem;font-weight:700}
+p{margin:.5em 0 .8em}
+a{color:var(--teal-2)}
+button{font:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent}
+.wrap{max-width:760px;margin:0 auto;padding:0 16px 120px}
+
+/* ---------- Top bar ---------- */
+.topbar{position:sticky;top:0;z-index:50;background:var(--teal);color:#fff;padding:8px 16px 10px;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.topbar-in{max-width:760px;margin:0 auto;display:flex;align-items:center;gap:10px}
+.xp{display:flex;align-items:center;gap:6px;font-family:var(--head);font-weight:800;font-size:1.05rem;background:rgba(255,255,255,.12);padding:4px 10px;border-radius:999px;white-space:nowrap}
+.xp .gem{color:var(--amber)}
+.xp.bump{animation:bump .5s}
+@keyframes bump{30%{transform:scale(1.25)}}
+.prog{flex:1;height:12px;background:rgba(255,255,255,.2);border-radius:999px;overflow:hidden}
+.prog>i{display:block;height:100%;width:0;background:var(--amber);border-radius:999px;transition:width .6s}
+.badgecount{font-size:.95rem;white-space:nowrap;background:rgba(255,255,255,.12);padding:4px 10px;border-radius:999px}
+.toast{position:fixed;left:50%;top:64px;transform:translateX(-50%) translateY(-20px);opacity:0;background:var(--amber);color:#3A2600;font-family:var(--head);font-weight:700;padding:8px 16px;border-radius:999px;z-index:60;transition:.3s;pointer-events:none;box-shadow:var(--shadow);max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- Hero ---------- */
+.hero{padding:22px 0 6px}
+.kicker{font-family:var(--head);font-weight:700;color:var(--amber-ink);letter-spacing:.04em;text-transform:uppercase;font-size:.85rem}
+.case{background:var(--card);border:2px dashed var(--teal-2);border-radius:var(--r);padding:16px;margin:14px 0;position:relative;box-shadow:var(--shadow)}
+.case h2{display:flex;align-items:center;gap:8px}
+.clues{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.clue{border-radius:12px;padding:10px;font-size:.9rem;line-height:1.4;background:#F1EEE7;color:var(--muted);min-height:74px}
+.clue b{display:block;font-family:var(--head);color:var(--muted);font-size:.8rem;margin-bottom:2px}
+.clue.on{background:var(--amber-soft);color:var(--ink);animation:pop .4s}
+.clue.on b{color:var(--amber-ink)}
+@keyframes pop{0%{transform:scale(.9)}60%{transform:scale(1.05)}}
+
+/* ---------- Cards / dossiers ---------- */
+.card{background:var(--card);border-radius:var(--r);padding:18px 16px;margin:18px 0;box-shadow:var(--shadow);border:1px solid var(--line)}
+.dossier-tag{display:inline-block;font-family:var(--head);font-weight:700;font-size:.8rem;color:#fff;background:var(--teal);padding:3px 10px;border-radius:6px;margin-bottom:8px;letter-spacing:.05em}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{border:0;border-radius:14px;padding:12px 16px;min-height:48px;font-family:var(--head);font-weight:700;font-size:1rem;background:var(--teal);color:#fff;box-shadow:0 4px 0 #0A3A3E;transition:transform .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #0A3A3E}
+.btn.ghost{background:var(--teal-soft);color:var(--teal);box-shadow:0 4px 0 #C4DAD8}
+.btn.amber{background:var(--amber);color:#3A2600;box-shadow:0 4px 0 #C98422}
+.btn.done{background:var(--ok);box-shadow:0 4px 0 #1F7040}
+.btn[disabled]{opacity:.55;cursor:default}
+.btn.small{min-height:40px;padding:8px 12px;font-size:.9rem}
+.readbtn{margin-top:6px}
+.listen{display:inline-flex;align-items:center;gap:6px}
+.term{background:none;border:0;padding:0 2px;color:var(--teal);font-weight:700;border-bottom:2px dotted var(--amber);font-size:inherit;line-height:inherit}
+.hl{background:var(--amber-soft);padding:0 4px;border-radius:4px}
+.fact-num{font-family:var(--head);font-weight:800;color:var(--teal);font-size:1.5rem;line-height:1}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+.stat{background:var(--teal-soft);border-radius:12px;padding:12px}
+.stat small{display:block;color:var(--muted);font-size:.85rem;margin-top:4px;line-height:1.35}
+.lib{background:#EAF3EC;border:1px solid #CFE3D3}
+.lib .dossier-tag{background:#2F6B3F}
+
+/* ---------- Maps ---------- */
+.mapbox{background:var(--sea);border-radius:14px;overflow:hidden;border:1px solid #B8D6E0}
+.mapbox svg{display:block;width:100%;height:auto}
+.land-outline{fill:none;stroke:#3A2E1A;stroke-width:1.4;stroke-linejoin:round}
+.maplabel{font:600 9px var(--body);fill:#2C5D73;letter-spacing:.12em}
+.mk{cursor:pointer}
+.mk circle.dot{stroke:#fff;stroke-width:1.6}
+.mk .halo{fill:none;stroke-width:2;opacity:0}
+.mk.active .halo{opacity:1;animation:ring 1.2s infinite}
+@keyframes ring{0%{r:6;opacity:1}100%{r:16;opacity:0}}
+.mk.seen circle.dot{stroke:#1F2A30}
+.regionhit{cursor:pointer;opacity:0}
+.rband{transition:opacity .2s}
+.rband.dim{opacity:.4}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.chip{border:0;border-radius:999px;padding:8px 12px;min-height:40px;font-size:.9rem;background:#F1EEE7;color:var(--ink);display:inline-flex;align-items:center;gap:6px}
+.chip i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.chip.seen{background:var(--teal-soft)}
+.chip.active{background:var(--teal);color:#fff}
+.infobox{background:var(--amber-soft);border-radius:12px;padding:12px;min-height:84px;margin-top:6px}
+.infobox h3{margin:0 0 4px;color:var(--amber-ink)}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:.85rem;color:var(--muted);margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:10px;height:10px;border-radius:50%;display:inline-block}
+.legend i.sq{border-radius:3px}
+.legend i.ln{width:16px;height:3px;border-radius:2px}
+
+/* ---------- Did you know ---------- */
+.dyk{display:grid;gap:10px}
+.dyk div{background:#F7F4EC;border-radius:12px;padding:12px 12px 12px 48px;position:relative}
+.dyk div:before{content:attr(data-i);position:absolute;left:12px;top:10px;font-size:1.4rem}
+
+/* ---------- Pilot-style stage / quiz ---------- */
+.stage{background:#F7F4EC;border-radius:14px;padding:14px;margin-top:10px}
+.stepdots{display:flex;gap:4px;margin-bottom:10px}
+.stepdots i{flex:1;height:6px;border-radius:3px;background:#E0D8C6}
+.stepdots i.ok{background:var(--ok)}
+.stepdots i.cur{background:var(--amber)}
+.opts{display:grid;gap:10px;margin-top:10px}
+.opt{border:2px solid var(--line);border-bottom-width:4px;background:#fff;border-radius:14px;padding:12px 14px;min-height:52px;text-align:left;font-size:1rem;color:var(--ink)}
+.opt:active{transform:translateY(2px)}
+.opt.right{border-color:var(--ok);background:var(--ok-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt[disabled]{cursor:default}
+.fb{border-radius:14px;padding:12px 14px;margin-top:12px;display:none}
+.fb.ok{display:block;background:var(--ok-soft);border:2px solid var(--ok)}
+.fb.bad{display:block;background:var(--bad-soft);border:2px solid var(--bad)}
+.fb b{font-family:var(--head)}
+.fb.ok b{color:#1F7040}.fb.bad b{color:#A42F2F}
+.path{display:flex;flex-direction:column;align-items:center;gap:6px;margin:14px 0}
+.node{width:84px;height:84px;border-radius:50%;border:0;font-family:var(--head);font-weight:800;font-size:1.6rem;color:#fff;background:var(--teal);box-shadow:0 6px 0 #0A3A3E;position:relative}
+.node:nth-child(2){margin-left:90px}.node:nth-child(3){margin-right:90px}
+.node[disabled]{background:#C9C3B5;box-shadow:0 6px 0 #A39D8F;cursor:default}
+.node.done{background:var(--amber);box-shadow:0 6px 0 #C98422;color:#3A2600}
+.node span{position:absolute;top:92px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:.8rem;color:var(--muted);font-weight:700}
+.pathwrap{padding-bottom:26px}
+.qhead{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:.9rem;color:var(--muted)}
+.qprog{height:14px;background:#E0D8C6;border-radius:999px;overflow:hidden;margin:8px 0 12px}
+.qprog i{display:block;height:100%;width:0;background:var(--ok);transition:width .4s}
+.qtext{font-family:var(--head);font-weight:700;font-size:1.15rem;color:var(--ink)}
+
+/* flashcards */
+.flash{perspective:900px;margin:12px 0}
+.flash-in{position:relative;height:190px;transition:transform .5s;transform-style:preserve-3d;cursor:pointer}
+.flash.flip .flash-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;text-align:center;padding:16px}
+.front{background:var(--teal);color:#fff;font-family:var(--head);font-weight:800;font-size:1.4rem}
+.back{background:var(--amber-soft);color:var(--ink);transform:rotateY(180deg);font-size:1rem;line-height:1.45}
+
+/* vocab */
+.vocab{display:grid;gap:8px}
+.word{display:flex;align-items:center;gap:10px;background:#F7F4EC;border-radius:12px;padding:10px 12px;min-width:0}
+.word .w{font-family:var(--head);font-weight:700;color:var(--teal);min-width:88px}
+.word .ex{font-size:.92rem;color:var(--muted);line-height:1.4;min-width:0;overflow-wrap:break-word}
+.word button{margin-left:auto;flex:none;border:0;background:var(--teal-soft);border-radius:10px;width:44px;height:44px;font-size:1.1rem}
+.hola .word .w{color:#B0452E}
+
+/* self-check open questions */
+.q{border-top:1px solid var(--line);padding:14px 0 6px}
+h3+.q,.sc-first{border-top:0}
+.qnum{font-family:var(--head);font-weight:700;color:var(--amber-ink);font-size:.8rem;letter-spacing:.04em;text-transform:uppercase}
+textarea.ans{width:100%;min-height:72px;font:16px/1.45 var(--body);border:2px solid var(--line);border-radius:12px;padding:10px 12px;background:#FFFDF8;color:var(--ink);resize:vertical;display:block;margin-top:6px}
+textarea.ans:focus{outline:none;border-color:var(--teal-2)}
+textarea.ans[readonly]{background:#F1EEE7;color:var(--muted)}
+.model{background:var(--amber-soft);border-radius:12px;padding:10px 12px;margin-top:10px;display:none}
+.model.show{display:block}
+.model .lbl{font-family:var(--head);font-weight:700;color:var(--amber-ink);font-size:.85rem}
+.model p{margin:.2em 0 .5em}
+.self{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:6px}
+.self button{border:2px solid var(--line);border-bottom-width:4px;border-radius:12px;background:#fff;min-height:56px;padding:6px 4px;font-family:var(--head);font-weight:700;font-size:.9rem;line-height:1.2;color:var(--ink)}
+.self button small{display:block;font-family:var(--body);font-weight:400;font-size:.76rem;color:var(--muted)}
+.self button[disabled]{cursor:default;opacity:.45}
+.self button.pick{opacity:1}
+.self button.pick.g1{border-color:var(--ok);background:var(--ok-soft)}
+.self button.pick.g05{border-color:var(--amber);background:#FFF4DF}
+.self button.pick.g0{border-color:var(--bad);background:var(--bad-soft)}
+.selfhint{font-size:.85rem;color:var(--muted);margin-top:6px}
+
+/* reveal / badges */
+.reveal{text-align:center;position:relative}
+.stamp{display:none;margin:12px auto;width:max-content;max-width:100%;border:4px solid var(--bad);color:var(--bad);font-family:var(--head);font-weight:800;font-size:1.8rem;padding:6px 18px;border-radius:10px;transform:rotate(-8deg);letter-spacing:.08em}
+.stamp.show{display:block;animation:stamp .5s}
+@keyframes stamp{0%{transform:rotate(-8deg) scale(2.2);opacity:0}100%{transform:rotate(-8deg) scale(1);opacity:1}}
+.badges{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;margin-top:12px}
+.badge{background:#F1EEE7;border-radius:14px;padding:10px 6px;text-align:center;font-size:.8rem;color:var(--muted);filter:grayscale(1);opacity:.6}
+.badge .ic{font-size:2rem;display:block}
+.badge.on{filter:none;opacity:1;background:var(--amber-soft);color:var(--ink);animation:pop .4s}
+.badge b{display:block;font-family:var(--head);font-size:.85rem}
+
+/* summary */
+.sum li{margin-bottom:6px}
+textarea.plain{width:100%;min-height:200px;font:15px/1.5 var(--body);border:1px solid var(--line);border-radius:12px;padding:10px;background:#FFFDF8;color:var(--ink)}
+
+/* glossary sheet */
+.sheet-bg{position:fixed;inset:0;background:rgba(31,42,48,.4);z-index:70;display:none}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:71;background:#fff;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));transform:translateY(110%);transition:transform .25s;max-width:760px;margin:0 auto;box-shadow:0 -6px 24px rgba(0,0,0,.15)}
+.sheet.open{transform:translateY(0)}
+.sheet h3{margin-bottom:6px}
+
+/* audio panel */
+.audiobar{position:fixed;left:0;right:0;bottom:0;z-index:55;background:#fff;border-top:1px solid var(--line);padding:8px 16px calc(8px + env(safe-area-inset-bottom));display:none;box-shadow:0 -4px 16px rgba(0,0,0,.08)}
+.audiobar.show{display:block}
+.audiobar-in{max-width:760px;margin:0 auto;display:flex;gap:8px;align-items:center}
+.audiobar .t{flex:1;font-size:.85rem;color:var(--muted);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.audiobar select{font:inherit;font-size:.9rem;padding:6px;border-radius:10px;border:1px solid var(--line);background:#fff;min-height:40px}
+.voicewarn{display:none;margin-top:8px}
+
+details{background:#F7F4EC;border-radius:12px;padding:10px 12px;margin:10px 0}
+summary{font-family:var(--head);font-weight:700;color:var(--teal);cursor:pointer;min-height:32px}
+.src li{font-size:.88rem;margin-bottom:4px;word-break:break-word}
+.note{font-size:.88rem;color:var(--muted);background:#F1EEE7;border-radius:10px;padding:8px 10px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- Gallery ---------- */
+.gallery{display:grid;gap:14px}
+figure{margin:0;background:var(--card);border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+figure img{display:block;width:100%;height:auto;max-height:75vh;object-fit:contain;background:#E8E2D4;cursor:zoom-in}
+.zoomhint{font-size:.78rem;color:var(--muted)}
+figure .noimg{height:120px;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.9rem;padding:12px;text-align:center;background:#EFE9DC}
+figcaption{padding:10px 12px;font-size:.95rem;line-height:1.45}
+figcaption small{display:block;color:var(--muted);font-size:.78rem;margin-top:4px}
+
+
+/* ---------- Natural zones map ---------- */
+.zone{transition:opacity .25s}
+.zone.off{opacity:.22}
+.zone.on{opacity:1}
+.zone.dimz{opacity:.45}
+.zone.sel{opacity:1;filter:drop-shadow(0 0 2px rgba(0,0,0,.55))}
+.zhit{opacity:0;cursor:pointer}
+.zchip.off{opacity:.45}
+
+/* ---------- Cross-sections (jungle layers / Andes belts) ---------- */
+.xsec{display:block;width:100%;height:auto}
+.layer{cursor:pointer}
+.layer .lbg{transition:opacity .2s}
+.layer.dimz .lbg{opacity:.45}
+.layer.sel .lbg{stroke:#1F2A30;stroke-width:3}
+.layer.seen .tick{opacity:1}
+.layer .tick{opacity:0}
+.sxlabel{font:700 11px var(--head);fill:#fff;pointer-events:none}
+.sxsmall{font:600 9.5px var(--body);fill:#fff;pointer-events:none}
+.xlist{display:grid;gap:8px;margin-top:10px}
+.xlist .chip{justify-content:flex-start;text-align:left;border-radius:14px;min-height:46px;width:100%}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.tag{background:#fff;border-radius:999px;padding:4px 10px;font-size:.85rem;border:1px solid #E6D3A8}
+
+/* ---------- Slider ---------- */
+.yearbox{background:#F7F4EC;border-radius:14px;padding:12px 14px;margin-top:10px}
+.yearbox .ytop{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--head);font-weight:800;color:var(--teal)}
+.yearbox .ytop big{font-size:1.7rem}
+input[type=range]{width:100%;height:44px;accent-color:var(--teal);margin:6px 0 0}
+
+/* ---------- Games ---------- */
+.gcard{background:#fff;border:2px solid var(--line);border-radius:16px;padding:16px;text-align:center;margin:10px 0;font-family:var(--head);font-weight:800;font-size:1.35rem;color:var(--teal)}
+.gcard small{display:block;font:400 .9rem var(--body);color:var(--muted);margin-top:4px}
+.gopts{display:grid;gap:10px}
+.gopts.g3{grid-template-columns:1fr 1fr 1fr}
+.gopts .opt{text-align:center;padding:10px 6px;font-weight:700}
+.ladder{display:grid;gap:8px;margin:10px 0}
+.ladder .opt{text-align:left}
+.ladder .opt.picked{border-color:var(--ok);background:var(--ok-soft)}
+.ladder .opt .n{display:inline-block;min-width:1.6em;font-family:var(--head);font-weight:800;color:var(--ok)}
+
+/* ---------- Tables ---------- */
+.cmp{width:100%;border-collapse:collapse;font-size:.92rem;margin:10px 0}
+.cmp th,.cmp td{border:1px solid var(--line);padding:8px;vertical-align:top;text-align:left}
+.cmp th{background:var(--teal-soft);color:var(--teal);font-family:var(--head);font-size:.85rem}
+.cmp{table-layout:fixed;font-size:.88rem}
+.cmp td{overflow-wrap:break-word;width:50%}
+.cmp td.k{font-weight:700;background:#F7F4EC;font-family:var(--head);color:var(--teal)}
+.tblwrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* ---------- Rain shadow scheme ---------- */
+.rainstep .opt{min-height:48px}
+.sbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+.sbtns button{border:2px solid var(--line);border-bottom-width:4px;background:#fff;border-radius:12px;min-height:48px;font-family:var(--head);font-weight:700;font-size:.9rem;color:var(--ink)}
+.sbtns button.act{border-color:var(--teal);background:var(--teal-soft);color:var(--teal)}
+.sbtns button.seen{border-color:var(--ok)}
+.air{transition:opacity .4s}
+
+.keywords b{background:var(--amber-soft);padding:0 4px;border-radius:4px}
+.partnav{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.partnav a.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.imgsrc{font-size:.8rem;color:var(--muted)}
+figure img{min-height:60px}
+
+/* ---------- Урок 7: допълнения ---------- */
+.people{display:block;width:100%;height:auto;max-width:420px;margin:4px 0}
+.people.anim .pp{animation:ppop .5s both;animation-delay:var(--d)}
+@keyframes ppop{0%{opacity:.15}100%{opacity:1}}
+.chtxt{font-size:.95rem;margin:2px 0 10px}
+.sbtns.two{grid-template-columns:1fr 1fr}
+.ctry{stroke:#fff;stroke-width:.9;stroke-linejoin:round;cursor:pointer}
+.ctry.sel{stroke:#1F2A30;stroke-width:2.2}
+.cl{font:700 8.5px Rubik,system-ui,sans-serif;fill:#1F2A30;paint-order:stroke;stroke:#fff;stroke-width:2.4px;stroke-linejoin:round;pointer-events:none}
+.dhit{cursor:pointer}
+.legend i.hatch{border-radius:3px;background:repeating-linear-gradient(45deg,#7A481E 0 2px,#EEDFC9 2px 5px)}
+.musicbox{background:var(--amber-soft);border-radius:12px;padding:12px;margin:12px 0}
+.musicbox a{font-weight:700}
+.tline{animation:dashm 1.2s linear infinite}
+@keyframes dashm{to{stroke-dashoffset:-18}}
+textarea.ans{margin-bottom:8px}
+mark{background:var(--amber-soft);padding:0 3px;border-radius:4px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="xp" id="xpBox"><span class="gem">◆</span><span id="xp">0</span> XP</div>
+    <div class="prog" aria-label="Напредък"><i id="progBar"></i></div>
+    <div class="badgecount">🏅 <span id="bCount">0</span>/<span id="bTot">9</span></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<main class="wrap">
+
+<!-- ===== HERO ===== -->
+<header class="hero">
+  <div class="kicker">География и икономика · 6. клас · Урок 7</div>
+  <h1>Население и политическа карта на Южна Америка</h1>
+</header>
+
+<section class="card" id="intro">
+  <p style="margin-top:0"><b>Ще научиш:</b> да характеризираш населението на Южна Америка и да описваш съвременната политическа карта на континента.</p>
+  <div class="partnav" style="margin:10px 0 0"><a class="btn ghost small" href="index.html" style="text-decoration:none;display:inline-flex;align-items:center">← Всички уроци</a></div>
+</section>
+
+<section class="case" id="case">
+  <div class="dossier-tag">🔍 СЛУЧАЯТ НА ДЕНЯ</div>
+  <h2>„Двата езика на един континент“</h2>
+  <p>Бразилия е най-голямата страна в Южна Америка. Всичките ѝ съседи говорят <b>испански</b>, а в Бразилия хората говорят <b>португалски</b>. <b>Защо в Бразилия се говори португалски, а в съседните страни — испански?</b></p>
+  <p><b>Твоята задача, детективе:</b> прочети досиетата, разгледай картите и събери 4 улики.</p>
+  <div class="clues" id="clues">
+    <div class="clue" data-clue="1"><b>УЛИКА 1</b>🔒 Досие „Религии, език, бит и култура“</div>
+    <div class="clue" data-clue="2"><b>УЛИКА 2</b>🔒 Политическата карта: всички 14 държави и територии</div>
+    <div class="clue" data-clue="3"><b>УЛИКА 3</b>🔒 Схема „Договорът от 1494 г.“</div>
+    <div class="clue" data-clue="4"><b>УЛИКА 4</b>🔒 „Знаеш ли, че…“</div>
+  </div>
+</section>
+
+<div class="card" style="padding:12px 16px">
+  <div class="row">
+    <span style="flex:1;font-size:.95rem">🔊 Всяко досие има бутон <b>„Чуй“</b>, а думите с <span class="term" style="pointer-events:none">точки отдолу</span> показват обяснение при докосване.</span>
+  </div>
+  <div class="row" style="margin-top:10px"><button class="btn ghost small" id="resetBtn">↺ Започни урока отначало</button></div>
+  <div class="note voicewarn" id="voiceWarn">
+    Телефонът няма български глас за четене. Можеш да го добавиш от настройките на телефона: <i>Език → Преобразуване на текст в говор → Услуги на Google → Инсталиране на гласови данни → Български</i> (пътят може да е малко различен).
+  </div>
+</div>
+
+<!-- ===== DOSSIER 1: NUMBER AND DISTRIBUTION ===== -->
+<section class="card" id="s1">
+  <div class="dossier-tag">ДОСИЕ №1</div>
+  <h2>Брой и разпределение на населението</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s1-text">🔊 Чуй</button></div>
+  <div id="s1-text">
+    <p>В Южна Америка живеят <b>над 434 млн. души</b>. По брой на населението континентът е на <b>пето място</b> в света.</p>
+    <p>Хората не са разпределени равномерно. Около <b>80%</b> от южноамериканците живеят <b>по бреговете</b> на континента. Най-рядко са населени <b>Амазония</b>, <b>високите части на Андите</b> и <b>Патагония</b>.</p>
+    <p>Повечето хора живеят в градове: <b>над 87%</b> от населението е градско. Многомилионни градове са <b>Сао Пауло, Буенос Айрес, Рио де Жанейро, Лима и Богота</b>.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="fact-num">434 млн.</div><small>души живеят в Южна Америка</small></div>
+    <div class="stat"><div class="fact-num">5-о</div><small>място по брой на населението сред континентите</small></div>
+    <div class="stat"><div class="fact-num">80%</div><small>живеят по бреговете</small></div>
+    <div class="stat"><div class="fact-num">87%</div><small>живеят в градове</small></div>
+  </div>
+  <figure>
+    <img loading="lazy" src="images/sao-paulo.jpg" alt="Небостъргачи в Сао Пауло">
+    <figcaption>Сао Пауло — най-големият град в Южна Америка.<small>Автор: Thomas Hobbs · лиценз: CC BY-SA 2.0 · <a href="https://commons.wikimedia.org/wiki/File:Sao_Paulo_Skyline_in_Brazil.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+  <button class="btn readbtn" data-done="s1" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== CHARTS ===== -->
+<section class="card" id="charts">
+  <div class="dossier-tag">ДИАГРАМИ</div>
+  <h2>10 души от Южна Америка</h2>
+  <p>Всяко човече е 10% от населението. Докосни бутона, за да ги „напълниш“.</p>
+  <h3 style="margin-top:12px">Къде живеят?</h3>
+  <svg class="people" id="peopleCoast" viewBox="0 0 330 70" role="img" aria-label="От 10 души 8 живеят по бреговете"></svg>
+  <p id="coastTxt" class="chtxt">Около <b>8 от 10</b> (80%) живеят <b>по бреговете</b>. Само 2 от 10 живеят във вътрешността.</p>
+  <h3 style="margin-top:12px">Град или село?</h3>
+  <svg class="people" id="peopleCity" viewBox="0 0 330 70" role="img" aria-label="Над 8 от 10 души живеят в градове"></svg>
+  <p id="cityTxt" class="chtxt">Над <b>87%</b> са <b>градско</b> население — почти 9 от 10 човечета. Само около 1 от 10 живее в селата.</p>
+  <div class="legend"><span><i style="background:#1B6F75"></i>градове / крайбрежие</span><span><i style="background:#D9D2C0"></i>останалите</span></div>
+  <button class="btn amber readbtn" id="chartBtn">▶ Покажи диаграмите</button>
+  <p class="note" style="margin-top:10px">Схемата е опростена: 87% са закръглени на малко повече от 8 цели човечета.</p>
+</section>
+
+<!-- ===== DENSITY MAP ===== -->
+<section class="card" id="density">
+  <div class="dossier-tag">КАРТА НА ДЕТЕКТИВА</div>
+  <h2>Колко гъсто живеят хората?</h2>
+  <p>Картата е по фиг. 1 от учебника, опростена. Докосни град или област (или бутон), за да прочетеш. Разгледай и осемте, за да получиш значка.</p>
+  <div class="mapbox"><svg id="svgDens" viewBox="0 0 390 560" role="img" aria-label="Карта на гъстотата на населението в Южна Америка"></svg></div>
+  <div class="legend" id="densLegend"></div>
+  <div class="infobox" id="densInfo"><h3>Избери град или област</h3><p style="margin:0">Тук ще се появи обяснението.</p></div>
+  <div class="chips" id="densChips"></div>
+  <p class="note">Опростена карта с цветни зони. Показва идеята: гъсто по бреговете и около големите градове, рядко във вътрешността, високите планини и юга.</p>
+</section>
+
+<!-- ===== DOSSIER 2: PEOPLES ===== -->
+<section class="card" id="s2">
+  <div class="dossier-tag">ДОСИЕ №2</div>
+  <h2>Външни белези и народи</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s2-text">🔊 Чуй</button></div>
+  <div id="s2-text">
+    <p>По произход и външни белези населението на Южна Америка се дели на <b>местно</b>, <b>преселено</b> и <b>смесено</b>. Това са исторически понятия за произход. Те не казват нищо за качествата на хората.</p>
+    <p><b>Местно население</b> са <button class="term" data-t="indianci">индианците</button>. Характерни за тях външни белези са удължената форма на очите и черната права коса. Днес повечето живеят в <b>Амазония</b> и в <b>Андите</b>. Индианските народи са живи и днес. Те говорят свои езици, пазят традициите си и имат своя култура.</p>
+    <p><b>Преселено население.</b> Преселените хора са от <b>Европа</b> и от <b>Африка</b>. След откриването на континента той е завладян от <b>испанците</b> и <b>португалците</b>. В тези години много индианци загинали, а други били принуждавани да работят в рудниците и плантациите. Така броят на индианците намалял. Тогава европейците започнали да довеждат насила хора от Африка, за да работят там. Това е тежка и несправедлива част от историята на континента.</p>
+    <p><b>Смесено население.</b> Днес по-голямата част от южноамериканците е със <b>смесен произход</b>. За потомците са се наложили историческите названия:</p>
+    <ul>
+      <li><button class="term" data-t="mulati">мулати</button> — потомци на европейци и хора, преселени от Африка;</li>
+      <li><button class="term" data-t="metisi">метиси</button> — потомци на европейци и индианци;</li>
+      <li><button class="term" data-t="sambo">самбо</button> — потомци на индианци и хора от африкански произход.</li>
+    </ul>
+    <p>Потомците на преселеното европейско население се наричат <button class="term" data-t="kreoli">креоли</button>.</p>
+  </div>
+  <figure>
+    <img loading="lazy" src="images/chinchero-predyach.jpg" alt="Жена с вретено в Чинчеро, Перу">
+    <figcaption>Жена в Чинчеро, Перу, преде вълна с вретено. Така в Андите се правят тъкани и до днес.<small>Автор: Pierre André · лиценз: CC BY-SA 4.0 · <a href="https://commons.wikimedia.org/wiki/File:Chinchero.-_Drop_spinning_by_woman.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+  <figure>
+    <img loading="lazy" src="images/amazonia-rezervat.jpg" alt="Спътникова снимка на индиански резерват в Амазония">
+    <figcaption>Спътникова снимка на индиански резерват в Амазония (река Жутаи, Бразилия). Гората около реката е дом на индиански общности.<small>Автор: Coordenação-Geral de Observação da Terra (INPE) · лиценз: CC BY-SA 2.0 · <a href="https://commons.wikimedia.org/wiki/File:Indigenous_Reserve_Estrela_da_Paz,_Amazonas.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+  <button class="btn readbtn" data-done="s2" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== GAME: WHO IS WHO ===== -->
+<section class="card" id="gwho">
+  <div class="dossier-tag">🎮 ИГРА</div>
+  <h2>Кой е кой?</h2>
+  <p>Свържи произхода с историческото название.</p>
+  <div class="stage" id="whoStage"></div>
+</section>
+
+<!-- ===== DOSSIER 3: CULTURE ===== -->
+<section class="card" id="s3">
+  <div class="dossier-tag">ДОСИЕ №3</div>
+  <h2>Религии, език, бит и култура</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s3-text">🔊 Чуй</button></div>
+  <div id="s3-text">
+    <p>В Южна Америка са се срещнали хора с различни външни белези и култури. Така са се формирали <b>нови народи и нации</b>. В живота им се съчетават <b>европейска</b>, <b>индианска</b> и <b>африканска</b> култура.</p>
+    <p>Според учебника днес около <b>95%</b> от южноамериканците са <b>католици</b>, но има и вярващи в местни религии.</p>
+    <p>Официалният език в <b>Бразилия</b> е <b>португалският</b>. В повечето от останалите страни официалният език е <b>испанският</b>. Двата езика произлизат от <b>латинския</b>. Затова Южна Америка и част от Северна Америка, където се говорят тези езици, се наричат <button class="term" data-t="latinska">Латинска Америка</button>.</p>
+    <p>Самобитната култура, музикалните ритми и танците на народите по света са известни. <b>Бразилия е родина на самбата</b>, а <b>Аржентина — на тангото</b>. Най-известните футболисти в света също са южноамериканци.</p>
+  </div>
+  <figure>
+    <img loading="lazy" src="images/samba-rio.jpg" alt="Парад на школите по самба в Рио де Жанейро">
+    <figcaption>Парад на школи по самба в Рио де Жанейро.<small>Автор: Alan Betensley · лиценз: обществено достояние · <a href="https://commons.wikimedia.org/wiki/File:Samba_school_parades_2004.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+  <figure>
+    <img loading="lazy" src="images/buenos-aires-tango.jpg" alt="Танго на улица Каминито в Буенос Айрес">
+    <figcaption>Танго на улица Каминито в квартал Ла Бока, Буенос Айрес.<small>Автор: Stefano Vigorelli · лиценз: CC BY-SA 4.0 · <a href="https://commons.wikimedia.org/wiki/File:Caminito_Tango,_Buenos_Aires_ARG.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+  <figure>
+    <img loading="lazy" src="images/maracana.jpg" alt="Стадионът Маракана в Рио де Жанейро">
+    <figcaption>Стадионът „Маракана“ в Рио де Жанейро — един от най-известните футболни стадиони в света.<small>Автор: Валерий Дед · лиценз: CC BY 3.0 · <a href="https://commons.wikimedia.org/wiki/File:Rio_de_Janeiro_Maracan%C3%A3_Stadium_4.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+  <div class="musicbox">
+    <h3 style="margin:0 0 6px">🎵 Чуй самба и танго</h3>
+    <p style="margin:0 0 6px;font-size:.95rem">Два свободни записа от Wikimedia Commons (в нов раздел):</p>
+    <p style="margin:0 0 4px">🥁 <a href="https://commons.wikimedia.org/w/index.php?search=samba&title=Special%3AMediaSearch&type=audio" target="_blank" rel="noopener">Самба</a></p>
+    <p style="margin:0 0 6px">💃 <a href="https://commons.wikimedia.org/wiki/File:La_Cumparsita_(Tango).ogg" target="_blank" rel="noopener">Танго</a></p>
+    <p class="note" style="margin:0">За родителя: моля, прегледайте записите предварително.</p>
+  </div>
+  <button class="btn readbtn" data-done="s3" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== DOSSIER 4: POLITICAL MAP ===== -->
+<section class="card" id="s4">
+  <div class="dossier-tag">ДОСИЕ №4</div>
+  <h2>Политическа карта на континента</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s4-text">🔊 Чуй</button></div>
+  <div id="s4-text">
+    <p>Само <b>две години след откриването</b> на континента <b>Испания и Португалия</b> се договарят да си поделят новооткритите земи. Това е договорът от <b>1494 г.</b></p>
+    <p>Днес в Южна Америка има <b>12 независими страни</b> и <b>2 територии</b>, които са чужди владения: <b>Френска Гвиана</b> (на Франция) и <b>Фолклендските острови</b> (на Великобритания).</p>
+    <p>По <b>площ</b> най-големи са <b>Бразилия, Аржентина и Перу</b>. По <b>население</b> най-големи са <b>Бразилия, Колумбия и Аржентина</b>. Само <b>Боливия</b> и <b>Парагвай</b> нямат <button class="term" data-t="izlaz">излаз на море</button>.</p>
+    <p>Според географското си положение и природните условия страните се делят на <b>две групи</b>:</p>
+    <ul>
+      <li><b>Страни в Андите:</b> Венецуела, Колумбия, Еквадор, Перу, Боливия и Чили;</li>
+      <li><b>Страни в равнинната и платовидната част:</b> Гаяна, Суринам, Френска Гвиана, Бразилия, Парагвай, Уругвай, Аржентина и Фолклендските острови.</li>
+    </ul>
+    <p>С изключение на Фолклендските острови всички страни са <button class="term" data-t="prezid">президентски републики</button>.</p>
+  </div>
+  <button class="btn readbtn" data-done="s4" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== POLITICAL MAP ===== -->
+<section class="card" id="polmap">
+  <div class="dossier-tag">⛰️ ГЛАВНА КАРТА</div>
+  <h2>Политическа карта</h2>
+  <p>Докосни държава или територия на картата (или бутон под нея), за да отвориш нейното досие. Разгледай и <b>14-те</b>, за да получиш значка и улика. С бутоните избери как да е оцветена картата.</p>
+  <div class="sbtns two" id="modeBtns"><button data-m="group" class="act">🎨 По групи</button><button data-m="lang">🗣️ По език</button></div>
+  <div class="mapbox" style="margin-top:10px"><svg id="svgPol" viewBox="0 0 390 560" role="img" aria-label="Политическа карта на Южна Америка"></svg></div>
+  <div class="legend" id="polLegend"></div>
+  <div class="infobox" id="polInfo"><h3>Избери държава</h3><p style="margin:0">Тук ще се появи досието.</p></div>
+  <div class="chips" id="polChips"></div>
+  <p class="note">Опростена карта за учебни цели. Границите са приблизителни. Територията „местни езици“ е нарисувана приблизително по фиг. 4 от учебника.</p>
+</section>
+
+<!-- ===== TABLES ===== -->
+<section class="card" id="groups">
+  <div class="dossier-tag">ГРУПИРАЙ СТРАНИТЕ</div>
+  <h2>Една и съща карта, различни признаци</h2>
+  <div class="tblwrap"><table class="cmp">
+    <tr><th>Признак</th><th>Страни</th></tr>
+    <tr><td class="k">Най-големи по площ</td><td>Бразилия, Аржентина, Перу</td></tr>
+    <tr><td class="k">Най-големи по население</td><td>Бразилия, Колумбия, Аржентина</td></tr>
+    <tr><td class="k">Без излаз на море</td><td>Боливия, Парагвай</td></tr>
+    <tr><td class="k">Официален език португалски</td><td>Бразилия</td></tr>
+    <tr><td class="k">Официален език испански</td><td>Повечето други страни</td></tr>
+    <tr><td class="k">Други езици</td><td>Английски — Гаяна, Фолклендски острови; холандски — Суринам; френски — Френска Гвиана</td></tr>
+    <tr><td class="k">Страни в Андите</td><td>Венецуела, Колумбия, Еквадор, Перу, Боливия, Чили</td></tr>
+    <tr><td class="k">Равнинна и платовидна част</td><td>Гаяна, Суринам, Френска Гвиана, Бразилия, Парагвай, Уругвай, Аржентина, Фолклендски острови</td></tr>
+  </table></div>
+</section>
+
+<!-- ===== TREATY ===== -->
+<section class="card" id="treaty">
+  <div class="dossier-tag">🌍 СХЕМА</div>
+  <h2>Договорът от 1494 г.</h2>
+  <p>Докосни трите стъпки по ред. Разгледай и трите, за да получиш значка.</p>
+  <div class="mapbox" style="background:#CFE6EE"><svg class="xsec" id="svgGlobe" viewBox="0 0 320 320" role="img" aria-label="Глобус с линията на подялбата между Испания и Португалия"></svg></div>
+  <div class="sbtns" id="treatyBtns"><button data-s="1">1 · Нови земи</button><button data-s="2">2 · Линията</button><button data-s="3">3 · Две владения</button></div>
+  <div class="infobox" id="treatyInfo"><h3>Избери стъпка</h3><p style="margin:0">Тук ще се появи обяснението.</p></div>
+  <div class="legend"><span><i class="sq" style="background:#6FAE5A"></i>испанско владение</span><span><i class="sq" style="background:#F08A24"></i>португалско владение</span><span><i class="ln" style="background:#C62828"></i>линия на подялбата</span></div>
+  <p class="note" style="margin-top:10px">Опростена схема. Линията е на около 46° западна дължина. Самият договор не я дава в градуси — това е съвременно изчисление.</p>
+  <figure>
+    <img loading="lazy" src="images/tordesillas-karta.jpg" alt="Стара карта на линията на подялбата по договора от Тордесиляс">
+    <figcaption>Стара карта на линията на подялбата по договора от Тордесиляс (1494 г.).<small>Автор: Antonio de Herrera y Tordesillas · лиценз: обществено достояние · <a href="https://commons.wikimedia.org/wiki/File:Map_of_Meridian_Line_set_under_the_Treaty_of_Tordesillas.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+</section>
+
+<!-- ===== GAME: CAPITALS ===== -->
+<section class="card" id="gcap">
+  <div class="dossier-tag">🎮 ИГРА</div>
+  <h2>Страна → столица</h2>
+  <p>Избери столицата на държавата. Във Френска Гвиана и на Фолклендските острови това е главният град на територията.</p>
+  <div class="stage" id="capStage"></div>
+</section>
+
+<!-- ===== GAME: SEA / ANDES ===== -->
+<section class="card" id="gsea">
+  <div class="dossier-tag">🎮 ИГРА</div>
+  <h2>Море и Анди</h2>
+  <div class="sbtns two" id="gameMode"><button data-g="sea" class="act">🌊 С излаз на море?</button><button data-g="andes">⛰️ В Андите?</button></div>
+  <div class="stage" id="seaStage"></div>
+</section>
+
+<!-- ===== DOSSIER 5: PROBLEMS ===== -->
+<section class="card" id="s5">
+  <div class="dossier-tag">ДОСИЕ №5</div>
+  <h2>Проблеми на населението и държавите</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="s5-text">🔊 Чуй</button></div>
+  <div id="s5-text">
+    <p>Главните политически проблеми на континента са свързани с <button class="term" data-t="diktatura">военните диктатури</button> в близкото минало. Днес основен проблем е <b>дълбоката пропаст между бедни и богати</b>.</p>
+    <p>Повечето градове в континента имат <b>европейски облик</b>. Но в тях има <b>квартали, в които живеят милиони хора в крайна бедност</b>. Хората там често се грижат един за друг, но им липсват добри жилища, чиста вода и работа.</p>
+    <p>Цивилизацията бързо навлиза в <b>селвата</b>, където живеят малкото останали индиански племена. <b>Унищожаването на естествената им среда ги обрича на изчезване</b>. Затова е важно гората и правата на тези народи да се пазят.</p>
+  </div>
+  <figure>
+    <img loading="lazy" src="images/rocinha.jpg" alt="Панорама на квартала Росинья в Рио де Жанейро">
+    <figcaption>Росинья в Рио де Жанейро — един от най-големите бедни квартали на града. В него живеят много хора.<small>Автор: Junius · лиценз: обществено достояние · <a href="https://commons.wikimedia.org/wiki/File:Favela_da_Rocinha.jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+  <button class="btn readbtn" data-done="s5" data-xp="10">✓ Прочетох досието · +10 XP</button>
+</section>
+
+<!-- ===== LIBRARY ===== -->
+<section class="card lib" id="lib">
+  <div class="dossier-tag">📚 ГЕОГРАФСКА БИБЛИОТЕКА</div>
+  <h2>Валпараисо</h2>
+  <div class="row"><button class="btn ghost small listen" data-read="lib-text">🔊 Чуй</button></div>
+  <div id="lib-text">
+    <p>Валпараисо е град в <b>Чили</b> с население около <b>800 хил. души</b>. Той е едно от най-важните <b>пристанища на Тихия океан</b>.</p>
+    <p>В града заседава <b>парламентът на Чили</b>. Тук можеш да се загубиш в лабиринт от <b>стръмни улички</b>, да видиш <b>ярко боядисани къщи</b> и да се насладиш на красиви гледки към океана.</p>
+  </div>
+  <figure>
+    <img loading="lazy" src="images/valparaiso-cerros.jpg" alt="Къщи по хълмовете на Валпараисо">
+    <figcaption>Цветни къщи по хълмовете на Валпараисо.<small>Автор: Nicolas Solop · лиценз: CC BY-SA 2.0 · <a href="https://commons.wikimedia.org/wiki/File:Los_cerros_de_Valparaiso_(32112979738).jpg" target="_blank" rel="noopener">Wikimedia Commons</a></small></figcaption>
+  </figure>
+  <button class="btn readbtn" data-done="lib" data-xp="10">✓ Прочетох · +10 XP</button>
+</section>
+
+<!-- ===== DID YOU KNOW ===== -->
+<section class="card" id="dyk">
+  <div class="dossier-tag">💡 ЗНАЕШ ЛИ, ЧЕ…</div>
+  <h2>Тайни от архива</h2>
+  <div class="dyk" id="dyk-text">
+    <div data-i="🏛️">Боливия има <b>две столици</b>. <b>Сукре</b> е конституционната столица, а в <b>Ла Пас</b> е седалището на правителството.</div>
+    <div data-i="🇧🇷">Бразилия е толкова голяма, че заема <b>почти половината</b> от площта на Южна Америка. Колонизаторите носят езика си. Затова езикът на всяка страна показва кой я е управлявал някога.</div>
+    <div data-i="🗣️">В Парагвай <b>гуарани</b> е втори официален език, наред с испанския. Говорят го много парагвайци.</div>
+    <div data-i="🌷">Суринам е единствената страна на континента с официален <b>холандски</b> език.</div>
+    <div data-i="💃">Тангото е в списъка на ЮНЕСКО за нематериално културно наследство от <b>2009 г.</b> Записано е за Аржентина и Уругвай заедно.</div>
+  </div>
+  <button class="btn readbtn" data-done="dyk" data-xp="10">✓ Прочетох · +10 XP</button>
+</section>
+
+<!-- ===== ROLE: REPORTER ===== -->
+<section class="card" id="reporter">
+  <div class="dossier-tag">📰 РОЛЯ: РЕПОРТЕР</div>
+  <h2>Репортер на живо</h2>
+  <p>Избери град и напиши репортаж от <b>3 изречения</b>.</p>
+  <div class="sbtns two" id="repCity"><button data-c="ba">Буенос Айрес</button><button data-c="sp">Сао Пауло</button></div>
+  <div id="repForm" style="display:none">
+    <div class="infobox" id="repHint" style="margin-top:10px"></div>
+    <textarea class="ans" id="rep1" rows="2" placeholder="1. Къде си, в коя държава и какъв е езикът?" aria-label="Изречение 1"></textarea>
+    <textarea class="ans" id="rep2" rows="2" placeholder="2. Какво знаем за града: голям ли е, къде е на картата?" aria-label="Изречение 2"></textarea>
+    <textarea class="ans" id="rep3" rows="2" placeholder="3. Какво е характерно за културата: музика, танц, футбол?" aria-label="Изречение 3"></textarea>
+    <div class="row" style="margin-top:8px"><button class="btn small" id="repDone" disabled>Изпрати репортажа</button></div>
+    <div class="fb" id="repFb"></div>
+  </div>
+</section>
+
+<!-- ===== DRAW ===== -->
+<section class="card" id="draw">
+  <div class="dossier-tag">🎨 ТВОРЧЕСКА ЗАДАЧА</div>
+  <h2>Контурна карта на лист хартия</h2>
+  <p>Това е задача 3 от учебника. Вземи контурна карта на Южна Америка (или я нарисувай на лист):</p>
+  <ol>
+    <li>Оцвети с <b>два цвята</b> страните в Андите и страните в източната (равнинната и платовидната) част.</li>
+    <li>Надпиши <b>страните и техните столици</b>.</li>
+    <li>Съставѝ <b>легенда</b>: какво означава всеки цвят.</li>
+  </ol>
+  <p class="note">Подсказка: в Андите са Венецуела, Колумбия, Еквадор, Перу, Боливия и Чили. Всички останали са във втората група.</p>
+  <button class="btn ghost readbtn" data-done="draw" data-xp="10">✓ Нарисувах я · +10 XP</button>
+</section>
+
+<!-- ===== ENGLISH ===== -->
+<section class="card" id="eng">
+  <div class="dossier-tag">🇬🇧 ENGLISH CORNER</div>
+  <h2>Words of the day</h2>
+  <p style="font-size:.95rem">Докосни 🔊, за да чуеш думата и изречението.</p>
+  <div class="vocab" id="vocabEn"></div>
+  <div class="hola" style="margin-top:18px">
+    <h3 style="color:#B0452E">¡Hola! 🇪🇸 Бонус на испански</h3>
+    <p style="font-size:.95rem;margin-top:0">Тези думи се използват в испаноезичните страни на континента.</p>
+    <div class="vocab" id="vocabEs"></div>
+  </div>
+</section>
+
+<!-- ===== SELF-CHECK ===== -->
+<section class="card" id="selfcheck">
+  <div class="dossier-tag">✍️ ПРОВЕРИ СЕ САМ</div>
+  <h2>Отговори с думи</h2>
+  <p style="font-size:.95rem">Напиши кратък отговор, после натисни „Готово“, за да видиш примерен отговор, и сам се оцени.</p>
+  <div id="scList"></div>
+</section>
+
+<!-- ===== QUIZ ===== -->
+<section class="card" id="quiz">
+  <div class="dossier-tag">🎯 ПРОВЕРИ СЕ</div>
+  <h2>Изпитът на детектива</h2>
+  <p>3 нива по 3 въпроса. Всяко ниво отключва следващото. Грешните въпроси се връщат в края на нивото.</p>
+  <div class="pathwrap"><div class="path" id="path">
+    <button class="node" data-lvl="0">1<span>Новобранец</span></button>
+    <button class="node" data-lvl="1" disabled>2<span>Следовател</span></button>
+    <button class="node" data-lvl="2" disabled>3<span>Картограф</span></button>
+  </div></div>
+  <div id="qArea"></div>
+
+  <h3 style="margin-top:18px">🃏 Флашкарти</h3>
+  <p style="font-size:.95rem;margin-top:0">Докосни картата, за да я обърнеш.</p>
+  <div class="flash" id="flash"><div class="flash-in"><div class="face front" id="fFront"></div><div class="face back" id="fBack"></div></div></div>
+  <div class="row"><button class="btn ghost small" id="fPrev">← Назад</button><span id="fNum" style="flex:1;text-align:center;color:var(--muted)"></span><button class="btn ghost small" id="fNext">Напред →</button></div>
+</section>
+
+<!-- ===== REVEAL ===== -->
+<section class="card reveal" id="reveal">
+  <div class="dossier-tag">🔓 РАЗКРИВАНЕ</div>
+  <h2>Защо в Бразилия се говори португалски?</h2>
+  <p id="revealLock">Събери 4-те улики, за да отключиш разкриването.</p>
+  <div id="revealBody" style="display:none;text-align:left">
+    <p>Погледни уликите. Защо в Бразилия се говори португалски, а в съседните страни — испански?</p>
+    <div class="opts" id="suspects"></div>
+    <div class="fb" id="revealFb"></div>
+  </div>
+  <div class="stamp" id="stamp">РАЗКРИТО</div>
+  <h3 style="margin-top:14px">Твоите значки</h3>
+  <div class="badges" id="badges"></div>
+  <p id="finalXp" style="margin-top:12px;font-family:var(--head);font-weight:700;color:var(--teal)"></p>
+  <div class="partnav"><a class="btn ghost" href="index.html" style="text-decoration:none;display:inline-flex;align-items:center">Всички уроци</a></div>
+</section>
+
+<!-- ===== SUMMARY ===== -->
+<section class="card" id="sum">
+  <div class="dossier-tag">📌 ЗАПОМНИ</div>
+  <h2>Най-важното от урока</h2>
+  <div class="row" style="margin-bottom:8px"><button class="btn ghost small listen" data-read="sumList">🔊 Чуй</button></div>
+  <ol class="sum" id="sumList">
+    <li>В Южна Америка живеят <b>над 434 млн. души</b> — континентът е на <b>пето място</b> по население. Около <b>80%</b> живеят <b>по бреговете</b>. Най-рядко населени са <b>Амазония, високите Анди и Патагония</b>. Градското население е <b>над 87%</b>.</li>
+    <li>Многомилионни градове: <b>Сао Пауло, Буенос Айрес, Рио де Жанейро, Лима, Богота</b>.</li>
+    <li>По произход населението е <b>местно</b> (индианци: удължена форма на очите, черна права коса; днес живеят най-вече в Амазония и в Андите), <b>преселено</b> (от Европа и Африка) и <b>смесено</b> (по-голямата част днес).</li>
+    <li>След откриването континентът е завладян от <b>испанците и португалците</b>. Броят на индианците намалял и европейците започнали да довеждат насила хора от Африка. Това е тежка част от историята.</li>
+    <li><b>Мулати</b> — потомци на европейци и хора, преселени от Африка; <b>метиси</b> — на европейци и индианци; <b>самбо</b> — на индианци и хора от африкански произход. Потомците на преселените европейци са <b>креоли</b>.</li>
+    <li>Съчетават се <b>европейска, индианска и африканска култура</b>. Според учебника около <b>95%</b> са католици, но има и вярващи в местни религии.</li>
+    <li>Официален език: <b>португалски</b> в Бразилия, <b>испански</b> в повечето други страни. И двата произлизат от <b>латинския</b>, затова се казва <b>Латинска Америка</b>. Бразилия е родина на <b>самбата</b>, Аржентина — на <b>тангото</b>.</li>
+    <li>През <b>1494 г.</b> Испания и Португалия си поделят новите земи. Днес има <b>12 независими страни и 2 територии</b>: Френска Гвиана (Франция) и Фолклендските острови (Великобритания).</li>
+    <li>По площ: <b>Бразилия, Аржентина, Перу</b>. По население: <b>Бразилия, Колумбия, Аржентина</b>. Без излаз на море: <b>Боливия и Парагвай</b>.</li>
+    <li>Две групи страни: <b>в Андите</b> (Венецуела, Колумбия, Еквадор, Перу, Боливия, Чили) и <b>в равнинната и платовидната част</b> (Гаяна, Суринам, Френска Гвиана, Бразилия, Парагвай, Уругвай, Аржентина, Фолклендските острови). Всички страни, без Фолклендските острови, са <b>президентски републики</b>.</li>
+    <li>Проблеми: <b>военните диктатури</b> в близкото минало и <b>пропастта между бедни и богати</b>. Унищожаването на селвата застрашава малкото останали индиански племена.</li>
+    <li><b>Валпараисо</b> (Чили) — около 800 хил. жители, голямо пристанище на Тихия океан, седалище на парламента, цветни къщи и стръмни улички.</li>
+    <li><b>Столици:</b> Венецуела — Каракас; Колумбия — Богота; Еквадор — Кито; Перу — Лима; Боливия — Сукре (конституционна) и Ла Пас (седалище на правителството); Чили — Сантяго; Гаяна — Джорджтаун; Суринам — Парамарибо; Бразилия — Бразилия; Парагвай — Асунсион; Уругвай — Монтевидео; Аржентина — Буенос Айрес.</li>
+  </ol>
+  <details>
+    <summary>📄 Текст за копиране (Google Docs / печат)</summary>
+    <textarea class="plain" id="plain" readonly></textarea>
+    <button class="btn small" id="copyBtn" style="margin-top:8px">📋 Копирай текста</button>
+  </details>
+</section>
+
+<!-- ===== PARENT ===== -->
+<section class="card" id="parent">
+  <details>
+    <summary>👤 За родителя: какво е добавено и източници</summary>
+    <p style="font-size:.92rem"><b>Извън учебника</b> в този урок са добавени: диаграмите с човечета (опростяване на 80% и 87%); опростената карта на гъстотата и обяснението защо Амазония, високите Анди и Патагония са рядко населени; играта „Кой е кой?“; схемата „Договорът от 1494 г.“ с глобус и изречението защо в Бразилия се говори португалски; досиетата на държавите (столици, езици) и таблицата с групиране; игрите „Страна → столица“ и „Море и Анди“; ролята „Репортер“; снимките и връзките към музика; 5-те факта в „Знаеш ли, че…“; Английски и испански кът. Картите са <b>опростени чертежи за учебни цели</b> (контурите на държавите са от данните на Natural Earth, обществено достояние).</p>
+    <p style="font-size:.88rem"><b>Числата от учебника остават водещи</b> (по тях се пита в клас). Към днес данните са малко по-различни:</p>
+    <ul class="src">
+      <li><b>Население:</b> учебникът — над 434 млн. По оценка на ООН (World Population Prospects 2024) около <b>438 млн.</b> през 2025 г. Континентът остава на 5-о място.</li>
+      <li><b>Градско население:</b> учебникът — над 87%. Данни, базирани на оценките на ООН, дават около <b>88%</b> за 2025 г. Числото е близко.</li>
+      <li><b>Католици:</b> учебникът — 95%. Това е <b>силно остаряло</b>. Проучването на Pew Research Center (2024 г., публикувано януари 2026 г.) показва, че днес католиците сред възрастните са между 46% и 67% в шестте изследвани страни (Бразилия и Чили — по 46%; Мексико и Перу — по 67%), а делът им намалява. Нараства дялът на протестантите и на хората без религия. Урокът запазва числото от учебника, но е добре да обясните на детето, че картината днес е по-пъстра.</li>
+      <li><b>Валпараисо:</b> учебникът — около 800 хил. По преброяването в Чили от 2017 г. самият град има около 300 хил. жители, а „Голямото Валпараисо“ (с околните градове) — около 950–980 хил.</li>
+      <li><b>12 страни и 2 територии</b> са както в учебника. Фолклендските острови (по-известни на испански като Малвински) са владение на Великобритания, но Аржентина оспорва принадлежността им. Френска Гвиана е заморски департамент на Франция.</li>
+      <li><b>Столици:</b> Боливия има две. Сукре е конституционната столица (там е Върховният съд), а Ла Пас е седалището на правителството и парламента. Столицата на Бразилия е Бразилия, а не Рио де Жанейро. Кайен е главният град на Френска Гвиана, а Стенли — на Фолклендските острови.</li>
+      <li><b>Езици:</b> в учебника на фиг. 4 е показан „местен език“. На нашата карта „по език“ е показан <b>официалният</b> език по държави, а местните езици са отбелязани приблизително. Официални езици освен испанския: гуарани в Парагвай, кечуа и аймара в Перу и още местни езици в Боливия.</li>
+      <li><b>Договорът от Тордесиляс (1494):</b> линията е на 370 легуи западно от Кабо Верде, приблизително 46°–47° з.д. Градусите са по-късно изчисление. По-късно португалците се разселват и западно от линията, затова днешните граници на Бразилия са по-широки. Схемата показва причината за началото на португалското владение.</li>
+      <li><b>Термините</b> „мулати“, „метиси“, „самбо“ и „креоли“ са от учебника и се използват като <b>исторически понятия за произход</b>, без оценка за хората. Част от тях днес не се ползват в обичайната реч. В урока робството и страданието на индианците са описани честно, но без подробности. Индианските народи са представени като живи общности.</li>
+      <li><b>Музика:</b> връзките към самба и танго са към свободни записи от Wikimedia Commons. Моля, <b>прегледайте ги предварително</b> — в нов раздел се отваря страница на Commons.</li>
+    </ul>
+    <ul class="src">
+      <li><a href="https://population.un.org/wpp/" target="_blank" rel="noopener">UN World Population Prospects 2024</a> — население по региони</li>
+      <li><a href="https://www.pewresearch.org/religion/2026/01/21/religious-affiliation-in-latin-america/" target="_blank" rel="noopener">Pew Research: Religious affiliation in Latin America (2026)</a></li>
+      <li><a href="https://citypopulation.de/en/chile/granvalparaiso/" target="_blank" rel="noopener">citypopulation.de: Gran Valparaíso</a> — преброяване 2017</li>
+      <li><a href="https://www.naturalearthdata.com/" target="_blank" rel="noopener">Natural Earth</a> — данни за контурите на държавите (обществено достояние)</li>
+      <li><a href="https://ich.unesco.org/en/RL/00258" target="_blank" rel="noopener">UNESCO: Tango</a></li>
+      <li>Снимките са от <a href="https://commons.wikimedia.org/" target="_blank" rel="noopener">Wikimedia Commons</a>. Авторът и лицензът са под всяка снимка.</li>
+    </ul>
+  </details>
+</section>
+
+</main>
+
+<div class="audiobar" id="audiobar">
+  <div class="audiobar-in">
+    <button class="btn small" id="aPause">⏸</button>
+    <button class="btn ghost small" id="aStop">⏹</button>
+    <span class="t" id="aText">Чета…</span>
+    <select id="aRate" aria-label="Скорост"><option value="0.8">0.8×</option><option value="1" selected>1×</option><option value="1.2">1.2×</option></select>
+  </div>
+</div>
+
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet"><h3 id="sheetT"></h3><p id="sheetD" style="margin:0 0 12px"></p><button class="btn ghost small" id="sheetClose">Разбрах</button></div>
+<script>
+(function(){
+"use strict";
+var CFG={};
+CFG.key='geo6-urok07-v1';
+CFG.reads=['s1','s2','s3','s4','s5','lib','dyk','draw'];
+CFG.progBadges=['demo','cart','hist','who','cap','sea','rep'];
+CFG.clueFor={s3:1,dyk:4};
+CFG.levelNames=['Новобранец','Следовател','Картограф'];
+CFG.badges=[
+  {id:'detective',ic:'🕵️',n:'Детектив',d:'Прочети всички досиета'},
+  {id:'demo',ic:'👥',n:'Демограф',d:'Разгледай всички 8 места на картата на гъстотата'},
+  {id:'cart',ic:'🗺️',n:'Картограф',d:'Отвори досиетата на всичките 14 държави и територии'},
+  {id:'hist',ic:'📜',n:'Историк',d:'Разгледай схемата „Договорът от 1494 г.“'},
+  {id:'who',ic:'🧬',n:'Познавач на народите',d:'Реши играта „Кой е кой?“'},
+  {id:'cap',ic:'🏛️',n:'Столичен експерт',d:'Реши играта „Страна → столица“'},
+  {id:'sea',ic:'🌊',n:'Навигатор',d:'Реши и двете игри „Море и Анди“'},
+  {id:'rep',ic:'📰',n:'Репортер',d:'Изпрати репортаж от 3 изречения'},
+  {id:'polyglot',ic:'💬',n:'Полиглот',d:'Чуй 5 думи'},
+  {id:'chief',ic:'👑',n:'Главен детектив',d:'Поне 8 от 9 верни от първи опит'}
+];
+CFG.clues={
+  1:'В Бразилия официалният език е португалски, а в повечето други страни на континента — испански. И двата езика произлизат от латинския.',
+  2:'Картата „по език“ показва Бразилия в един цвят (португалски), а почти всичките ѝ съседи — в друг (испански).',
+  3:'През 1494 г. Испания и Португалия поделят земите с линия на около 46° з.д. Източната част на Южна Америка е на изток от линията — при Португалия.',
+  4:'Колонизаторите носят езика си със себе си. Езикът на страната показва кой я е управлявал някога.'
+};
+CFG.glossary={
+  indianci:['Индианци','Местното население на Америка. Индианските народи живеят на континента от хилядолетия, много преди пристигането на европейците. Днес те са живи общности със свои езици и традиции.'],
+  mulati:['Мулати','Историческо название за потомците на европейци и хора, преселени от Африка.'],
+  metisi:['Метиси','Историческо название за потомците на европейци и индианци.'],
+  sambo:['Самбо','Историческо название за потомците на индианци и хора от африкански произход. Не е същото като танца самба.'],
+  kreoli:['Креоли','Потомците на преселеното европейско население в Америка.'],
+  latinska:['Латинска Америка','Страните в Америка, където се говорят испански или португалски. И двата езика произлизат от латинския.'],
+  izlaz:['Излаз на море','Страната има бряг на море или океан. Страна без излаз на море е заобиколена само от суша.'],
+  prezid:['Президентска република','Държава, в която държавен глава е президентът.'],
+  diktatura:['Военна диктатура','Управление, при което властта е в ръцете на армията, а хората не могат свободно да избират управляващите.']
+};
+CFG.EN=[['country','Държава','Brazil is a big country.'],['capital','Столица','Lima is the capital of Peru.'],['city','Град','São Paulo is a big city.'],['people','Хора','Many people live in the city.'],['language','Език','Portuguese is the language of Brazil.'],['border','Граница','Chile and Argentina have a long border.'],['coast','Бряг','Most people live near the coast.']];
+CFG.ES=[['país','държава'],['capital','столица'],['ciudad','град'],['gente','хора'],['idioma','език']];
+CFG.SC=[
+  {q:'Характеризирай броя, разпределението, външните белези, бита и културата на населението на Южна Америка.',a:'Живеят над **434 млн.** души (**пето място** в света). Около **80%** са по **бреговете**, най-рядко е в **Амазония, Андите и Патагония**. Градското население е над **87%**. Има **местно** (индианци), **преселено** (от Европа и Африка) и **смесено** население. Съчетават се **европейска, индианска и африканска** култура. Повечето са католици, езиците са **португалски и испански**. Самбата е от Бразилия, тангото — от Аржентина.'},
+  {q:'Кои са мулатите, метисите, самбо и креолите?',a:'Това са исторически названия за произход. **Мулати** — европейци и хора от Африка; **метиси** — европейци и индианци; **самбо** — индианци и хора от африкански произход. **Креоли** — потомци на преселените европейци.'},
+  {q:'Групирай страните по различни признаци: площ, население, официален език, природни условия и излаз на море.',a:'**Площ:** Бразилия, Аржентина, Перу. **Население:** Бразилия, Колумбия, Аржентина. **Език:** португалски — Бразилия; в повечето други — **испански**; английски — Гаяна, Фолклендски острови; холандски — Суринам; френски — Френска Гвиана. **Природни условия:** в **Андите** (6 страни) и в **равнинната и платовидната част**. **Без излаз на море:** Боливия и Парагвай.'},
+  {q:'Кои са главните проблеми на населението и на държавите в континента?',a:'**Военните диктатури** в близкото минало и днес **пропастта между бедни и богати**. В повечето градове има квартали, където милиони хора живеят в **крайна бедност**. Цивилизацията навлиза в **селвата** и унищожава средата на малкото останали **индиански племена**.'}
+];
+CFG.LV=[
+ [{q:'Колко души живеят в Южна Америка според учебника?',o:['Над 434 млн.','Около 43 млн.','Над 4 млрд.'],a:0,e:'В Южна Америка живеят над 434 млн. души.'},
+  {q:'Къде живеят около 80% от южноамериканците?',o:['По бреговете','В Амазония','В Патагония'],a:0,e:'Около 80% живеят по бреговете. Амазония и Патагония са рядко населени.'},
+  {q:'Кои са местното население на Южна Америка?',o:['Индианците','Креолите','Мулатите'],a:0,e:'Местното население са индианците.'}],
+ [{q:'Кои са метисите?',o:['Потомци на европейци и индианци','Потомци на европейци и хора от Африка','Потомци на индианци и африканци'],a:0,e:'Метисите са потомци на европейци и индианци.'},
+  {q:'Какъв е официалният език в Бразилия?',o:['Португалски','Испански','Английски'],a:0,e:'В Бразилия официалният език е португалският.'},
+  {q:'Защо се казва „Латинска Америка“?',o:['Испанският и португалският произлизат от латинския','Там е живял древен Рим','Защото е в Южното полукълбо'],a:0,e:'Двата езика произлизат от латинския, затова се казва Латинска Америка.'}],
+ [{q:'Кои две страни нямат излаз на море?',o:['Боливия и Парагвай','Чили и Перу','Уругвай и Аржентина'],a:0,e:'Само Боливия и Парагвай нямат излаз на море.'},
+  {q:'Колко са независимите страни и териториите в Южна Америка?',o:['12 страни и 2 територии','14 страни и 12 територии','2 страни и 12 територии'],a:0,e:'12 независими страни и 2 територии: Френска Гвиана и Фолклендските острови.'},
+  {q:'Коя е конституционната столица на Боливия?',o:['Сукре','Лима','Кито'],a:0,e:'Сукре е конституционна столица. Седалището на правителството е в Ла Пас.'}]
+];
+CFG.FC=[['Латинска Америка','Страните, където се говорят испански и португалски. И двата езика произлизат от латинския.'],['Метиси','Потомци на европейци и индианци (исторически термин).'],['Мулати','Потомци на европейци и хора, преселени от Африка (исторически термин).'],['Самбо','Потомци на индианци и хора от африкански произход (исторически термин).'],['Креоли','Потомци на преселеното европейско население.'],['12 страни и 2 територии','Френска Гвиана (на Франция) и Фолклендските острови (на Великобритания) са чужди владения.'],['Боливия и Парагвай','Единствените страни в Южна Америка без излаз на море.'],['Договорът от 1494 г.','Испания и Португалия си поделят новите земи. Затова в Бразилия се говори португалски, а на запад — испански.']];
+CFG.SUS=[
+ {t:'Договорът от 1494 г.: източната част на континента е при Португалия, останалото — при Испания. Колонизаторите са носили своя език.',ok:1,e:'Точно така! Португалският и испанският са от един корен (латинския, улика 1), но двете страни получават различни земи с договора от 1494 г. (улика 3). Бразилия е оцветена различно на картата (улика 2). Колонизаторите носят езика си (улика 4).'},
+ {t:'Бразилия е толкова голяма, че хората са измислили собствен език',ok:0,e:'Не. Португалският идва от Португалия, не е измислен в Бразилия (улики 1 и 4).'},
+ {t:'Езикът зависи от климата: в горещите страни говорят португалски',ok:0,e:'Не. Езикът не зависи от климата. Той е свързан с това кой е управлявал земята (улика 4).'},
+ {t:'Португалия е завладяла целия континент, но съседите са сменили езика си',ok:0,e:'Не. На картата по език (улика 2) съседите на Бразилия говорят испански, защото са били испански владения (улика 3).'}
+];
+CFG.plainTitle='Урок 7. Население и политическа карта на Южна Америка';
+CFG.plainTerms='индианци, мулати, метиси, самбо, креоли, Латинска Америка, излаз на море, президентска република, военна диктатура';
+
+var $=function(s,r){return (r||document).querySelector(s)}, $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+
+/* ================= STATE ================= */
+var S={xp:0,done:{},badges:{},clues:{},quizDone:[false,false,false],quizFirst:0,solved:false,sc:{},x:{}};
+var heard={};
+var LSKEY=CFG.key;
+function save(){try{localStorage.setItem(LSKEY,JSON.stringify({xp:S.xp,done:S.done,badges:S.badges,clues:S.clues,quizDone:S.quizDone,quizFirst:S.quizFirst,solved:S.solved,sc:S.sc,heard:heard,x:S.x}))}catch(e){}}
+function load(){try{var r=localStorage.getItem(LSKEY);return r?JSON.parse(r):null}catch(e){return null}}
+function resetAll(){try{localStorage.removeItem(LSKEY)}catch(e){}location.reload()}
+
+function progress(){
+  var n=0;CFG.reads.forEach(function(k){if(S.done[k])n++});
+  CFG.progBadges.forEach(function(k){if(S.badges[k])n++});
+  S.quizDone.forEach(function(d){if(d)n++}); if(S.solved)n++;
+  var tot=CFG.reads.length+CFG.progBadges.length+3+1;
+  $('#progBar').style.width=Math.min(100,Math.round(n/tot*100))+'%';
+}
+function toast(msg){var t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('show')},1800)}
+function addXP(n,msg){S.xp+=n;$('#xp').textContent=S.xp;save();var b=$('#xpBox');b.classList.remove('bump');void b.offsetWidth;b.classList.add('bump');if(msg)toast('+'+n+' XP · '+msg);else toast('+'+n+' XP');progress()}
+function shuffle(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t}return a}
+
+/* ================= BADGES ================= */
+var BADGES=CFG.badges;
+function renderBadges(){
+  $('#badges').innerHTML=BADGES.map(function(b){return '<div class="badge'+(S.badges[b.id]?' on':'')+'"><span class="ic">'+b.ic+'</span><b>'+b.n+'</b>'+b.d+'</div>'}).join('');
+  $('#bCount').textContent=Object.keys(S.badges).length;
+}
+function award(id){if(S.badges[id])return;S.badges[id]=true;save();var b=BADGES.filter(function(x){return x.id===id})[0];renderBadges();setTimeout(function(){toast('🏅 Нова значка: '+b.n)},900);progress()}
+
+/* ================= CLUES ================= */
+var CLUES=CFG.clues;
+function markClue(n){var el=$('.clue[data-clue="'+n+'"]');el.classList.add('on');el.innerHTML='<b>УЛИКА '+n+' ✓</b>'+CLUES[n]}
+function giveClue(n){if(S.clues[n])return;S.clues[n]=true;save();markClue(n);toast('🔎 Нова улика!');checkReveal()}
+
+/* ================= READ BUTTONS ================= */
+$$('[data-done]').forEach(function(b){
+  b.addEventListener('click',function(){
+    var k=b.getAttribute('data-done'); if(S.done[k])return;
+    S.done[k]=true; b.classList.add('done'); b.disabled=true; b.textContent='✓ Готово'; save();
+    addXP(+b.getAttribute('data-xp'));
+    if(CFG.clueFor[k])setTimeout(function(){giveClue(CFG.clueFor[k])},700);
+    if(CFG.reads.every(function(r){return S.done[r]}))award('detective');
+  });
+});
+
+/* ================= GLOSSARY ================= */
+var G=CFG.glossary;
+var sheet=$('#sheet'),sbg=$('#sheetBg');
+function openSheet(k){$('#sheetT').textContent=G[k][0];$('#sheetD').textContent=G[k][1];sbg.style.display='block';requestAnimationFrame(function(){sheet.classList.add('open')})}
+function closeSheet(){sheet.classList.remove('open');setTimeout(function(){sbg.style.display='none'},250)}
+$$('.term[data-t]').forEach(function(t){t.addEventListener('click',function(){openSheet(t.getAttribute('data-t'))})});
+sbg.addEventListener('click',closeSheet);$('#sheetClose').addEventListener('click',closeSheet);
+
+/* ================= SPEECH ================= */
+var synth=window.speechSynthesis, voices=[], queue=[], qi=0, speaking=false, paused=false, curLang='bg-BG', gen=0;
+function loadVoices(){if(!synth)return;voices=synth.getVoices()||[];
+  if(voices.length&&!pickVoice('bg'))$('#voiceWarn').style.display='block'; else $('#voiceWarn').style.display='none';}
+function pickVoice(lang){var l=lang.toLowerCase();var v=voices.filter(function(x){return x.lang&&x.lang.toLowerCase().replace('_','-').indexOf(l)===0});
+  var g=v.filter(function(x){return /google/i.test(x.name)});return g[0]||v[0]||null}
+if(synth){loadVoices();if(typeof synth.onvoiceschanged!=='undefined')synth.onvoiceschanged=loadVoices;}
+function splitText(t){t=t.replace(/\s+/g,' ').trim();var parts=t.match(/[^.!?…]+[.!?…]*/g)||[t];var out=[];
+  parts.forEach(function(p){p=p.trim();if(!p)return;while(p.length>180){var i=p.lastIndexOf(',',180);if(i<60)i=180;out.push(p.slice(0,i+1));p=p.slice(i+1).trim()}if(p)out.push(p)});return out}
+function speakNext(){
+  if(qi>=queue.length){stopSpeech();return}
+  var my=gen;var u=new SpeechSynthesisUtterance(queue[qi]);var v=pickVoice(curLang.slice(0,2));if(v)u.voice=v;u.lang=curLang;u.rate=+$('#aRate').value;
+  u.onend=u.onerror=function(){if(my!==gen||!speaking||paused)return;qi++;speakNext()};
+  $('#aText').textContent=queue[qi];synth.speak(u);
+}
+function speak(text,lang,showBar){
+  if(!synth){toast('Този браузър не може да чете на глас');return}
+  gen++;synth.cancel();queue=splitText(text);qi=0;speaking=true;paused=false;curLang=lang||'bg-BG';
+  $('#aPause').textContent='⏸';if(showBar!==false)$('#audiobar').classList.add('show');
+  var g0=gen;setTimeout(function(){if(g0===gen)speakNext()},60);
+}
+function stopSpeech(){gen++;speaking=false;paused=false;if(synth)synth.cancel();$('#audiobar').classList.remove('show')}
+$('#aPause').addEventListener('click',function(){
+  if(!speaking)return;
+  if(!paused){paused=true;gen++;synth.cancel();this.textContent='▶'}
+  else{paused=false;gen++;this.textContent='⏸';speakNext()}
+});
+$('#aStop').addEventListener('click',stopSpeech);
+$('#aRate').addEventListener('change',function(){if(speaking&&!paused){gen++;synth.cancel();setTimeout(speakNext,60)}});
+$$('[data-read]').forEach(function(b){b.addEventListener('click',function(){speak($('#'+b.getAttribute('data-read')).innerText,'bg-BG')})});
+/* ================= GEOMETRY (Natural Earth, опростена) ================= */
+var CT={"VE":{"d":"M149.2,19.0L148.7,20.9L144.8,20.2L146.3,19.3L147.8,20.0L149.2,19.0ZM179.9,39.6L181.2,42.0L175.9,45.5L174.2,47.7L174.9,50.3L177.4,50.9L177.2,52.0L174.3,53.9L170.8,54.4L171.0,58.3L168.9,60.5L174.6,66.7L175.0,68.9L172.0,71.7L169.7,71.9L167.6,73.7L158.3,75.9L157.1,79.2L153.3,76.5L147.8,76.6L146.4,75.0L143.4,74.9L141.7,73.8L142.6,75.9L146.2,79.3L147.6,88.0L152.9,88.7L152.8,90.2L147.9,92.6L146.4,95.8L139.8,98.7L135.6,102.5L135.8,101.3L134.8,100.2L129.6,102.0L125.0,98.2L122.3,88.9L119.1,85.6L117.1,85.6L121.5,80.7L118.7,77.1L117.2,71.9L117.4,65.8L120.2,60.6L120.2,58.6L117.1,57.7L104.6,59.0L99.0,52.4L94.1,51.3L91.0,52.1L84.0,51.7L82.3,49.0L80.2,47.8L81.1,42.8L80.7,40.9L78.7,39.0L77.6,35.1L75.5,33.9L73.1,34.4L75.9,29.7L77.0,24.1L78.5,21.3L82.0,18.4L84.3,14.7L89.5,13.1L84.4,15.4L85.3,18.5L86.9,19.9L86.1,20.0L87.2,22.7L83.1,29.5L86.5,35.4L90.1,34.7L91.3,33.2L91.6,30.3L88.9,25.9L87.6,21.8L88.2,20.3L98.1,17.0L99.2,15.8L101.5,16.2L101.5,14.6L98.5,15.0L97.7,12.9L98.4,11.2L100.0,10.6L103.0,16.2L109.4,16.5L112.8,18.7L113.6,22.5L114.9,24.1L130.0,22.9L133.2,25.9L139.0,27.4L141.2,27.2L146.5,24.3L150.1,24.0L146.0,23.7L145.6,22.9L165.0,22.1L161.0,23.6L156.7,23.8L158.5,25.7L158.1,27.6L159.6,26.4L161.4,29.7L162.2,28.9L162.8,29.4L162.7,28.2L163.4,28.2L166.1,30.9L165.9,29.5L167.3,28.8L173.7,33.1L171.8,34.8L170.0,39.2L167.0,39.2L169.6,40.7L173.6,39.3L179.9,39.6Z","cx":130.6,"cy":51.1},"UY":{"d":"M233.0,377.9L229.7,383.0L226.7,385.4L220.8,387.5L214.6,386.2L210.0,387.2L202.6,383.6L197.0,383.6L192.8,379.3L192.5,377.8L193.1,373.5L195.3,371.7L194.5,363.4L196.1,361.0L195.7,359.3L197.5,354.9L197.0,352.7L198.8,349.8L202.3,350.3L203.0,349.2L205.3,348.9L211.7,354.2L212.0,356.6L215.2,354.8L218.6,358.2L223.3,359.9L226.2,362.8L229.9,364.5L231.2,367.2L235.0,369.9L231.8,373.4L231.8,377.2L233.0,377.9Z","cx":211.8,"cy":370.3},"FK":{"d":"M189.2,518.2L190.4,518.6L192.6,518.6L193.0,519.0L192.8,519.3L191.8,519.4L191.9,519.9L193.8,520.6L194.1,520.6L193.7,519.7L193.9,519.3L196.2,519.1L197.5,520.1L196.3,520.7L197.7,521.1L197.3,521.7L190.5,523.5L190.8,524.8L186.4,524.1L187.5,525.4L185.3,525.6L184.8,526.5L183.7,525.9L182.8,525.1L182.8,524.6L183.7,523.8L183.4,523.4L185.9,521.9L187.5,521.5L187.2,519.9L188.9,518.9L188.7,518.2L189.2,518.2ZM177.7,519.7L178.9,519.8L180.7,519.1L181.7,519.6L184.3,519.3L184.9,518.9L185.8,519.4L180.6,523.8L178.0,523.9L176.9,525.2L174.5,525.5L172.3,524.5L173.9,523.6L175.3,523.6L178.1,522.2L177.8,521.7L176.0,522.1L175.3,521.7L178.0,521.1L175.9,519.9L175.4,518.9L177.7,519.7ZM171.8,522.3L173.0,522.4L172.4,523.6L171.7,523.5L170.8,522.7L171.8,522.3ZM192.5,524.1L192.5,524.8L191.7,524.2L192.5,524.1ZM179.1,519.2L178.0,519.2L177.8,518.2L179.5,518.5L179.1,519.2ZM182.5,525.9L181.9,525.9L181.6,525.1L182.6,525.4L182.5,525.9Z","cx":189.9,"cy":522},"SR":{"d":"M226.7,65.1L224.4,67.9L224.4,72.1L225.2,75.6L228.1,79.3L226.4,82.9L226.4,85.5L224.8,88.3L222.7,89.4L220.2,87.2L214.2,88.7L212.3,87.8L210.9,89.9L212.7,91.7L212.3,93.1L206.4,91.7L202.3,84.9L201.6,81.0L198.8,80.8L195.8,76.0L197.0,69.0L201.5,67.6L202.3,66.3L201.5,65.3L204.2,60.1L210.1,60.9L212.8,62.4L213.4,60.3L225.2,60.7L227.6,61.5L226.7,65.1Z","cx":212.7,"cy":75},"PE":{"d":"M100.3,141.9L99.6,142.7L96.8,141.2L93.6,141.4L92.2,142.8L85.2,144.0L76.9,149.0L76.2,153.1L74.1,156.8L74.9,159.7L69.9,163.2L70.2,166.5L68.3,167.0L68.0,168.4L70.2,170.3L69.8,171.5L71.6,174.8L76.2,179.9L74.3,183.3L81.0,184.1L82.6,186.8L82.5,188.0L90.1,187.7L95.7,183.5L94.9,186.6L94.9,196.1L95.7,195.6L97.7,196.5L100.3,195.4L103.4,195.6L110.5,208.0L108.2,211.0L108.1,216.0L107.4,217.5L109.0,221.4L105.1,226.4L105.0,227.7L106.6,229.9L104.6,233.1L106.3,237.2L109.3,238.7L107.7,239.8L107.8,241.1L103.0,245.6L103.9,248.0L101.2,249.6L101.6,251.9L100.6,253.7L96.7,254.8L89.3,249.5L87.8,246.4L80.3,241.7L70.2,237.6L59.2,231.3L55.7,227.2L52.5,225.1L49.0,218.9L49.9,218.4L50.2,215.0L45.3,206.8L42.8,204.5L42.2,201.3L38.9,198.3L38.1,194.7L34.5,188.7L29.9,176.9L25.0,170.7L20.0,162.2L10.9,156.5L10.7,155.0L12.6,154.7L13.0,153.1L9.3,145.4L10.1,141.9L13.6,137.9L17.4,135.1L18.6,139.0L16.1,140.1L16.1,141.3L17.2,141.7L16.2,143.4L18.9,142.4L22.9,143.6L25.3,147.4L27.7,147.8L28.7,145.7L30.5,144.5L33.2,135.2L34.7,135.7L34.5,134.8L37.1,131.9L46.6,128.5L51.3,125.1L55.4,120.2L56.7,115.4L58.0,115.6L57.9,112.7L55.0,109.0L57.3,109.1L58.2,108.3L63.1,111.0L66.0,115.8L70.7,118.0L72.0,121.5L74.4,122.6L74.8,126.2L76.5,127.1L82.3,127.2L86.0,125.2L88.8,126.7L92.2,125.7L99.2,129.3L94.1,138.3L97.3,138.5L100.3,141.9Z","cx":64.6,"cy":180.9},"PY":{"d":"M194.7,269.3L197.4,276.0L196.4,284.9L204.5,286.2L206.9,285.9L208.4,284.6L210.0,286.1L213.2,286.5L215.0,289.4L216.7,299.6L219.3,300.0L223.0,298.5L226.1,300.4L224.5,309.0L223.1,311.5L222.0,320.3L218.9,323.5L216.6,324.1L214.3,327.3L210.7,326.6L208.5,328.4L194.7,326.2L191.2,326.5L191.1,325.1L194.5,321.0L195.1,317.4L199.4,312.3L198.8,310.6L196.3,308.4L186.5,304.5L180.9,300.7L171.7,298.0L165.6,293.5L162.3,288.9L158.8,285.9L161.8,276.5L161.8,272.5L165.9,265.2L179.9,262.4L187.3,262.3L194.6,266.5L194.7,269.3Z","cx":192.5,"cy":293.7},"GY":{"d":"M174.1,66.4L168.9,60.5L171.0,58.3L170.8,54.4L174.3,53.9L177.2,52.0L177.4,50.9L174.9,50.3L174.2,47.7L175.9,45.5L181.2,42.0L179.9,39.6L186.4,43.4L191.9,48.8L192.2,51.7L190.6,56.9L192.7,53.2L193.6,53.0L196.1,53.7L199.7,57.3L202.2,58.6L202.4,63.6L201.5,65.3L202.3,66.4L201.3,67.8L197.0,69.0L197.2,70.7L195.6,75.2L198.8,80.8L201.6,81.0L202.4,85.2L206.4,91.7L208.1,92.5L205.3,93.0L203.0,91.9L201.5,92.3L199.6,94.2L196.1,94.8L195.7,95.8L193.3,95.3L192.0,96.5L191.9,97.7L189.7,98.3L186.2,97.0L182.1,93.0L182.0,89.8L180.9,89.1L180.1,86.5L181.2,79.3L183.6,76.5L182.1,74.2L182.4,73.0L178.8,71.7L180.1,67.3L178.9,66.1L174.1,66.4Z","cx":188.2,"cy":69.7},"GF":{"d":"M223.1,89.4L224.8,88.3L226.4,85.5L226.4,82.9L228.1,79.3L225.2,75.6L224.2,68.7L228.6,61.8L236.8,64.6L241.7,68.5L241.4,69.8L242.2,69.1L243.5,70.3L244.0,73.2L245.4,70.9L246.8,75.5L241.4,82.6L238.4,89.1L235.9,90.6L234.2,90.4L233.3,89.3L231.9,90.0L229.9,89.2L227.0,91.0L223.1,89.4Z","cx":234,"cy":76.6},"EC":{"d":"M57.7,108.9L55.0,109.0L57.9,112.7L58.0,115.6L56.7,115.4L55.4,120.2L51.3,125.1L46.6,128.5L37.1,131.9L34.5,134.8L34.7,135.7L33.2,135.2L30.5,144.5L28.7,145.7L27.7,147.8L25.3,147.4L22.9,143.6L18.9,142.4L16.2,143.4L17.2,141.7L16.1,141.3L16.1,140.1L18.6,139.0L17.4,135.1L20.3,133.3L22.2,128.6L21.3,124.5L20.6,128.4L19.8,128.5L20.0,126.8L17.7,129.7L12.6,126.1L13.9,123.5L12.8,116.6L15.6,114.8L16.4,112.7L17.7,113.0L16.2,110.9L19.6,106.8L19.7,101.3L28.8,98.4L29.1,96.4L34.6,100.2L38.4,101.3L40.3,102.9L40.8,104.8L48.0,106.1L49.8,104.5L57.7,108.9ZM18.9,131.8L17.8,132.0L18.2,130.0L19.4,129.4L20.7,129.8L18.9,131.8ZM-62.7,114.2L-64.3,113.4L-64.3,112.6L-62.2,111.9L-61.5,113.3L-62.7,114.2ZM-55.4,115.3L-56.9,115.1L-54.3,113.5L-55.4,115.3ZM-71.4,111.7L-72.9,111.6L-73.2,110.3L-71.7,110.1L-71.4,111.7ZM-70.2,107.8L-66.4,114.0L-67.3,115.5L-69.0,116.2L-71.0,116.1L-72.0,114.9L-69.0,112.5L-71.0,110.3L-71.4,108.2L-72.8,108.0L-70.9,107.0L-70.2,107.8ZM-64.6,110.7L-66.9,110.2L-66.2,109.3L-64.6,110.7Z","cx":32.9,"cy":119.6},"CO":{"d":"M89.5,13.1L84.3,14.7L82.0,18.4L78.5,21.3L77.0,24.1L75.9,29.7L73.1,34.4L75.5,33.9L77.6,35.1L78.7,39.0L80.7,40.9L81.1,42.8L80.2,47.8L82.3,49.0L84.0,51.7L91.0,52.1L94.1,51.3L99.0,52.4L104.6,59.0L117.1,57.7L120.2,58.6L120.2,60.6L117.4,65.8L117.2,71.9L118.7,77.1L121.5,80.7L117.1,85.6L119.1,85.6L122.3,88.9L124.9,97.1L125.0,98.2L123.3,98.5L123.3,95.1L120.8,91.1L116.5,94.0L114.5,92.1L114.0,93.2L114.6,94.2L101.2,94.3L101.2,99.5L105.5,99.6L106.7,101.1L106.8,102.9L104.2,102.2L99.6,103.4L99.4,109.1L102.9,112.1L104.8,117.6L100.3,141.9L97.3,138.5L94.1,138.3L99.2,129.3L92.2,125.7L88.8,126.7L86.0,125.2L82.3,127.2L76.5,127.1L74.8,126.2L74.4,122.6L72.0,121.5L70.7,118.0L66.0,115.8L64.7,112.6L61.6,109.6L53.8,107.3L49.8,104.5L48.0,106.1L40.8,104.8L40.3,102.9L38.4,101.3L33.5,99.6L27.8,95.0L29.7,93.2L31.4,93.8L31.3,89.1L32.7,88.1L35.5,87.9L37.5,86.3L43.4,76.7L41.9,76.9L41.8,75.5L41.1,76.4L40.7,74.0L39.8,74.3L41.2,72.8L41.7,70.2L41.0,65.4L39.7,63.7L42.0,61.8L40.2,58.6L41.0,55.4L36.8,50.2L37.9,46.4L39.7,47.5L42.4,44.2L40.2,40.0L40.9,38.8L45.2,43.3L44.6,44.2L45.7,44.5L45.8,41.5L44.6,39.4L49.8,36.1L51.8,33.1L54.9,32.4L54.5,30.2L55.7,26.4L54.3,26.8L56.4,23.1L61.3,19.1L65.3,20.0L63.9,21.1L64.8,21.9L66.8,17.4L73.5,17.6L81.8,12.9L82.9,10.5L86.3,8.6L89.9,9.3L90.9,11.6L89.5,13.1Z","cx":75.4,"cy":76.8},"CL":{"d":"M96.7,254.8L100.6,253.7L101.6,251.9L101.2,249.6L103.9,248.0L105.5,251.5L107.3,252.4L108.3,259.7L112.3,263.5L110.4,265.8L111.5,267.7L110.0,268.7L110.5,270.5L109.9,271.3L112.1,273.0L111.5,275.2L114.4,278.4L117.0,290.6L119.3,291.1L122.4,290.6L123.9,292.0L121.2,300.3L114.0,303.1L111.5,306.0L112.9,308.7L111.3,311.4L112.7,317.2L111.3,319.8L113.4,323.8L109.2,325.2L106.6,331.4L102.8,335.3L101.4,340.8L99.8,342.6L100.3,348.6L101.3,349.4L100.3,350.9L98.8,350.9L97.5,356.2L95.8,357.2L95.3,360.5L96.4,362.7L98.0,363.7L97.1,364.7L99.8,371.1L99.3,373.6L101.4,374.3L101.2,381.8L99.6,382.4L96.9,389.2L95.6,390.0L96.7,392.2L96.8,396.5L94.0,399.1L91.6,400.2L90.5,402.8L90.7,410.1L92.2,415.6L93.2,416.3L92.4,417.9L88.8,419.5L87.7,424.8L86.2,425.1L86.7,428.2L85.4,429.4L86.4,430.7L84.5,434.3L84.7,441.2L86.0,444.4L83.1,446.0L83.6,447.8L82.9,448.6L83.2,452.5L86.0,453.9L84.8,454.8L86.6,459.4L85.5,460.8L85.4,463.1L90.3,463.5L90.7,464.5L89.9,466.1L83.5,466.2L83.7,467.2L87.2,467.8L89.2,469.8L87.9,472.1L86.0,472.6L86.0,474.7L86.9,475.6L85.0,477.3L86.4,481.2L84.5,482.7L84.8,485.6L81.2,487.9L79.9,491.0L81.6,493.8L79.1,496.2L79.1,498.3L75.7,500.1L74.9,502.4L72.3,502.5L71.4,504.7L72.2,506.4L72.0,509.0L74.8,513.9L79.9,512.9L81.3,513.5L81.6,518.4L80.7,520.3L84.4,523.0L84.2,523.7L100.3,524.1L112.3,526.3L106.1,525.6L103.0,527.7L93.6,530.1L92.0,538.2L89.6,539.1L82.6,537.1L80.7,534.8L84.5,533.9L85.4,535.2L84.9,536.2L85.7,535.9L86.1,533.9L89.7,532.3L90.7,531.1L90.2,530.5L88.9,530.1L81.8,533.1L79.6,535.7L75.6,533.9L76.7,533.0L76.9,531.0L78.2,530.1L80.4,530.5L83.1,529.2L87.9,528.8L82.2,528.2L80.5,529.0L78.3,528.3L75.0,532.6L73.3,532.4L70.8,530.7L74.1,529.7L75.0,527.9L74.0,529.0L71.3,529.5L67.9,529.1L67.7,527.2L66.8,527.1L65.6,524.9L69.3,525.9L70.4,525.6L70.5,524.6L73.9,525.3L77.6,523.6L79.4,525.6L78.3,526.9L79.8,526.0L79.0,524.1L80.0,522.8L79.7,521.6L74.6,519.6L79.2,522.4L71.9,524.3L70.0,522.4L66.4,521.4L67.4,520.6L68.6,520.9L68.5,518.1L61.5,516.5L59.2,513.5L62.5,513.3L61.8,511.8L62.8,510.9L65.1,511.9L66.9,514.5L69.6,515.5L70.1,513.6L71.0,513.2L70.8,511.9L68.2,514.6L66.4,512.9L66.5,511.9L68.4,512.1L63.0,509.6L65.3,507.8L68.3,508.0L65.4,506.3L65.7,504.8L69.3,504.9L67.2,503.4L68.5,500.2L67.8,500.2L66.2,504.0L65.1,503.2L65.3,496.8L67.9,495.8L64.2,495.7L63.3,492.0L72.9,493.2L71.1,492.0L70.3,489.2L68.5,491.4L66.2,491.7L62.8,489.6L63.7,488.5L66.1,489.4L66.9,488.7L64.1,487.4L66.7,485.5L66.8,483.8L65.5,482.3L64.4,482.1L63.9,483.1L60.0,481.9L60.1,480.1L55.7,481.6L56.9,482.9L56.6,483.5L54.9,482.9L54.3,481.6L60.6,477.3L59.5,475.0L66.7,474.1L67.0,472.0L68.3,471.2L69.4,471.6L67.5,475.6L67.9,476.4L64.9,477.7L68.3,477.2L69.0,474.8L70.1,474.5L70.3,476.6L68.4,480.3L69.2,480.5L70.7,478.4L71.3,475.2L69.8,473.0L70.2,471.8L73.9,470.8L76.5,471.6L74.2,470.0L72.4,469.9L72.7,468.8L73.1,467.8L78.1,465.9L78.6,464.8L78.7,463.5L73.9,461.3L74.2,459.2L75.5,458.9L76.0,457.1L75.4,454.6L77.0,452.4L77.9,452.3L77.2,449.3L77.8,448.0L78.9,448.1L77.8,446.1L78.9,445.6L80.7,447.1L80.0,443.8L77.4,443.3L81.1,441.2L81.4,440.0L79.7,441.5L76.4,440.1L74.1,442.3L70.1,441.9L71.0,440.7L69.1,439.6L68.1,435.8L70.6,427.7L72.7,426.3L74.2,421.8L71.8,416.1L72.3,412.3L70.7,409.6L70.7,406.7L71.2,405.5L74.3,405.3L75.1,401.5L75.9,401.1L77.8,395.8L79.3,394.1L79.0,392.7L82.2,388.8L84.0,381.3L86.7,377.2L86.1,372.8L88.4,369.3L86.3,354.1L86.7,350.6L88.8,349.1L89.5,345.2L87.8,339.4L90.5,335.0L94.8,318.6L94.3,314.3L96.4,310.0L95.4,305.1L96.9,296.5L95.2,294.0L95.5,292.5L97.3,290.8L99.3,279.9L98.4,273.8L98.8,265.7L96.7,254.8ZM111.0,529.2L110.8,546.8L104.1,546.9L102.2,545.7L96.0,546.5L84.8,544.8L85.6,543.5L87.4,544.0L93.6,542.6L94.4,542.8L94.4,543.9L97.5,544.2L93.1,540.9L93.1,539.1L94.8,538.6L94.4,537.8L95.8,537.0L97.0,539.9L95.0,540.0L95.7,541.1L98.6,543.0L102.1,542.4L106.0,544.5L107.7,543.3L100.1,540.9L98.8,539.1L99.3,537.8L105.1,535.3L102.9,534.7L97.4,535.0L96.5,532.7L99.0,531.5L97.0,530.0L100.5,530.6L104.7,527.9L106.7,529.3L109.7,528.6L111.0,529.2ZM123.3,549.2L121.3,550.3L120.0,549.4L115.4,549.8L113.6,547.8L122.0,547.8L123.3,549.2ZM69.8,454.8L67.1,454.9L64.9,453.8L66.3,451.0L67.7,442.4L71.8,443.2L72.6,445.5L71.7,446.5L72.2,447.7L69.7,448.7L72.5,451.5L70.0,453.3L69.8,454.8ZM64.2,501.2L64.3,505.5L63.2,508.1L61.9,508.1L61.0,505.8L62.2,503.4L60.3,504.3L59.8,506.7L55.6,506.3L55.8,505.0L57.3,505.0L57.5,504.0L56.3,502.9L59.3,502.2L58.3,501.2L60.4,499.7L60.8,497.9L63.6,498.1L64.2,501.2ZM55.9,498.1L55.0,498.1L54.8,496.7L55.8,494.6L55.5,492.6L56.9,492.2L58.8,495.4L58.7,497.0L55.9,498.1ZM64.9,531.4L70.8,532.6L74.9,534.8L71.5,534.5L69.1,532.8L65.8,532.6L62.3,530.0L64.9,531.4ZM63.5,496.7L60.6,497.0L58.3,493.1L58.4,491.8L61.4,490.8L61.2,492.2L63.5,496.7ZM76.6,535.9L77.0,536.6L80.1,536.7L82.4,538.5L80.7,540.0L77.0,541.0L76.3,540.5L77.9,538.9L75.7,538.7L75.3,540.0L74.3,539.9L73.6,539.6L73.5,537.8L69.2,536.4L72.4,535.3L75.2,536.1L75.6,535.1L76.6,535.9ZM61.4,521.0L61.7,522.6L63.7,523.7L62.4,526.2L61.2,526.2L59.2,522.3L61.4,521.0ZM102.4,547.4L108.8,548.1L112.3,547.7L112.8,548.3L111.1,549.2L113.7,550.0L113.4,550.7L115.3,551.8L115.6,553.1L113.3,552.0L109.1,551.6L108.9,549.9L106.5,549.4L105.1,550.4L106.6,551.8L104.3,551.4L102.7,549.8L100.2,549.2L100.9,547.1L102.4,547.4ZM88.9,540.3L91.8,540.9L92.0,542.0L90.9,543.0L88.2,541.8L84.4,542.4L82.3,540.4L84.0,539.1L88.9,540.3ZM70.1,463.2L68.0,464.7L69.4,466.7L70.0,470.1L67.2,470.6L67.3,469.6L63.1,465.2L64.2,464.7L64.0,463.8L67.2,463.1L68.1,461.1L70.4,462.2L70.1,463.2ZM76.1,466.2L74.2,466.9L72.8,466.2L72.4,465.1L73.9,462.8L77.8,464.1L76.1,466.2ZM57.6,513.4L57.4,514.2L56.5,513.9L56.6,511.8L59.1,512.1L57.6,513.4ZM59.2,498.7L56.9,501.3L54.9,501.6L56.1,500.7L54.9,499.5L55.3,498.9L59.2,498.7ZM63.5,518.2L63.0,519.2L59.6,519.2L57.7,521.0L58.8,518.2L63.1,517.7L63.5,518.2ZM59.6,510.4L56.4,510.7L57.4,508.1L61.0,508.9L61.3,509.6L59.6,510.4ZM65.5,473.5L64.3,474.1L62.5,473.3L64.1,471.4L64.0,470.3L65.5,469.4L66.2,472.9L65.5,473.5ZM92.1,546.9L93.6,547.7L96.7,547.3L97.6,548.9L96.2,549.4L88.5,547.1L92.1,546.9Z","cx":92.4,"cy":382.9},"BR":{"d":"M125.0,98.2L129.2,101.9L131.5,101.7L134.6,100.1L135.8,101.3L135.6,102.5L136.2,102.5L139.2,99.1L146.4,95.8L147.9,92.6L152.6,90.8L152.9,88.7L147.6,88.0L146.2,79.3L142.6,75.9L141.7,73.8L143.4,74.9L146.4,75.0L147.8,76.6L153.3,76.5L157.1,79.2L158.3,75.9L160.2,74.9L162.8,75.2L167.6,73.7L169.7,71.9L172.0,71.7L175.0,68.9L174.1,66.4L174.8,66.2L178.9,66.1L180.1,67.3L178.8,71.7L182.4,73.0L182.1,74.2L183.6,76.5L181.2,79.3L180.1,86.5L180.9,89.1L182.0,89.8L182.7,94.0L189.1,98.4L191.9,97.7L192.0,96.5L193.3,95.3L195.7,95.8L196.1,94.8L199.2,94.4L201.1,92.5L203.0,91.9L205.3,93.0L208.1,92.5L212.3,93.1L212.7,91.7L210.9,89.9L212.3,87.8L214.2,88.7L220.2,87.2L222.7,89.4L227.0,91.0L229.9,89.2L231.9,90.0L233.3,89.3L234.2,90.4L236.3,90.5L238.8,88.6L241.4,82.6L248.3,73.5L250.2,75.2L254.3,90.9L256.3,93.4L260.4,94.7L260.8,98.7L257.6,101.3L254.0,106.2L249.7,108.7L244.2,118.9L242.2,118.9L238.7,120.4L244.4,120.7L252.8,115.5L254.5,122.1L256.8,124.1L260.0,122.7L262.3,123.4L265.5,121.9L262.9,129.3L264.3,128.0L266.3,123.3L268.1,122.6L270.3,119.9L272.3,120.9L273.2,119.9L272.2,119.1L272.4,117.2L275.1,113.9L279.5,113.4L280.7,114.1L280.5,113.2L281.8,113.2L296.3,118.9L297.4,121.7L299.4,119.7L302.2,121.9L301.8,122.4L302.8,122.0L303.7,124.4L301.9,126.1L302.7,127.0L304.5,125.3L304.9,126.9L303.8,127.2L303.3,128.6L302.2,133.6L304.5,131.5L306.2,127.8L307.2,128.0L306.5,130.5L308.5,128.7L312.4,128.0L313.0,127.0L316.5,127.7L322.0,130.3L325.0,130.0L328.1,131.3L336.2,130.4L340.3,130.9L352.2,137.7L355.6,141.7L359.0,144.7L361.6,145.7L362.6,147.3L367.3,148.8L375.6,149.0L378.1,152.5L381.5,166.3L380.3,175.3L378.8,179.4L375.2,184.3L373.9,185.6L372.9,185.5L372.9,186.8L368.8,191.9L364.5,194.6L361.2,199.2L361.1,198.0L358.5,204.8L354.1,210.8L352.0,211.7L351.8,210.1L350.5,209.0L349.2,210.3L349.9,211.3L347.3,216.7L348.1,216.9L347.6,220.3L348.5,220.3L347.5,225.2L348.9,234.9L346.4,245.4L346.8,249.6L342.8,254.0L341.7,264.6L340.0,265.9L336.8,272.6L333.7,275.2L332.4,277.9L331.6,280.0L332.0,284.0L326.4,286.5L324.1,288.7L324.5,290.3L323.7,291.6L316.3,291.7L314.8,289.8L314.2,291.9L308.8,292.8L308.2,292.5L310.6,292.1L309.1,291.3L302.9,292.4L302.6,293.7L303.4,294.2L297.4,296.8L296.3,298.4L292.2,298.4L285.1,301.9L276.1,308.3L276.6,309.3L274.4,311.3L274.5,310.5L272.8,310.2L272.2,311.5L270.1,311.0L270.5,311.9L272.8,312.8L270.7,314.8L271.4,315.5L271.0,317.4L270.0,318.1L271.6,325.6L271.0,332.6L269.6,336.6L265.8,339.0L262.0,342.9L257.6,351.4L252.6,358.1L243.7,364.9L243.5,362.6L246.6,362.2L249.8,359.8L250.7,357.0L252.2,356.8L252.5,355.2L254.5,353.6L254.3,351.4L255.3,351.5L255.5,350.0L251.8,351.0L249.6,348.3L250.7,350.9L249.7,354.0L249.1,353.4L247.9,356.8L244.2,359.1L242.4,363.1L243.0,365.3L238.8,373.1L233.0,377.9L231.8,377.2L231.8,373.4L235.0,369.9L231.2,367.2L229.9,364.5L226.2,362.8L223.3,359.9L218.6,358.2L215.2,354.8L212.0,356.6L211.7,354.2L205.3,348.9L203.0,349.2L202.3,350.3L199.1,349.5L205.8,343.3L212.9,335.0L214.5,335.1L214.2,333.6L219.2,330.9L221.4,328.4L225.4,327.4L229.3,325.0L230.3,323.1L230.7,318.3L228.9,313.4L226.8,312.2L223.1,312.6L226.1,300.4L223.0,298.5L219.3,300.0L216.7,299.6L215.0,289.4L213.6,286.8L210.0,286.1L208.4,284.6L206.9,285.9L204.5,286.2L196.4,284.9L197.4,276.0L194.7,269.3L197.1,267.8L194.9,266.0L198.3,260.3L197.7,259.3L200.0,253.7L197.3,248.1L196.1,248.1L192.8,245.9L192.2,241.6L193.2,238.3L178.6,238.2L178.1,231.8L175.3,228.8L177.8,228.7L175.9,218.3L171.4,215.9L165.7,216.2L163.1,213.3L157.9,212.0L155.5,209.3L153.2,209.4L150.5,207.8L144.6,207.5L143.9,206.0L140.1,203.8L136.9,198.0L137.4,196.2L136.4,192.1L137.6,189.2L136.8,185.7L127.4,187.2L120.7,191.1L118.2,193.5L115.4,193.6L113.5,195.8L111.0,196.9L106.2,195.6L94.9,196.1L94.9,186.6L95.7,183.5L90.1,187.7L82.5,188.0L82.6,186.8L81.0,184.1L74.3,183.3L76.2,179.9L71.6,174.8L69.8,171.5L70.2,170.3L68.0,168.4L68.3,167.0L70.2,166.5L69.9,163.2L74.9,159.7L74.1,156.8L76.2,153.1L76.9,149.0L85.2,144.0L92.2,142.8L93.6,141.4L96.8,141.2L98.1,142.4L100.2,142.4L104.8,117.6L102.9,112.1L99.4,109.1L99.6,103.4L104.2,102.2L106.8,102.9L106.7,101.1L105.5,99.6L101.2,99.5L101.2,94.3L114.6,94.2L114.0,93.2L114.5,92.1L116.5,94.0L120.8,91.1L123.3,95.1L123.3,98.5L125.0,98.2ZM263.0,109.8L267.1,109.3L272.9,110.4L269.3,119.1L267.7,120.1L266.6,119.3L266.1,120.8L264.0,120.1L263.3,121.7L261.6,122.3L259.5,121.6L255.9,122.3L253.9,117.9L254.2,117.0L255.4,116.8L253.7,116.1L253.6,115.2L254.8,110.2L258.0,108.9L263.0,109.8ZM262.1,105.9L260.7,108.2L257.3,107.6L257.8,106.1L262.1,105.9ZM257.6,92.5L256.3,92.7L256.1,91.0L257.3,90.9L257.6,92.5ZM254.8,109.1L252.6,110.6L251.7,109.8L253.3,108.4L254.8,109.1ZM264.4,108.9L261.4,108.7L264.0,107.3L265.0,108.0L264.4,108.9ZM256.6,106.9L256.4,108.1L255.0,107.6L257.0,103.3L257.3,105.9L256.6,106.9ZM258.8,104.9L257.9,105.1L257.8,103.9L259.5,102.9L258.8,104.9ZM245.3,119.5L244.5,119.6L246.6,116.7L247.6,113.2L250.0,112.3L250.7,113.3L249.8,116.2L245.3,119.5Z","cx":234.1,"cy":193.5},"BO":{"d":"M103.9,248.0L103.0,245.6L107.8,241.1L107.7,239.8L109.3,238.7L106.3,237.2L104.6,233.1L106.6,229.9L105.0,227.7L105.1,226.4L109.0,221.4L107.4,217.5L108.1,216.0L108.2,211.0L110.5,208.0L103.4,195.6L111.0,196.9L113.5,195.8L115.4,193.6L118.2,193.5L120.7,191.1L127.4,187.2L136.8,185.7L137.6,189.2L136.4,192.1L137.4,196.2L136.9,198.0L140.1,203.8L143.9,206.0L144.6,207.5L150.5,207.8L153.2,209.4L155.5,209.3L157.9,212.0L163.1,213.3L165.7,216.2L171.4,215.9L175.9,218.3L177.8,228.7L175.3,228.8L178.1,231.8L178.6,238.2L193.2,238.3L192.2,241.6L192.8,245.9L196.1,248.1L197.3,248.1L200.0,253.7L197.7,259.3L198.3,260.3L194.9,266.0L197.1,267.8L195.3,269.2L194.7,269.3L194.6,266.5L187.3,262.3L179.9,262.4L165.9,265.2L161.8,272.5L161.8,276.5L158.8,285.9L157.3,284.0L149.1,284.1L145.4,290.6L143.2,285.8L140.1,284.9L133.8,284.8L130.2,282.4L129.1,284.9L126.3,285.7L122.4,290.6L118.3,291.1L117.0,290.6L114.4,278.4L111.5,275.2L112.1,273.0L109.9,271.3L110.5,270.5L110.0,268.7L111.5,267.7L110.4,265.8L112.2,263.3L108.3,259.7L107.3,252.4L105.5,251.5L103.9,248.0Z","cx":142.4,"cy":241.5},"AR":{"d":"M199.1,349.5L197.0,352.7L197.5,354.9L195.7,359.3L196.1,361.0L194.5,363.4L194.6,371.7L192.6,372.9L191.6,377.3L192.9,381.5L191.8,382.4L193.7,385.5L199.6,388.2L202.6,390.9L201.0,395.2L203.4,398.4L206.3,399.1L206.2,403.7L200.8,410.0L199.6,412.7L194.6,415.5L181.4,418.7L171.1,419.9L165.2,419.7L161.3,418.4L161.6,421.9L163.6,423.0L162.6,423.0L163.4,423.7L163.0,426.6L161.7,427.2L160.8,429.6L160.8,431.7L162.0,433.4L160.8,435.1L156.3,436.9L151.0,437.3L141.0,433.9L139.4,434.4L138.8,436.8L140.1,444.8L143.7,446.0L143.4,447.3L144.6,447.5L147.2,447.2L147.5,446.1L146.2,445.8L149.6,444.9L151.0,446.3L151.1,449.6L150.5,450.4L147.7,451.0L144.1,448.1L140.2,449.3L139.8,450.1L145.4,451.8L141.3,453.5L138.0,456.6L137.7,462.9L134.8,465.3L134.9,468.1L130.5,467.7L124.5,470.1L119.2,476.4L120.0,479.5L125.8,484.0L133.2,485.2L134.1,486.8L133.8,488.5L130.2,490.6L132.5,490.6L133.5,491.5L120.3,499.6L118.5,502.0L117.7,506.9L116.7,507.9L113.9,508.8L110.6,506.0L110.7,507.5L108.2,508.0L111.2,508.1L112.6,509.3L108.5,511.1L106.8,514.9L105.1,516.2L106.4,516.0L107.5,520.4L104.3,520.7L108.3,521.4L112.8,526.5L100.3,524.1L84.2,523.7L84.4,523.0L80.7,520.3L81.6,518.4L81.3,513.5L79.9,512.9L74.8,513.9L72.0,509.0L72.2,506.4L71.4,504.7L72.3,502.5L74.9,502.4L75.7,500.1L79.1,498.3L79.1,496.2L81.6,493.8L79.9,491.0L81.2,487.9L84.8,485.6L84.5,482.7L86.4,481.2L85.0,477.3L86.9,475.6L86.0,474.7L86.0,472.6L87.9,472.1L89.2,469.8L87.2,467.8L83.7,467.2L83.5,466.2L89.9,466.1L90.7,464.5L90.3,463.5L85.4,463.1L85.5,460.8L86.6,459.4L84.8,454.8L86.0,453.9L82.8,451.9L83.1,446.0L86.0,444.4L84.7,441.2L84.6,433.5L86.3,431.1L85.4,429.4L86.7,428.2L86.2,425.1L87.7,424.8L88.8,419.5L93.1,416.8L90.7,410.1L90.5,402.8L91.6,400.2L94.0,399.1L96.8,396.5L96.7,392.2L95.6,390.0L96.9,389.2L99.6,382.4L101.2,381.8L101.4,374.3L99.3,373.6L99.8,371.1L97.1,364.7L98.0,363.7L96.4,362.7L95.3,360.5L95.6,358.5L95.8,357.2L97.5,356.2L98.6,351.1L100.3,350.9L101.3,349.4L100.3,348.6L99.8,342.6L101.4,340.8L102.8,335.3L106.6,331.4L109.2,325.2L113.4,323.8L111.3,319.8L112.7,317.2L111.2,311.9L112.9,308.7L111.5,306.7L111.9,305.0L114.0,303.1L121.2,300.3L123.9,292.0L122.4,290.6L126.3,285.7L129.1,284.9L130.2,282.4L133.8,284.8L140.1,284.9L143.2,285.8L145.4,290.6L148.6,284.2L157.2,284.0L162.3,288.9L164.6,292.5L171.7,298.0L180.9,300.7L186.5,304.5L196.3,308.4L198.8,310.6L199.4,312.3L195.1,317.4L194.5,321.0L191.1,325.1L191.2,326.5L194.7,326.2L208.5,328.4L210.7,326.6L214.3,327.3L216.6,324.1L218.9,323.5L222.0,320.3L223.1,312.6L226.8,312.2L228.9,313.4L230.7,318.3L230.3,323.1L229.3,325.0L225.4,327.4L221.4,328.4L219.2,330.9L214.2,333.6L214.5,335.1L212.9,335.0L205.8,343.3L199.1,349.5ZM110.8,546.8L111.0,529.2L114.1,532.6L112.5,532.4L112.1,534.1L114.7,534.5L115.9,536.5L121.7,540.4L130.1,544.3L138.6,545.4L136.2,547.3L127.9,548.3L123.0,547.2L110.8,546.8ZM143.6,545.7L149.5,545.8L142.9,547.2L142.0,546.6L143.6,545.7Z","cx":142,"cy":384.3}};
+var GL={"sphere":"M160,310L154.8,309.9L149.5,309.6L144.3,309.2L139.1,308.5L134,307.7L128.8,306.7L123.7,305.5L118.7,304.2L113.6,302.7L108.7,301L103.8,299.1L99,297L94.2,294.8L89.6,292.4L85,289.9L80.5,287.2L76.1,284.4L71.8,281.4L67.7,278.2L63.6,274.9L59.6,271.5L55.8,267.9L52.1,264.2L48.5,260.4L45.1,256.4L41.8,252.3L38.6,248.2L35.6,243.9L32.8,239.5L30.1,235L27.6,230.4L25.2,225.8L23,221L20.9,216.2L19,211.3L17.3,206.4L15.8,201.3L14.5,196.3L13.3,191.2L12.3,186L11.5,180.9L10.8,175.7L10.4,170.5L10.1,165.2L10,160L10.1,154.8L10.4,149.5L10.8,144.3L11.5,139.1L12.3,134L13.3,128.8L14.5,123.7L15.8,118.7L17.3,113.6L19,108.7L20.9,103.8L23,99L25.2,94.2L27.6,89.6L30.1,85L32.8,80.5L35.6,76.1L38.6,71.8L41.8,67.7L45.1,63.6L48.5,59.6L52.1,55.8L55.8,52.1L59.6,48.5L63.6,45.1L67.7,41.8L71.8,38.6L76.1,35.6L80.5,32.8L85,30.1L89.6,27.6L94.2,25.2L99,23L103.8,20.9L108.7,19L113.6,17.3L118.7,15.8L123.7,14.5L128.8,13.3L134,12.3L139.1,11.5L144.3,10.8L149.5,10.4L154.8,10.1L160,10L165.2,10.1L170.5,10.4L175.7,10.8L180.9,11.5L186,12.3L191.2,13.3L196.3,14.5L201.3,15.8L206.4,17.3L211.3,19L216.2,20.9L221,23L225.8,25.2L230.4,27.6L235,30.1L239.5,32.8L243.9,35.6L248.2,38.6L252.3,41.8L256.4,45.1L260.4,48.5L264.2,52.1L267.9,55.8L271.5,59.6L274.9,63.6L278.2,67.7L281.4,71.8L284.4,76.1L287.2,80.5L289.9,85L292.4,89.6L294.8,94.2L297,99L299.1,103.8L301,108.7L302.7,113.6L304.2,118.7L305.5,123.7L306.7,128.8L307.7,134L308.5,139.1L309.2,144.3L309.6,149.5L309.9,154.8L310,160L309.9,165.2L309.6,170.5L309.2,175.7L308.5,180.9L307.7,186L306.7,191.2L305.5,196.3L304.2,201.3L302.7,206.4L301,211.3L299.1,216.2L297,221L294.8,225.8L292.4,230.4L289.9,235L287.2,239.5L284.4,243.9L281.4,248.2L278.2,252.3L274.9,256.4L271.5,260.4L267.9,264.2L264.2,267.9L260.4,271.5L256.4,274.9L252.3,278.2L248.2,281.4L243.9,284.4L239.5,287.2L235,289.9L230.4,292.4L225.8,294.8L221,297L216.2,299.1L211.3,301L206.4,302.7L201.3,304.2L196.3,305.5L191.2,306.7L186,307.7L180.9,308.5L175.7,309.2L170.5,309.6L165.2,309.9L160,310Z","land":"M133,307.2L133.7,307.4L134.1,307.5L134.5,307.6L133.9,307.6L133.4,307.5L132.6,307.4L132.3,307.3L131.8,307.2L131.3,307.2L130.3,307L129.7,306.8L129.7,306.7L130,306.8L130.8,306.9L130.3,306.7L129.8,306.6L128.6,306.2L128.3,306L128.8,306L129.7,306.3L130.4,306.5L131.4,306.7L132.2,307ZM129.1,306.8L129.1,306.8L129.7,306.9L129.7,306.9ZM130.4,307L130.9,307.1L131.8,307.3L132.7,307.5L133.3,307.6L133.5,307.6L133.7,307.6L134.2,307.7L134.9,307.8L135.5,307.9L135.9,307.9L135.8,307.8L135.4,307.7L134.8,307.6L134,307.4L133.3,307.2L132.5,307L131.8,306.8L131.3,306.6L130.8,306.5L130.7,306.3L130.4,306.2L130.1,306L129.3,305.7L128.7,305.5L128.6,305.3L128.7,305.2L128.8,305L129,304.9L129.4,304.8L129.3,304.6L129.5,304.5L129.8,304.4L130.7,304.4L131,304.3L131.6,304.2L132.3,304.2L132.8,304.1L133.1,304L133.8,304L134.7,304.2L134.6,304.4L133.8,304.5L133.6,304.6L132.6,304.4L131.9,304.4L131.4,304.5L131,304.6L130.8,304.7L131.1,305L131.6,305.2L132.4,305.4L132,305.5L131.2,305.5L131.1,305.6L131,305.7L131,305.9L131.3,306.1L132.1,306.3L132.9,306.5L133.9,306.7L134.9,306.9L135.6,307.1L136.2,307.3L136.9,307.5L137.7,307.7L138.3,307.8L139.4,308.2L140,308.3L140.5,308.4L141.2,308.6L141.7,308.7L141.8,308.8L141.8,308.8L141.1,308.7L141.2,308.8L141.3,308.8L140.9,308.8L140.4,308.7L140.3,308.7L140.3,308.7L135.1,307.9ZM160.2,310L160.6,310L161.6,310L162.3,310L163.1,310L163.7,309.9L164.6,309.9L165.4,309.9L165.9,309.8L166.9,309.8L167.8,309.7L168.7,309.7L169.6,309.6L170.5,309.5L171.6,309.4L172.4,309.3L173.2,309.3L173.8,309.2L173.2,309.2L173.8,309.1L174.6,308.9L175.5,308.8L176.5,308.7L177.5,308.6L178.5,308.4L179.3,308.2L180.1,308L181,308L181,308.1L181.8,308L182.3,307.8L183.1,307.7L183.8,307.6L183.5,307.7L184.3,307.6L185.5,307.5L186.5,307.3L187.2,307.2L186.9,307.3L188.2,307.1L189.1,306.9L190.1,306.7L191.1,306.5L192.1,306.3L193.1,306.1L194,305.9L195,305.7L195.1,305.7L196,305.5L195.6,305.6L195.3,305.7L196.3,305.5L197.3,305.2L198.4,304.9L199.1,304.8L198.6,304.9L199.8,304.6L200.6,304.4L201.3,304.2L201.9,304L201.9,304L201.9,304L196.9,305.4L191.8,306.6L186.6,307.6L181.5,308.5L176.3,309.1L171.1,309.6L165.8,309.9L160.6,310ZM112.1,293.9L114.5,294.8L116.6,295.3L116.6,295.8L115.4,295.7L114.3,295.3L114.4,295.6L113.7,295.8L112.2,295.5L110.9,295.1L109.5,294.7L107.3,293.9L105.3,293L102.2,291.4L103.5,291.9L106,292.9L108.1,293.6L108.2,293.2L107.8,292.4L108.5,292.1L109.6,292.4L110.6,293ZM122.4,292.1L123.9,292.8L123.8,293.2L122,293.3L121.1,292.9L120.2,293.3L119.1,292.7L120.3,292.1L121.8,292.5ZM305.3,197L304.5,199.9L304.3,200.9L303.9,202.1L303.7,203L304,201.7L303.8,202.5L303.3,204.2L302.9,205.3L302.7,206L302,208.1L301,211.1L299.6,214.7L297.6,219.4L296.1,222.9L294.7,225.8L294.2,226.7L293.4,228.1L293.4,227.8L293.5,227.4L293.9,226.3L294.8,224.3L295.5,222.6L296.1,221L296.9,219.2L297.3,218.6L297.6,217.8L298.5,215.8L299.1,214.2L299.4,213.2L299.8,211.8L300.5,209.6L301.1,208.1L301.6,206.5L301.8,206.1L302.2,205.3L302.5,204.7L302.7,204.4L303.3,202.7L304,200.8L304.4,199.4L304.6,198.4L304.7,198.5L305.3,196.5L305.6,195L305.9,193.7L305.8,194.6L305.6,195.5ZM95.4,161.9L93.5,161.9L93.1,161.7L93.8,161L93.8,160L95.2,159.8L95.7,159.9ZM87.5,139.6L86.8,140.2L85.2,140L84,139.9L84.1,138.8L84.4,138.4L86.1,138.7L87.2,139ZM64.7,137.1L64,137.4L63.1,136.8L62.2,135.7L62.6,135.1L63.4,135.1L63.8,135.3L65,135.7L65.8,136.5L66,137.3ZM74,133.4L75.6,134L75.9,133.6L77.5,133.9L78.5,134.7L79.1,134.7L79.3,135.7L80.4,135.8L80.2,136.6L81.1,136.8L81.9,137.9L81,138.8L80.1,138.1L79.1,138.1L78.5,137.9L78,138.3L77.2,138.3L77,137.7L76.3,137.9L75.2,139.6L74.7,139.1L74.8,138.3L73.5,137.7L72.5,137.7L71.4,137.3L70.4,137.7L69.5,136.7L69.9,135.9L71.6,136.5L73,137L73.8,136.5L73.1,135.3L73.4,134.3L72.2,133.7L72.8,133.1ZM62.7,123.7L63.2,124.7L64.9,124.8L65.3,125.5L66.5,127.3L67.3,128.7L67.9,128.8L68.9,129.5L68.6,130.2L69.9,130.5L71.1,131.8L70.8,132.4L69.4,132.5L68.1,132.4L66.9,131.9L64.2,131.7L65.8,130.5L65.2,129.7L64.1,129.3L63.7,128.5L63.6,127L62.6,126.9L61.2,125.8L60.8,125.2L58.7,124.3L58.3,123.7L59.1,123.2L57.5,122.7L56,123.8L55.3,123.7L54.9,124.2L54,124.3L53.4,123.9L54.5,123.3L55.1,122.5L56,122.1L56.9,121.8L58.2,121.9L58.7,121.7L60.1,122.2L61.4,122.5ZM67.2,121.9L66.7,122L66.7,120.4L66.3,119.6L67.1,118.1L67.6,118.3L67.6,120.5ZM68.8,114.8L66.8,114.8L67,113.9L67.9,113.9L69,114.2ZM70.2,115.1L69.4,116.8L69.2,116.4L69.6,115.1L69.2,114L69.2,113.7ZM274.2,83.3L274.3,84.5L274.6,84.9L274.7,85L274.5,86.4L273.9,86.3L273.2,85.5L273.5,85.2L273.6,85.2L273.3,84.6L273.9,84.3ZM264.1,87.5L265.1,88.1L265.9,87.6L266.8,87.5L267,87.9L267.4,87.4L267.6,88.2L266.2,88.9L266,88.5L264.4,88.6ZM250.9,84.8L251.4,86.7L252,87.3L252.4,88.5L250.9,87.9L250,87.9L247.5,87.2L247.1,86L248.8,85.8L250.1,85.2ZM238.7,80.2L240.4,81.5L241.7,84.5L241,84.5L240.8,85.4L239.9,84.9L238.5,82.2L237.5,81L238.3,81ZM238,78L238.5,79.8L237.6,79.5L236.5,78.1L236.3,77.2L236.7,76.2ZM110.5,72.3L111.5,72.7L113.1,72.8L111.9,73.6L111.3,73.7L109.6,72.5L109.5,71.8L110.4,71.2ZM115.7,67.3L115,67.3L113.3,66.4L112.4,65.3L113,65.2L114.7,65.9L115.8,66.9ZM60.7,50.6L60.4,50.7L61.3,49.3L62,48.6L62.7,47.7L63.3,47.2L63.7,46.5L64.8,45.5L65.3,45.2L64.8,45.9L64.4,46.4L64.2,46.9L63.5,47.5L62.5,48.5L61.7,49.5ZM125.7,64.9L124.1,66.6L125.3,66L126.2,66.5L125.4,67.2L126.7,67.9L127.6,67.4L129,68.2L128,69.6L129.3,69.4L129.1,70.5L129.3,71.8L128.1,73.6L127.3,73.7L126.3,73.2L127.1,71.5L126.8,71.2L124.3,72.9L123.3,72.7L124.8,71.8L123.4,71.2L121.6,71.2L118.4,70.8L118.4,70.2L119.7,69.5L119.2,68.9L121,67.8L123.9,64.7L125.3,63.6L126.8,63.1L127.5,63.2L127,63.7ZM72.7,38.8L72.7,39L70.4,40.5L68.6,42L68.6,41.9L69.7,41L70.7,40.2L71.5,39.6L72.4,38.9L73.1,38.4ZM203.4,60.8L201.4,62.2L199.2,62.1L199.5,60L197.8,58.1L198.9,56.4L199.5,55.4L200.6,55.2L202.6,56.2L202.6,57.6L203.6,58.9ZM222.7,50.8L223.3,52.3L221.4,51.6L220.6,50.9L221.5,50ZM201.4,48.5L201.4,50.5L202.4,50.1L203.7,50L204.4,51.5L204.3,53.2L205.7,53.2L208.4,55.4L209.5,55.5L211.6,57.5L212.5,58.2L214.3,58.4L214.9,59.6L214.6,60.3L215.7,61.2L215.2,62.4L213.3,62.6L211.3,63.5L210.4,63.2L210,64.3L208.5,64.2L207.9,65.1L206.9,64.8L208,62.4L209,61.9L206.6,61.8L205.8,61.1L206.9,60.3L205.6,59.3L205.2,58.1L207.3,58L206.8,56.9L205.2,55.8L203.4,55.7L202.8,55.2L202.8,54.3L202.1,53.9L201.9,54.8L200.8,53.1L199.6,52.2L199,50.3L199,48.8L200.1,48.8ZM111.1,40.7L109.9,41.4L109.7,41.2L109.9,40.7L110.1,40.6L110.9,40.2L111.2,40.3ZM109.8,39.4L107.9,40L107.4,39.8L107.6,39.4L109,38.8L110.1,39.1ZM112.5,34.6L111.9,35.2L112.5,35.1L112.4,35.5L112.6,36.2L113,36.9L112.2,37.6L112.9,37.6L113,38.2L111.7,38.5L110.9,37.9L111.2,37.1L109.5,37.7L107.5,38.2L108.3,37.3L107.2,37.2L108.7,36.6L110.2,35.5L112.2,34.3ZM181,37.2L181.3,38.2L183,39.1L182.3,40.4L179.7,41.7L178.8,42.1L177.3,41.9L174,41.6L174.8,40.8L172.2,40.1L174,39.7L173.8,39.3L171.5,39L171.9,38L173.4,37.7L175.4,38.7L176.6,37.7L178,38.1L179.3,37.2ZM121.9,34L121,33.9L121.6,33.2L122.8,32.5L123.7,32.4L123.8,32.9L123.2,33.5L122.8,33.6ZM272.1,65.6L273.4,66.8L273.6,66.7L274.1,67.1L274.1,67.6L275.4,69.2L275.9,70L276.2,70.6L277,71.6L278.3,73L278.8,73L279.7,73.8L280.1,73.5L279.8,72.3L279.5,71.8L278.3,70.4L276.6,68.2L276,67.9L274.9,66.4L274.8,66.6L273.3,64.8L273.8,64.9L273.3,63.9L272.2,63.1L271.2,62.1L271.6,62.9L272.9,64.4L271.7,63.3L271.3,62.8L270.6,61.9L270,61.3L269.2,61.1L267.6,59.6L267,59.4L266.4,58.8L266.7,58.6L265.4,57.2L265.2,56.6L265.5,56.5L263.7,54.7L262.5,53.7L262.5,54.1L262,54L262.7,55.2L262.9,56L263.9,57.2L264,57.9L265.7,60.2L267.6,61.6L268.8,62.9L271.1,64.8ZM295,94.7L295.1,94.8L295,94.8L295,95.1L293.6,92.5L293.4,92.3L293.7,93.1L294.3,94.7L293.8,94.5L292.8,93.3L292.4,93.1L291.1,91.3L289.2,88.6L289.3,89.2L288.8,88.8L289.2,89.8L289,90L289.6,90.9L289.9,91.5L290.9,93L292,94.8L292.4,95.1L292.9,95.8L293.5,96.5L294,97.4L294.4,98.2L294.8,98.9L295.2,99.4L295.6,100.1L295.9,100.6L295,99L294.5,97.6L294.4,97.2L294.8,97.8L295.5,99.2L296.1,100.6L296.5,101.4L296.5,101.2L296.8,101.9L296.7,101.1L296.8,100.8L296.9,100.5L296.2,98.6L295.5,96.8L294.7,95L294.3,94.1L294.4,94.2L294.9,95.2L295.1,95.7L296,97.5L296.7,98.8L297,99.4L297.1,99.4L297.2,99.5L297.7,100.6L298,101.2L298.1,101.4L298.3,101.9L298.9,103.5L299.2,104.2L299.6,105.2L300.3,107L300.3,107.1L300.6,107.8L301,109.1L301.6,110.6L301.7,111L301.8,111.2L302.1,112.4L302.5,113.7L302.7,114.3L302.7,114.6L303,115.4L303.3,116.4L303.5,117.3L303.4,117.4L303.6,118.6L303.6,118.9L303.8,120L304.1,121.2L304.3,122L304.4,123.6L304.4,125.6L304.7,127.8L304.6,128.2L304.4,128.2L304.5,129.6L304.4,130.4L304.1,130.9L304,131.2L304.1,132L304,132.3L304.1,133L303.9,133.2L303.8,133.7L303.4,134L303,132.6L302.6,131.2L302.4,130.6L301.8,128.8L301.4,128L301.4,127.7L301.1,126.6L301,126.1L300.7,125L300.3,124L299.9,123.4L299.6,122.5L299,121.9L298,120.1L297.2,118.2L296.2,116.9L295.7,116.7L294.4,114.7L293.7,113L293.2,111.6L291.7,109.2L291,108.5L290.4,108.2L289.6,107L289.4,106.4L288.6,105.3L288.1,104.9L287,103.3L285.7,101.7L284.5,100.3L284.1,100.6L283.6,99.2L283.2,98.4L282.8,97.4L282.6,97.1L282.9,98.1L283.6,100L284,101.3L284,101.8L283.3,101.2L282.4,100.4L280.1,97.4L280.1,97.6L281.8,99.9L283.4,102L285.8,105.3L286.7,106.5L287.5,107.7L289.4,109.9L289.4,110.4L290.1,112L291.8,113.6L292.2,114L293.3,116.3L293.3,116.8L294.3,119.3L295.6,122.1L296,122.5L296.7,123.1L298,125.7L298.8,127.9L299.5,128.8L301,130.5L301.7,131.6L302.4,132.8L302.7,133.5L303.2,134L303.5,134.7L303.7,135.8L303.5,136.7L303.9,137.1L304.1,137.4L304.4,138.4L304.9,139.2L305.1,138.9L305.4,137.8L305.8,136.9L305.9,135.7L306.1,135.2L306.1,134.6L306.2,134.2L306.3,134L306.3,133.4L306.4,132.8L306.3,131.7L306.4,131.5L306.5,132.2L306.8,133.7L307.1,135L307.2,136L307.6,138.9L308,142L308.2,145.6L308.4,149.8L308.4,153.1L308.2,157.3L307.9,159.9L307.3,163.2L306.8,165.7L306.2,169.3L306,170.8L305.8,171.5L305.4,172.9L305.2,174.1L304.9,174.5L304.7,176.4L304.5,177.6L304.2,179.4L303.9,180.4L303.2,183.8L303.1,185.2L303.5,185.8L303.4,186.4L303,188.1L303,188.8L302.7,190.1L302.7,191.4L302.6,193.7L302.8,194.1L302.7,195.1L302.1,197.6L301.7,199.7L300.8,203.5L300.6,204.6L300,206.5L299.3,208.4L298.4,210.2L297.5,211.6L296.3,213.3L294.6,216.4L294.1,217L293,219.1L292.5,219.8L291.8,221.5L291.5,223L291.1,224.3L290.9,225L291.1,224.8L290.1,227.1L289.5,228.2L289.5,228.5L289,229.5L288.3,230.5L287.3,231.6L285.7,233.4L284.9,234.4L284.5,235.3L284.7,235.3L284.1,236.5L283,238.2L282,240.1L281.2,241.2L280,242.5L279.7,242.9L278.7,244.2L277.8,245.4L276.4,247.1L274,249.7L272.6,251.2L271.3,252.5L269.7,253.7L269.1,254L268.6,254.6L268.1,254.5L267.4,255.1L266.4,255.1L265.5,255.6L265.1,255.6L263.4,256.8L262.2,257.4L261,258.4L260.4,258.6L260.3,258.1L259.9,258.2L259.9,257.4L259.6,257.7L259.8,257.3L260.5,256.1L260.8,254.9L261.4,254.4L262.3,252.9L262.4,251.3L262.6,249.7L262.6,249.7L262.9,247.3L262.5,246L262.6,244.6L263.2,242.6L263.4,241.1L264.2,237.9L265.1,235.3L265.3,234.1L265,233.3L264.7,231.6L264.7,229.1L264.7,227.8L263.9,225.8L264.3,224L264.5,222.6L265.2,220.5L266.2,218.2L266.5,217.1L267.5,214.9L268.1,213.8L269.4,212L270.1,210.8L270.6,208.9L270.7,207.5L270.3,206.8L270.1,205.4L269.8,204L270,203.5L270.6,202.4L270.4,200.1L270.2,198.5L269.4,197.1L269.7,196.6L269.5,195.9L269.1,194.1L267.8,191.8L266,189.6L264.9,187.8L263.8,185.4L263.9,184.5L264.3,183.6L264.7,181.6L265.1,179.7L264.7,179.3L265.3,176.3L265.5,174.2L264.7,172.7L263.9,172.4L263.4,171.3L262.9,171.1L262.9,170.3L261,171.7L260.2,171.7L259.5,172.4L257.9,172.6L256.8,171.2L256,169.4L254.5,168L253,168.2L251.2,168.5L249.5,169.1L247.8,169.9L244.6,171.9L243.4,173L241.5,174L239.5,173.5L238.5,173.7L236.9,173.4L235.5,173.6L232.8,174.4L231.3,175.3L229,176.5L228.6,176.5L228,176.6L225.5,175.6L223.3,173.8L221.2,172.6L219.5,171L218.9,170.9L217.1,170L215.8,168.7L215.3,167.8L214.9,165.9L213.8,164.5L212.8,163.5L212.1,163.2L211.5,162.7L211.2,161.6L210.8,161.1L210,160.7L208.7,159.7L207.6,159.6L207,158.9L207,158.5L206.3,158L206.1,157.4L205.5,155.5L205.7,154.3L204.6,152.3L203.3,151.5L204.3,150.9L205.4,149L205.8,147.6L205.5,146.2L206,144.9L206.1,142.4L205.5,139.9L205.1,138.6L205.2,137.3L204.5,136.1L203.1,135.1L203.1,134L203.1,132.8L203.9,132.1L204.5,130.7L204.2,129.8L204.7,128L205.8,126.3L206.5,125.8L206.9,124.3L206.7,122.9L207.2,121.3L208.5,120.2L209.5,117.6L210.4,116.5L212.3,116L213.7,114.2L214.6,113.4L215.8,111.2L214.6,108.2L214.9,106L214.8,104.7L215.7,102.9L217.3,101.6L218.5,100.5L219,97.9L219.1,96.4L220.5,96.2L221.9,97.1L223.6,96.7L225.7,97L226.5,96.9L227.7,95.4L229.5,94.7L230.2,93.6L231.6,92.6L234.2,91.8L236.8,91.1L237.8,91.3L238.9,90.2L240.5,89.8L241.4,90.3L242.4,89.9L243.6,88.7L244.8,88.7L245.3,89.9L246.1,88.8L246.4,89.2L246.2,90.5L246.8,91.5L247.5,92L248.3,94L247.8,95.4L248.7,96.6L249.5,96.5L250.4,97.5L251.1,97.8L253.2,98.2L253.7,97.8L255.1,98L257.5,98.5L259.1,100.5L260.6,100.6L263,101.1L264.9,101.8L265.3,101L265.4,99.8L264.3,98.1L264.1,96.8L264.5,95.4L265.1,94.9L267,94.8L267.9,95.7L268.4,95.6L268.9,95.9L270.2,95.7L270.9,96.4L272.3,95.8L273.6,96L275,96.3L275.6,96.5L276,95.4L276,94.6L276.7,94L277.5,94L278.4,95L278.2,94.2L279.2,94.4L279.9,94.2L280,93.4L279.8,92.5L279.7,92.4L279.3,91.2L278.4,89.4L278.2,88.8L278.2,88.8L277.3,86.8L276.7,85L276.7,84.9L275.5,83.3L275.1,82.3L274.2,81.5L273.9,80.5L273.6,80.9L272.7,80.8L273,82.3L272,83.2L270.5,82.3L269.6,82.7L270,83.7L269.5,84.2L267.9,83.4L266.9,83.9L264.9,81.9L263.4,81L262.8,79.1L261.5,78.4L261.1,75.9L262.4,75.3L261.6,73.5L263.4,73.1L263.3,71.3L263.7,70.3L264.8,69.6L267.1,70.4L268.5,70.6L268.9,69.8L269.5,69.7L269.2,68.1L268.5,67.2L267.3,66L266.4,65.5L265.9,65.5L265.2,65L263.1,63.8L261.8,63.5L260.3,62.7L260.4,62.1L259.3,60.3L258.3,59.7L258.3,58.4L257.9,58L257.8,58.6L257.5,59.1L257.7,59.9L257.3,60.3L257.4,61.4L258.5,62.5L259.3,62.8L259.8,62.3L260.3,63.1L259.9,63.8L260,65.4L259.3,65.2L258.7,64.2L257.4,64.1L257.2,63.6L257.3,62.7L256.7,62.3L255.2,62.4L254.5,61.7L254,62.2L254.7,63.4L255.3,65.1L255.8,65.6L255.7,66.2L255.3,66.1L257.1,68.7L257.3,69.7L258.1,71.3L259.3,72.3L260,73.1L261.3,73.4L261.5,74L260.5,74.6L260.6,75.4L260.6,76.8L259.6,75.9L259.3,75.5L258.7,75.7L258,75.6L257.2,76.6L258.7,77.6L258.4,78.1L257.9,78.3L256.6,77.4L256.7,77.9L257.8,79.1L259,80L258.9,80.6L260.1,81.4L261,81.8L261.8,83.1L260.5,82.8L261.5,83.8L260.9,84.3L262.5,86.1L261.8,86.4L260.3,85.7L258.8,84.1L257.7,82.7L256.6,81.8L255.3,80.7L254.8,80.2L254.5,80.1L254.2,79.6L253.1,79.1L252.3,78.1L251.5,76.6L251.2,75.9L250.8,75.6L250.4,75.5L249.6,74.9L248.9,74.6L247.3,74.1L246.1,73.6L244.6,73.2L242.5,71.9L242.7,71.7L241.5,71L241,70.3L240,70.2L240.3,71.1L239.4,70.5L239,69.8L239,69.8L239.1,69.5L238,69.5L237.5,70.4L238.2,71.4L238.4,72L239.5,73L241.4,73.8L243.2,75.4L245.6,76.8L246.6,76.5L247.2,76.9L247.1,77.4L248.7,77.9L250,78.3L251.7,79.2L252.1,79.5L252.4,80.4L251.1,79.5L249.8,79.5L250.1,81L251.5,81.6L252.1,82.8L251.6,83.1L252,85.1L251.6,85.4L251.2,84.8L250.8,83.5L250.8,83L249.5,81.8L248.5,80.8L247.8,80.7L246.9,79.8L245.8,79.6L244.7,78.9L243.7,79L242,78.2L240,77.1L238.3,76.1L236.7,74.1L235.9,73.9L234.3,73.5L233.9,73.9L233.7,75L233.2,75.3L232.6,76.7L229.4,76.7L227.6,77.7L228.1,79.1L228.8,80.3L228,82L226.2,82.8L226.4,83.6L226,85L226.1,86.9L227.3,88.1L226.7,89.2L227,90.8L225.8,91.4L225.3,93.4L223,93.7L221.3,93.9L220.4,94.8L220,95.8L219.1,95.7L218.1,95L217.2,93.7L215.3,93.6L214.8,94.2L213.7,94L212.8,94.4L212.5,92.5L211.9,91.1L211,91L210.3,90.1L210,88.6L210.5,87.7L210.3,86.8L210.2,85.4L209.9,84.4L209.2,83.7L208.9,82.9L208.4,81.3L207.4,80.4L209.2,78.6L211.4,78.8L213.7,78.5L215.6,78.7L216.9,78.4L219.5,78.1L219.7,76.7L218,72.4L215.3,70.4L213.7,69.5L211,69L210.1,67.6L211.8,66.9L214.5,67.1L212.8,64.8L214.7,65.5L217,63.5L216.4,61.8L217.3,61.3L218.1,60.7L218.4,60.1L217.5,57.1L218.6,56L219.6,55.9L219.5,55.5L220.4,55.2L221,55.5L221,54.5L220.2,53.9L219.3,52.8L218,51.9L216.5,50.2L216.3,49.6L216.1,49.1L216.9,48.8L216.8,48.2L217.2,47.6L218,48.5L218.2,49.1L218.7,49.6L219.5,49.7L219.9,50.4L219.4,50.3L219.8,51.7L220.8,52.5L221.4,53.2L222.8,53.4L223.3,54L224.1,53.5L224.3,52.8L226.1,53.3L227.1,53.7L227.3,53L228,51.8L228.6,50.9L229.8,51L230.3,51.4L231.2,51.2L230.6,50.3L231.2,49.4L229.5,48L228.2,46.8L227.4,45.6L227.5,44.8L229.5,45.9L230.1,45.6L228.8,44.3L227.7,43.4L227.7,43.7L226.6,43.3L225.4,42.4L225.7,41.6L226.3,41.1L227.3,41.1L227.9,40.8L227.4,39.7L225.8,39.3L224.9,39.8L224.5,40.8L223.8,41.5L222.4,40.8L221,40.5L219.3,39L217.3,37.7L216.4,36.8L215.8,35.7L215,33.8L214.9,33.4L214,32.9L212.2,32.5L211.8,33.2L212.6,34.3L213.9,35.1L214.5,36.6L214.7,38.2L216.8,40.4L218.6,41.4L220.4,42L221.7,44L221.2,44.6L223.8,47.5L224.9,49.2L223.6,49.3L224.4,50.8L223.3,51.2L221.5,49.6L218.8,47.8L215.8,45.6L214.2,44.8L214.1,47.1L213.1,47.7L210.9,47.1L209,45.4L205.3,41.7L205.2,40.6L206.2,38.8L206.1,37L205.1,34.7L203.2,31.8L202.9,30.5L202,28.6L202.2,27.7L203.1,27.5L202,26.4L202.9,26.2L203.2,25.7L206,25.9L206.1,26.4L207.9,26.9L207.5,26.4L209.4,26.7L210.8,26.5L214.5,27L215.8,27.4L217.4,28.1L218.3,28.9L218.5,29.6L215.2,29.6L215.2,29.9L217.5,30.5L220.9,32.3L222,32.4L222.9,32.5L221.8,31.9L220.6,31.5L220,30.9L222.2,31.1L221.9,30.6L220,29.9L218.4,28.3L218.7,28.1L219.7,28.3L218.2,27.4L216.6,26.9L215.3,26.2L213.7,25.7L214.9,25.5L216.4,25.9L216.5,26.3L217.8,26.9L218.7,27.1L218.4,26.6L216.9,25.8L216,24.9L214.1,23.4L214.2,23.3L215.7,24.1L216,23.9L215.1,23.5L215,23.1L213.9,22.4L215.3,22.7L213.6,21.9L212.3,21.6L211.4,21.2L211.8,20.9L212.4,20.9L214.4,21.2L213,20.6L212,20.4L211.5,20.2L211.5,20.3L210.3,19.9L208.5,19.4L207.8,19.2L205.2,18.2L202.9,17.6L202.3,17.3L202.3,17.1L203.6,17.4L205.8,18.1L206.4,18.2L207.9,18.6L211.2,19.6L212.3,19.9L214,20.5L217.8,22.1L217.8,22L216.9,21.6L215.9,21.2L214.7,20.7L213.3,20.1L212.2,19.8L210.6,19.2L210.7,19.4L209.5,19L206.9,18.1L205.4,17.8L203.3,17.1L201.7,16.7L201.5,16.6L202.7,16.9L205,17.5L205.1,17.5L203.6,17.1L202.2,16.6L201.4,16.3L202,16.3L200.5,16L198.1,15.4L197.1,15.1L196.4,14.8L195.3,14.5L194.4,14.3L192.6,13.9L192.1,13.8L190.4,13.4L189.1,13.1L188.4,13L187.2,12.7L187.3,12.6L185.3,12.3L184.6,12.1L183.7,12L182.5,11.9L180.8,11.6L180.6,11.5L181.6,11.7L180.8,11.5L181.5,11.6L180.7,11.5L179.2,11.3L178.8,11.2L178.8,11.2L178.8,11.2L184,11.9L189.1,12.9L194.2,14L199.3,15.2L204.3,16.7L209.3,18.3L214.2,20.1L219.1,22.1L223.9,24.3L228.6,26.6L233.2,29.1L237.7,31.7L242.1,34.5L246.5,37.4L250.7,40.5L254.8,43.7L258.8,47.1L262.7,50.6L266.4,54.3L270.1,58.1L273.5,62L276.9,66L280.1,70.1L283.2,74.4L286.1,78.7L288.8,83.2L291.4,87.7L293.9,92.4ZM113.4,28.4L112.3,28.7L112.4,28.1L111.8,28.1L112.2,27.3L113.3,27.1L114.5,26.8L114.3,27.3L114.2,27.6L113.9,27.8ZM119.5,15.6L119.4,15.6L119.3,15.6L118.7,15.8L119.2,15.8L118.1,16.1L116.8,16.5L117,16.4L116.2,16.7L115.7,16.9L114.7,17.2L114.6,17.3L113.1,17.9L112.3,18.3L111.7,18.5L111.7,18.6L110.6,19.1L110,19.4L109,19.9L107.5,20.6L107.1,20.9L107.9,20.7L108.5,20.7L108,21.1L108.9,21L109.4,21.1L108.3,21.5L108.8,21.5L110,21.1L109.7,21.4L107.4,22.4L109.1,22.1L107.2,22.8L107.7,22.9L108.4,22.7L108.3,23L107.4,23.6L106.7,24.5L106.5,24.9L106.8,25L105.8,25.8L104.4,26L104.2,26.6L105.1,27L105.7,27L104.6,27.9L106.1,27.5L106.8,26.9L107.7,26.6L108.2,26.8L108.7,26.9L108.4,27.3L107.5,28.1L108,28.2L107.7,29L108.7,29.1L109.3,29.4L110.6,28.7L111.3,28.6L111.3,29.3L109.3,30.5L111.3,29.6L111.6,29.8L114,28.7L114.8,27.8L115.1,27.1L117.5,25.9L119.6,25.3L119.8,25.7L119.3,26.3L117.6,27.8L116.2,28.2L116.7,28.8L116.7,28.8L114.6,30L116.9,29.2L116.3,30.2L114.7,31.1L114,32.1L116,31.4L118.1,30.4L120.2,29.1L120.9,29.3L121.5,29.7L121.4,30.5L120.6,31.2L119.2,31.8L118.7,32.6L117.8,33.2L115.2,33.8L113.9,33.8L113.8,33.2L112.6,33.9L110.4,34.8L109.4,35.4L107.3,36.1L106.3,35.9L104.9,36.4L103.6,37.3L102.6,37.2L100.2,38.1L97.3,39.6L95.5,40.7L93.2,42.4L93.9,43L92.5,44.6L91.4,46L92.9,46L93.6,47.2L93.8,48L93.6,49L94.3,49.8L94.6,50.8L96.1,51.3L97,51.7L95.5,53.2L94.3,55.1L93.4,57.3L93.7,59.5L95,59L97.1,57.2L98.8,54.2L98.8,53.1L101.3,52.6L103.5,51.6L105.1,50.5L106,49.3L106.6,47.7L106.5,46.2L109.3,44.7L110.2,43.2L112.4,40.6L113.4,40.4L114.5,41.1L115.3,41.4L116.5,41.2L116.9,41.8L117.3,43L117.1,43.6L118.8,44L117.7,45.4L116.4,47.6L117.3,48L117.4,49.1L119.7,48.4L122.1,46.6L123.3,45.9L123.3,47.5L123.5,49.9L123.6,52.2L122.5,53.3L123.7,54.5L124.4,55.7L126.4,56.4L127,57.1L126.9,58.7L127.9,59.1L128.2,59.8L127.5,62.1L126.1,62.7L124.8,63.3L122,63.8L119.4,65.3L116.7,65.3L113.7,64.6L111.6,64.3L110,64.3L108,65.5L105.7,66.2L102.2,68.6L99.5,70.2L100.9,70.1L104.7,67.7L108.6,66.4L110.9,66.5L111.8,67.7L109.7,68.9L109.2,71.2L109,72.8L110.6,74.1L113.4,74.1L115.9,71.9L115.5,73.4L116.2,74.3L113.7,75.5L109.5,76.4L107.5,77.1L105,78.4L103.9,78.1L104.6,76.3L108.2,74.8L105.6,74.6L103.7,74.6L103.7,75.4L101.5,76.2L99.5,76.7L97.6,77.1L96,78.4L95.7,78.7L95.1,79.9L95.1,81.1L95.7,81.3L95.9,80.4L96.2,81L95.8,81.6L94.5,81.8L93.8,81.7L92.4,81.9L91.7,81.9L90.7,81.8L89.1,82.3L91.6,82.2L91.9,82.7L89.4,83L88.4,82.9L88.6,82.6L87.8,83.1L88.2,83.3L87.1,84.9L85.1,86.4L85.3,85.8L85,85.6L84.8,85L84.5,86.2L84.7,86.7L84.4,87.6L83.4,88.4L81.7,90L81.6,89.9L82.8,88.4L82.4,87.4L83.1,85.5L82.4,86.4L82,87.9L81.2,87.4L81.9,88.3L81,90.5L81.3,90.7L81.2,91.6L80.4,93.9L78.6,95.5L76.7,95.8L75,97L74.2,97L73,97.7L72.4,98.5L70.1,99.6L68.7,100.6L67.4,101.8L66.5,103.5L66.1,105.2L65.8,107.4L65.9,109.3L65.5,110.3L65.3,113.3L64.7,115L64.3,115.9L63.4,117.3L62.8,117.5L62.1,117.1L62.2,115.9L61.8,115.2L61.6,112.9L61.6,110.9L61.7,109.9L62.6,108.3L62.7,106.9L62.3,104.6L61.9,104.1L60,104.8L59.8,104.6L59.5,103.4L58.9,102.5L57.2,102.4L56.1,101.8L55,101.7L54.3,101.9L54.2,102.6L53.8,103.6L53.9,104.1L53.5,104.4L53.1,103.9L52.5,104.2L51.5,103.8L51.2,102.3L50,102.2L49.3,101.4L48.5,101.3L47.3,101.5L45.4,102.9L43.8,103.5L42.7,104.4L42,105.4L41.3,107L40.8,108.2L40.7,109.1L40.7,109.1L40.7,109.1L39.4,111L38.5,112.7L37.2,116L36.6,117.1L36.3,118.5L36.3,119.9L35.8,121.9L36,124.1L35.8,125.6L35.9,127L37.1,128.1L37.3,129.4L38.6,129.1L39.7,129.1L40.8,129L41.8,128.9L42.9,128.1L43.7,126.7L44.4,124.7L44.9,124L46,123.6L47.7,123.5L49,123.9L50,124L50.2,124.6L49.8,125.8L48.5,127.1L47.7,128.5L47.9,129L47.4,130L46.5,131.9L46.3,131.2L45.9,131.1L45.9,131.5L46.1,131.6L45.9,132.3L45.4,133.3L45.4,133.7L45.1,134.6L45.1,134.9L44.6,136.1L44.2,136.7L43.9,136.7L43.4,137.5L43.8,138.1L44,137.8L44.4,138.2L44.5,138.3L44.9,138L45.4,138.1L45.5,138.3L45.7,138.3L46.4,138.7L47.1,138.8L47.7,138.6L47.9,138.4L48.4,138.7L48.8,138.9L49.2,139L49.6,138.8L50.2,139.4L50.5,139.5L50.9,140.1L51.2,140.8L51.8,141.3L52.1,142.1L51.9,142.3L51.7,142.9L51.7,143.9L51.1,144.7L50.8,145.7L50.5,146.8L50.5,147.5L50.3,148.6L50,148.8L49.7,149.9L49.7,150.6L49.3,151.2L49.2,151.9L49.4,152.4L49.7,153.9L50.2,155.1L50.9,156.4L51.4,157.4L51.3,158L52,158.3L52.2,158.1L52.6,158.8L53.5,158.8L54.3,158.3L55.5,158.1L56.2,157.4L57.2,157.8L57.1,158L58.1,158.3L58.9,158.9L59.5,159.8L60.1,160.7L61.1,160.9L62.7,159.4L63.6,159.3L63.7,158.4L64.3,156.3L65.6,155.3L66.8,155.4L67,154.9L68.6,155.4L70.3,154.4L71.2,153.9L72.3,152.8L73.1,153.1L73.5,153.8L73,154.7L72.9,155.3L71.6,155.4L72.2,156.7L72,158L70.9,159.4L71.5,161.6L72.4,161.5L73,159.7L72.5,158.7L72.6,156.7L75.3,156.1L75.2,154.8L76,154.1L76.6,156L78,156.3L79.3,157.9L79.3,158.8L81.2,159.1L83.6,159.1L84.7,160.4L86.4,160.9L87.7,160.3L87.8,159.6L90.6,159.8L93.4,160.1L91.4,160.6L92,161.9L93.9,162.3L95.5,163.8L95.8,165.9L97,166L97.8,166.7L99.3,167.8L100.7,169.6L100.7,170.9L101.6,171.1L102.8,172.5L103.8,173.5L106.6,174.2L106.9,173.8L108.9,173.7L111.5,174.6L112.3,175L114.1,175.7L116.7,178.1L117.1,179.2L118,179.1L118.6,180.6L119.9,185.2L121.3,185.7L121.3,187.4L119.4,189.5L120.2,190.3L124.7,190.9L124.8,193.5L126.7,191.9L129.9,193L134.2,194.7L135.5,196.2L135.1,197.6L138.1,196.9L143.1,198.4L147,198.4L150.9,200.5L154.2,203.4L156.2,204.1L158.4,204.2L159.4,205L160.3,208.2L160.7,209.7L159.7,213.7L158.4,215.3L154.7,218.7L153.1,221.4L151.3,223.4L150.6,223.5L150,225.2L150.2,229.6L149.6,233.1L149.4,234.6L148.6,235.5L148.3,238.5L145.9,241.3L145.6,243.6L143.7,244.5L143.2,245.8L140.6,245.7L136.9,246.4L135.3,247.3L132.8,247.8L130.2,249.3L128.5,251.3L128.4,252.8L128.9,254L128.8,256L128.4,257L127,258L125.2,261.3L123.6,262.7L122.4,263.5L121.8,265.2L120.7,266.2L120.1,267.2L118.1,268.1L116.5,267.6L115.5,267.7L113.4,266.8L112,266.7L110.5,265.6L110.7,266.5L113.7,268.3L113.8,269.5L115.3,270.4L115.5,271.3L114.4,273.3L112,274L108.4,274L106.3,273.6L107.2,274.6L107.4,275.8L108.1,276.7L107.3,277.1L105.7,277.2L103.7,276.4L103.2,276.7L104.4,278.3L105.8,279L106.4,278.6L107.4,279.4L106.1,279.7L105.3,280.5L106,282L106.1,282.8L104.6,282.6L103.9,283.2L104.2,284.2L106.4,285.5L108.1,285.9L108.5,287.1L107.3,287.6L107.6,289.1L106.8,289.4L106.7,289.9L108.3,291.3L109.9,292.1L109.3,292L108.1,291.8L107.7,292L107,292.3L108,293.3L107.5,293.3L105.7,292.7L103.3,291.6L101.1,290.7L99.8,289.8L99.4,289.1L97.9,288.1L95.5,285.8L94.9,284.6L95.4,283.7L92.9,282.9L93.2,281.9L91.7,279.4L93.7,280.2L92.2,277.1L90.9,276.5L91.8,278.4L90.7,278.1L89.6,275.9L88.1,272.9L88.1,271.8L86.7,270.1L85.4,268L86.1,268.1L85.6,265.3L85.3,262.6L84.8,259.8L83.2,256.9L83,255.3L81.9,252.8L82.1,250.4L81.1,246.5L80.4,242.1L79.7,237.3L78.7,233.6L77.6,230.3L75.3,228.7L74.9,227.7L70.5,224.8L66.5,221.6L64.8,219.9L63.6,217.8L63.8,217.1L61.7,213.7L59.2,208.8L56.8,203.6L56,202.3L55.2,200.3L53.6,198.4L52.3,197.1L52.8,196.1L51.7,193.5L52.2,191.9L53.6,190.6L54.5,188.9L54,187.7L53.4,188.8L52.2,187.4L52.6,186.8L52.2,184.4L52.9,184.1L53.2,182.6L53.9,181.1L53.8,180L54.8,179.7L56.1,178.9L55.9,178.1L56.6,178L56.5,176.7L57,175.9L57.9,175.9L58.8,174.4L59.6,173.2L58.9,172.5L59.4,171L59.1,168.6L59.5,168L59.4,165.7L58.7,164.2L58.2,163.4L57.9,161.9L58.4,161.3L58,161L57.7,160.1L56.9,159.2L56,159.2L55.6,160L54.8,160.5L54.3,160.5L54.1,161L54.8,162.6L54.3,162.8L54,163.1L53.2,163.1L53,161.5L52.7,161.9L52.1,161.6L51.9,160.5L51.2,160.1L50.8,159.7L50,159.6L49.9,160.1L49.7,159.7L48.9,158.9L48.6,158.3L48.8,157.9L48.8,157.3L48.4,156.5L47.8,155.9L47.3,155.4L47.3,154.6L46.9,154L46.9,154.8L46.5,155.4L46.2,154.6L45.7,154.2L45.6,153.6L45.7,152.8L46,152L45.6,151.6L46.1,151.2L45.6,150.2L45.1,149L44.8,148L44.3,147L43.7,145.7L44,145.3L44.2,145.8L44.3,145.6L44.2,144.7L43.8,144.4L43.5,144.9L42.6,144.7L42.1,144.3L41.6,143.6L40.8,143.2L40.5,142.5L39.9,141.8L39,141.5L38.4,140.8L37.9,139.5L37,136.3L36.5,135.2L35.6,134.2L34.9,134.1L33.7,134.7L33,134.7L32.3,133.7L31.6,132.9L30.8,131.3L30.1,130.6L29.3,128.9L28.8,127.3L28.7,126.5L28.2,126.1L27.5,124.8L27.5,123.5L27,121.5L27.1,119.7L27.3,118.4L27.7,118.3L27.8,117.6L28.3,117.1L28.6,116.2L28.7,115L29,113.9L29.2,112.6L29.5,109.7L29.6,107.4L29.9,105.7L29.8,104.3L29.9,103.6L30.7,102.2L30.7,101.4L30.9,100L31.5,98.3L31.3,97.8L31.6,96.3L32,95L32.4,94.3L33.1,92.3L33.9,90.4L34.4,89.5L34.6,88.3L34.4,88.3L34.5,87.4L33.9,88.2L33.4,89.4L32.4,91.1L32,92.2L31.5,94.1L31.3,94.7L31.2,95L30.9,95.8L31,95.9L30.3,97.5L30.2,98.2L29.8,99.1L29.6,100.6L28.7,103L28.4,104.1L28.1,105.4L27.6,106.7L27.8,107L27.6,108.3L27.4,109.5L27.2,109.9L26.5,110.6L26.4,110.5L26.9,108.9L27.1,107.2L27.2,105.7L27.2,104.9L28,103.2L28.5,101.8L28.6,100.9L28.8,99.5L28.6,99.7L28.8,99L28.8,98.1L29.2,96.5L29.3,96.4L29.4,96.7L30,96L30.6,95L31.2,93L31.3,92.1L32,90.5L32.7,88.9L33.6,86.9L34.7,84.7L35.4,83.5L36,81.9L36.1,81.5L36.5,80.8L36.4,80.5L36.7,79.7L36.7,79.1L36.9,78.6L37.7,77.4L39.1,74.9L41.2,71.6L41.6,71.2L42.1,70.3L43.4,68.3L44.7,66.6L45.6,65.3L47,63.8L48.5,62.1L49.9,60.6L51.6,59L54.9,55.7L57.5,53.3L59.1,51.7L60,50.8L60.4,50.5L59.8,51.6L58,53.4L58.5,53L60.1,51.6L61.7,50L61.7,50L63.6,47.7L64.4,46.7L65.3,45.4L67.2,43.8L68.4,42.9L69.5,41.8L71.2,40.6L72.8,39.1L73.9,38.4L74.8,37.7L75.7,36.9L77.6,35.7L79.6,34.2L81.8,32.8L82.1,32.5L82.6,32L83.6,31.3L86.5,29.5L87.2,29L88.7,28.1L89.1,27.9L90.9,26.9L92.4,26.1L92.4,26.1L92.4,26.1L97.1,23.8L101.9,21.7L106.8,19.8L111.7,18L116.7,16.4ZM117.2,21.3L116,21.6L117.1,21.7L116.1,22.4L117.6,22.1L117,22.5L114.8,23.6L115.9,23.3L118.2,22.2L118.7,22.2L118.6,22.5L117.9,23.1L115.8,24.1L114.3,24.8L113.6,25.6L113.2,26.4L112.2,26.9L111.4,26.7L110.8,27.2L109.8,27.6L109.5,27.1L109.6,26.5L109.1,26.3L107.8,26.3L106.7,26L106.2,25.8L107.3,25.2L107.7,24.6L107.3,24.6L109.1,23.6L109.4,23.6L110,23.7L110.2,24L110.8,24.1L111,23.5L110.5,23.2L110.4,22.9L111.3,22.5L112.5,22.6L112.3,22.3L112.8,21.8L114.7,21.3L115.8,21.1L117.6,21ZM119.9,22.5L118.1,23L119.4,22.1L119.8,22L120.2,22.2ZM131.2,26.4L130.8,26.7L130.2,26.6L129.7,26.5L128.8,26.5L128.8,26.4L129.1,25.7L129.8,25.3L130.2,25.3L131.2,25.6ZM126,25.2L125.1,26L127.1,25.2L129.1,25.1L128.2,26.4L126.9,27.1L128.5,27L129.8,26.7L130.2,27.5L130.3,28.2L129.7,28.7L131.3,28.7L131,29.6L132.2,30.3L132.3,30.9L131.8,32.3L129.7,32.7L130.8,33.8L131.8,34.3L132,35.8L133.4,36L132.3,37L129.3,38.6L128.7,37.8L128.4,36.2L127.1,36.2L126.2,37L126.5,38L127.2,38.9L127.3,39.3L126.7,41L125.6,42L124.6,41.5L123.1,39.9L123.4,41.4L123.7,42.5L123.5,43.1L121.2,42.1L119.8,40.9L119.4,39.9L120.1,39.5L119.5,38.6L118.9,37.6L118.5,38L115.8,37.8L115.6,37.2L117.4,36.2L118.9,36.5L120.8,36.6L121.1,36L122.1,35.4L124.6,34.2L125.1,33.5L125.3,33L124.9,32.2L123.9,31.5L124.8,31.2L125.1,30.3L124.6,30.1L124.7,29.6L123.8,29.9L122.4,29.8L120.7,29L120,28.4L119.5,28L119.8,27.4L121.2,27.1L120.5,26.9L122.4,25.7L124.6,24.9L125.9,24.6L127.6,24.6ZM122.1,22.7L122,23.1L122.8,23.2L122.3,23.5L120.9,23.8L120.5,24.5L118.4,25.4L117,25.5L116.8,25.3L117.4,24.8L118.4,23.6L119.1,23.3L119.4,23.8L120.6,23ZM122.2,24.7L120.2,25.4L119.8,25.2L121.5,24.2L122.6,23.7L123.7,23.3L124.7,23.2L125.4,23.5L125.6,24L123.1,24.7ZM112.3,21.7L110.9,21.7L112,21.2L113.3,20.4L114.1,20.2L116.2,19.7L117.9,19.4L119.4,18.8L119.9,19.2L119.4,19.5L119.5,19.9L118.8,20.3L117.9,20.8L117.1,20.8L115.2,21L113.3,21.4ZM126.8,22.5L125.8,22.8L125.4,22.5L125.6,22.2L126.8,21.8L127.8,21.7L127.4,22.2ZM129.2,20.4L128.3,20.9L127.2,21.3L125.4,21.9L124.6,21.8L124.7,21.5L126.1,21L125.4,20.9L127.2,20.2L127.4,20.4L128.6,20.3L128.8,20.5ZM125.7,19.7L125,20L125.5,20L125.6,20.1L124.5,20.5L123.2,20.9L122.2,20.5L120.7,20.5L120.4,20.3L121.2,20.1L122.6,20L121.7,19.5L122.1,19.1L124.6,18.6L125.4,18.6L124.9,19.2L123.7,19.8L123.8,20.1L125.9,19.2L127,19.1L126.9,19.3ZM209.5,21.1L209.7,21.2L209.4,21.7L208.3,21.4L207.6,21.5L206.2,21L205.7,20.7L204.4,20.3L202.3,19.3L202,19.4L199.8,18.4L198.6,18.1L197.2,17.5L195.4,16.7L194.7,16.2L193.6,15.8L193,15.5L193.9,15.6L194.8,15.8L196.4,16.5L197.9,17.2L200.5,18.2L203,19.1L205.4,20.1L207.5,20.7ZM131.1,20.5L130.7,20.9L131.4,21.1L131,21.5L130.1,21.8L130,22.1L129.8,22.4L130.2,22.6L130.6,22.8L131.7,22.8L132.7,22.9L133.3,23.1L133.1,23.6L132.5,24.1L131.7,24.3L130.6,24.4L130.2,24.1L128.6,23.9L127.7,23.7L127.3,23.4L126.9,22.8L128,22.2L129,21.8L129.6,21.3L129.3,20.9L129.6,20.5L130.6,20.2ZM128.3,17.7L126.3,18.2L125.4,18.3L125.2,18.2L124,18.3L123.5,18.2L124,17.8L126,17.6L127.7,17.4L127.8,17.6ZM132.3,20.2L132.1,20.2L131.7,20L132.2,19.7L132.8,19.9L132.5,20.1ZM129.1,18.3L128.1,18.3L128.8,17.9L129.7,17.8L130.1,17.9L129.9,18.2ZM187.3,19.9L187.5,20.4L186.5,20.4L186.1,20.1L185.3,19.9L185.4,19.6L186.4,19.8ZM131.4,17.8L130.8,17.8L130.6,17.6L130.9,17.5L131.8,17.5L131.7,17.5ZM132.9,19.6L132,19.6L132.4,19.4L133.1,19L134.1,18.7L134.3,18.9L134.3,19L133.8,19.3ZM132.5,19L131.6,19.3L131.5,19.1L131.9,18.7L131.6,18.4L132.5,18.3L132.8,18L133.8,17.8L133.8,18L133.4,18.6ZM179.5,11.5L182.4,12L179.4,11.7L178.9,11.6L178.7,11.5L178.7,11.4ZM181.5,19L184,19.3L184.1,19.8L185.4,20.5L185.5,20.7L187,21.5L186.6,21.7L184.6,21.3L184.3,20.9L183.2,20.8L180.9,20.2L179.2,19.6L179.4,19.1L180.2,19.4L180.6,19.2L180.1,18.9L180.4,18.8ZM181.7,17.9L183,18L183.8,18.5L183.4,18.8L182.3,18.9L181.6,18.7L181.2,18.8L180,18.6L180.2,18.1L181,18.2L180.6,17.9ZM184.6,15.6L184.9,15.8L185,15.9L185.4,16L185.8,16.2L185.1,16.2L184.4,16L184.1,16.2L183.8,15.9L183.9,15.8L184.6,15.9L184,15.7L183.6,15.5L184.2,15.5ZM180.5,11.8L181.5,12L181.8,12.1L181.6,12.2L180.4,12.2L180.3,12.3L178.2,12L177.2,11.9L177.7,11.8L178.8,11.7ZM138.8,19.1L138.5,19.5L137.5,19.6L135.4,20.1L134.7,20L134.3,19.7L134.9,19.2L135.7,19L136.5,18.8L136.1,18.7L136.5,18.3L137.4,18L138.6,17.7L139.4,17.6L139.8,17.6L140.2,17.4L140.8,17.5L139.9,18L139.9,18.3L139.9,18.5ZM150.1,17.5L150.7,17.6L151.1,17.8L151.3,18.1L151,18.3L149.7,18.5L148.6,18.6L148,18.8L148.8,18.9L147.1,19.3L146.2,19.4L144.3,20.1L143.3,20.1L142.7,20.2L141.4,20.1L141.7,20.3L141.2,20.4L140.7,20.9L139.7,21.2L138.6,21.3L137.7,21.7L136.6,21.8L136.3,22L137.1,22.2L136.7,22.4L134.4,22.7L133.8,22.2L132.3,22.1L132,21.8L131.4,21.6L132.4,21.1L133.5,21.1L134.8,20.4L135.1,20.4L135.2,21.1L136,20.4L135.9,20.1L136.9,19.8L137.9,19.8L138.7,19.5L139.1,19.1L140,18.7L140.7,18.9L140.7,19L141.9,18.8L141.4,18.6L140.4,18.4L140.6,18L141.3,17.7L141.7,17.4L142.3,17.2L143.1,17.1L143.4,17.2L144.1,17.2L145.2,17L145.4,17.1L145.1,17.4L146.3,17L146.9,17L147.5,17L148.2,17.1L148.2,17.2L149.2,17.2L149.6,17.3ZM162.3,17.7L164.6,18.3L164.3,18.6L163,18.7L161.1,18.9L161.3,19L162.6,18.9L163.8,19.2L164.3,18.9L164.8,19.2L164.7,19.7L165.5,19.3L167,18.9L168.2,19L168.8,19.3L167.9,20.1L167.8,20.3L166.6,20.6L167.6,20.6L167.7,21.3L167.7,22L168.5,23.1L169.6,23.8L168.7,23.9L168,24.3L169.4,24.8L170.1,25.8L169.5,25.9L170.9,26.9L169.5,27.1L170.5,27.5L170.5,27.9L169.6,28.2L168.5,28.2L169.8,29.1L170.1,29.6L168.3,29.2L168.1,29.5L169.2,29.8L170.6,30.5L171.4,31.6L170,31.9L169.1,31.4L167.8,30.7L168.4,31.6L167.6,32.4L169.9,32.3L171.2,32.4L169.2,33.7L166.9,34.9L164.2,35.4L163.1,35.4L162.2,36L160.8,37.6L158.6,38.7L157.8,38.7L156.4,39.1L154.8,39.4L153.7,40.4L153.5,41.5L152.8,42.6L150.6,43.8L150.9,45.1L150.1,46.5L149.1,48.2L147.3,48.2L145.7,46.8L143.2,46.6L142.4,45.6L142.1,44L140.9,41.8L140.8,40.7L141.3,39.3L140.6,37.8L141.5,36.8L141.1,36.2L142.9,34.6L144.6,34.1L145.2,33.6L145.9,32.5L144.7,32.9L144.1,33.1L143.2,33.2L142.4,32.7L142.9,31.8L143.7,31.1L144.4,31.1L145.9,31.6L145,30.7L144.5,30.2L143.6,30.3L143.2,29.9L144.9,28.8L144.7,28.3L144.8,27.4L145,26.1L144.6,25.6L145,25.1L144.1,24.3L143,24.1L141.5,24L140.1,23.9L139.9,23.4L140,22.7L141.7,22.5L142.7,22.6L141.1,22.1L140.7,21.5L141.4,21.2L143.7,21L145.9,20.7L146.5,20.4L146,19.9L146.8,19.6L149,19.2L149.6,19.1L150,18.7L151.1,18.6L152.3,18.6L153.3,18.6L153.4,18.9L154.8,18.5L155.3,18.9L155.8,19L156.4,19.3L155.8,18.8L156.1,18.4L157.4,17.9L158.5,18L158.9,17.7L160,17.6Z","grat":"M138.4,11.6L149.1,11.2L160,13.3M98.9,23L113.4,17.6L128.6,14.2L144.2,12.7L160,13.3M21.7,218.2L16.9,204.8L13.4,191L11.3,177L10.6,162.7L11.3,148.3L13.4,134L17,120L21.9,106.4L28.2,93.2L35.8,80.7L44.5,69L54.3,58.2L65.2,48.3L77,39.5L89.6,31.9L102.8,25.5L116.6,20.4L130.8,16.6L145.4,14.3L160,13.3M117.3,303.8L100.4,297L84.8,287L70.9,274L59.1,258.5L49.7,240.7L42.8,221L38.5,199.9L37.1,177.9L37.7,163.4L39.5,148.9L42.4,134.5L46.5,120.4L51.6,106.6L57.8,93.4L65,80.7L73.1,68.9L82.1,57.9L91.7,47.9L102.1,39L113,31.3L124.3,24.8L136,19.6L148,15.7L160,13.3M145.5,309.3L140.4,308.3L135.4,306.2L126,299L117.6,287.9L110.3,273.3L104.4,255.5L100.1,234.9L97.5,212.3L96.6,188.3L97.8,159.1L101.4,130L107.3,102L115.2,76.2L124.8,53.7L135.7,35.3L147.6,21.6L153.8,16.8L160,13.3M162.7,310L164.9,307.8L166.8,301.3L170.2,276.4L172.3,238.2L173.1,191.1L172.1,132.6L169.2,78.2L165,36.3L162.6,22.2L160,13.3M181.6,308.4L188.4,306.9L195,304.4L207.4,296.5L218.5,285L228,270L235.8,252L241.4,231.6L244.9,209.2L246,185.5L244.4,156.4L239.5,127.5L231.5,99.7L220.8,74.3L207.8,52.2L200.6,42.6L192.9,34.2L185,27L176.8,21.1L168.4,16.5L160,13.3M221.1,297L237.2,288.2L251.9,277L264.8,263.6L275.7,248.2L284.4,231.1L290.8,212.7L294.7,193.3L295.9,173.2L295.3,158.7L293.3,144.3L290.1,130L285.6,116L279.9,102.5L273,89.4L265.1,77.1L256.1,65.6L246.2,54.9L235.5,45.3L224.1,36.8L212,29.5L199.5,23.4L186.5,18.7L173.3,15.3L160,13.3M298.3,101.8L288.4,82.6L275.8,65.1L260.6,49.7L243.2,36.6L224.1,26.3L203.5,18.8L182,14.5L160,13.3M202.7,16.2L192.3,13.7L181.7,12.4L170.9,12.3L160,13.3M174.5,10.7L167.3,11L160,13.3M157.3,10L158.6,10.8L160,13.3M90.3,292.8L90.7,293L92,293.7L93.5,294.3L95,294.9L96.7,295.4L98.6,296L100.5,296.6L102.5,297.1L104.7,297.6L107,298.1L109.3,298.6L111.8,299L114.3,299.4L117,299.8L119.7,300.2L122.5,300.6L125.4,300.9L128.3,301.2L131.3,301.5L134.3,301.7L137.4,301.9L140.6,302.1L143.8,302.3L147,302.4L150.2,302.5L153.5,302.6L156.7,302.6L160,302.7L163.3,302.6L166.5,302.6L169.8,302.5L173,302.4L176.2,302.3L179.4,302.1L182.6,301.9L185.7,301.7L188.7,301.5L191.7,301.2L194.6,300.9L197.5,300.6L200.3,300.2L203,299.8L205.7,299.4L208.2,299L210.7,298.6L213,298.1L215.3,297.6L217.5,297.1L219.5,296.6L221.4,296L223.3,295.4L225,294.9L226.5,294.3L228,293.7L229.3,293L229.7,292.8M31.1,236.7L31.2,236.9L32.1,238.1L33.2,239.2L34.5,240.4L36.1,241.5L37.9,242.6L40,243.7L42.3,244.8L44.8,245.8L47.5,246.9L50.4,247.9L53.6,248.9L56.9,249.8L60.5,250.7L64.2,251.6L68.1,252.5L72.2,253.3L76.5,254.1L80.9,254.8L85.5,255.5L90.2,256.1L95,256.8L100,257.3L105.1,257.8L110.3,258.3L115.6,258.7L120.9,259.1L126.4,259.4L131.9,259.7L137.4,260L143,260.1L148.7,260.3L154.3,260.3L160,260.4L165.7,260.3L171.3,260.3L177,260.1L182.6,260L188.1,259.7L193.6,259.4L199.1,259.1L204.4,258.7L209.7,258.3L214.9,257.8L220,257.3L225,256.8L229.8,256.1L234.5,255.5L239.1,254.8L243.5,254.1L247.8,253.3L251.9,252.5L255.8,251.6L259.5,250.7L263.1,249.8L266.4,248.9L269.6,247.9L272.5,246.9L275.2,245.8L277.7,244.8L280,243.7L282.1,242.6L283.9,241.5L285.5,240.4L286.8,239.2L287.9,238.1L288.8,236.9L288.9,236.7M10,160L10.1,161.4L10.6,162.7L11.3,164.1L12.3,165.4L13.6,166.8L15.1,168.1L16.9,169.4L19,170.7L21.4,171.9L24.1,173.2L26.9,174.4L30.1,175.6L33.5,176.8L37.1,177.9L41,179L45.1,180L49.4,181.1L53.9,182.1L58.7,183L63.6,183.9L68.7,184.7L74,185.5L79.4,186.3L85,187L90.7,187.7L96.6,188.3L102.6,188.8L108.7,189.3L114.9,189.7L121.2,190.1L127.5,190.4L134,190.7L140.4,190.9L146.9,191.1L153.5,191.2L160,191.2L166.5,191.2L173.1,191.1L179.6,190.9L186,190.7L192.5,190.4L198.8,190.1L205.1,189.7L211.3,189.3L217.4,188.8L223.4,188.3L229.3,187.7L235,187L240.6,186.3L246,185.5L251.3,184.7L256.4,183.9L261.3,183L266.1,182.1L270.6,181.1L274.9,180L279,179L282.9,177.9L286.5,176.8L289.9,175.6L293.1,174.4L295.9,173.2L298.6,171.9L301,170.7L303.1,169.4L304.9,168.1L306.4,166.8L307.7,165.4L308.7,164.1L309.4,162.7L309.9,161.4L310,160L310,160M31.1,83.3L30.6,84.3L30.2,85.5L30.1,86.6L30.2,87.8L30.6,89L31.2,90.2L32.1,91.3L33.2,92.5L34.5,93.6L36.1,94.8L37.9,95.9L40,97L42.3,98.1L44.8,99.1L47.5,100.1L50.4,101.2L53.6,102.1L56.9,103.1L60.5,104L64.2,104.9L68.1,105.7L72.2,106.6L76.5,107.3L80.9,108.1L85.5,108.8L90.2,109.4L95,110L100,110.6L105.1,111.1L110.3,111.6L115.6,112L120.9,112.4L126.4,112.7L131.9,113L137.4,113.2L143,113.4L148.7,113.5L154.3,113.6L160,113.6L165.7,113.6L171.3,113.5L177,113.4L182.6,113.2L188.1,113L193.6,112.7L199.1,112.4L204.4,112L209.7,111.6L214.9,111.1L220,110.6L225,110L229.8,109.4L234.5,108.8L239.1,108.1L243.5,107.3L247.8,106.6L251.9,105.7L255.8,104.9L259.5,104L263.1,103.1L266.4,102.1L269.6,101.2L272.5,100.1L275.2,99.1L277.7,98.1L280,97L282.1,95.9L283.9,94.8L285.5,93.6L286.8,92.5L287.9,91.3L288.8,90.2L289.4,89L289.8,87.8L289.9,86.6L289.8,85.5L289.4,84.3L288.9,83.3M90.3,27.2L89.5,27.6L88.5,28.2L87.6,28.9L86.8,29.6L86.1,30.2L85.6,30.9L85.3,31.6L85.1,32.3L85,32.9L85.1,33.6L85.3,34.3L85.6,35L86.1,35.6L86.8,36.3L87.6,37L88.5,37.6L89.5,38.3L90.7,38.9L92,39.5L93.5,40.1L95,40.7L96.7,41.3L98.6,41.9L100.5,42.4L102.5,43L104.7,43.5L107,44L109.3,44.4L111.8,44.9L114.3,45.3L117,45.7L119.7,46.1L122.5,46.4L125.4,46.8L128.3,47.1L131.3,47.3L134.3,47.6L137.4,47.8L140.6,48L143.8,48.2L147,48.3L150.2,48.4L153.5,48.5L156.7,48.5L160,48.5L163.3,48.5L166.5,48.5L169.8,48.4L173,48.3L176.2,48.2L179.4,48L182.6,47.8L185.7,47.6L188.7,47.3L191.7,47.1L194.6,46.8L197.5,46.4L200.3,46.1L203,45.7L205.7,45.3L208.2,44.9L210.7,44.4L213,44L215.3,43.5L217.5,43L219.5,42.4L221.4,41.9L223.3,41.3L225,40.7L226.5,40.1L228,39.5L229.3,38.9L230.5,38.3L231.5,37.6L232.4,37L233.2,36.3L233.9,35.6L234.4,35L234.7,34.3L234.9,33.6L235,32.9L234.9,32.3L234.7,31.6L234.4,30.9L233.9,30.2L233.2,29.6L232.4,28.9L231.5,28.2L230.5,27.6L229.7,27.2","line":"M153.6,309.9L152.2,309.6L149.7,308.3L147.3,305.9L145,302.3L142.8,297.7L140.7,292L138.8,285.4L137,277.7L135.4,269.2L134,259.8L132.8,249.7L131.8,238.9L131,227.5L130.4,215.6L130.1,203.2L130,190.6L130.1,177.7L130.4,164.6L131,151.5L131.8,138.5L132.8,125.7L134,113.1L135.4,100.9L137,89.1L138.8,77.9L140.7,67.2L142.8,57.3L145,48.2L147.3,39.9L149.7,32.6L152.2,26.2L154.8,20.8L157.4,16.5","east":"M145,302.3L141,293.1L137.6,280.5L134.7,264.8L132.5,246.5L130.1,203.9L130.7,156.8L172.7,157.3L173,204.4L172,247L169.8,280.9L166.5,302.6Z","west":"M21.7,218.2L14.7,196.8L11.1,174.6L11,152L14.4,129.6L27,133.2L52.4,139.3L88.1,147.4L130.7,156.8L130.1,203.9L132.5,246.5L134.7,264.8L137.6,280.5L141,293.1L145,302.3L133.6,303.7L122.6,303.4L111.9,301.6L101.8,298.2L101.8,298.2L97,296.1L92.3,293.8L87.7,291.4L83.1,288.8L78.7,286L74.3,283.1L70.1,280.1L65.9,276.8L61.9,273.5L58,270L54.2,266.4L50.6,262.6L47.1,258.7L43.7,254.7L40.5,250.6L37.4,246.4L34.4,242.1L31.6,237.6L29,233.1L26.5,228.5L24.2,223.8L22.1,219Z","pts":{"port":[212.5,88.1],"spain":[220,86.1],"brazil":[116.8,214.8],"europe":[228.2,61.8],"africa":[274.5,167.2],"sam":[85.4,223.8],"line1":[133.5,118.1],"line2":[137,277.7]}};
+function PX(lon,lat){return [(lon+82.5)*8,(13.5-lat)*8]}
+function polyPx(pts){return 'M'+pts.map(function(p){var q=PX(p[0],p[1]);return q[0].toFixed(1)+','+q[1].toFixed(1)}).join('L')+'Z'}
+function ell(cx,cy,rx,ry){var a=[];for(var i=0;i<20;i++){var t=i/20*Math.PI*2;a.push([cx+rx*Math.cos(t),cy+ry*Math.sin(t)])}return a}
+var ALLD=Object.keys(CT).map(function(k){return CT[k].d}).join('');
+var tags=function(a){return '<div class="tags">'+a.map(function(t){return '<span class="tag">'+t+'</span>'}).join('')+'</div>'};
+
+/* ================= ДАННИ ЗА ДЪРЖАВИТЕ ================= */
+var GRPC={andes:'#E39A4B',plain:'#5AA9B3'};
+var GRPN={andes:'Страни в Андите',plain:'Равнинна и платовидна част'};
+var LNGC={es:'#E8C14A',pt:'#5DAA57',en:'#5B84C9',nl:'#E27A3F',fr:'#9B6BC9'};
+var LNGN={es:'испански',pt:'португалски',en:'английски',nl:'холандски',fr:'френски'};
+var COUNTRIES=[
+ {id:'VE',n:'Венецуела',cap:'Каракас',lk:'es',grp:'andes',sea:1,lab:[-66.3,7.6],note:'Страна в Андите, на север. Има излаз на Карибско море.'},
+ {id:'CO',n:'Колумбия',cap:'Богота',lk:'es',grp:'andes',sea:1,lab:[-73.2,3.4],note:'Втора по население в континента (след Бразилия). Богота е в Андите, на около 2600 m надморска височина.'},
+ {id:'EC',n:'Еквадор',cap:'Кито',lk:'es',grp:'andes',sea:1,lab:[-78.6,-1.6],note:'Името означава „екватор“ — страната лежи на екватора.'},
+ {id:'PE',n:'Перу',cap:'Лима',lk:'es',grp:'andes',sea:1,lab:[-74.6,-8.8],note:'Трета по площ в континента. Освен испански официални са кечуа и аймара.'},
+ {id:'BO',n:'Боливия',cap:'Сукре',cap2:'Ла Пас',lk:'es',grp:'andes',sea:0,lab:[-64.6,-16.8],note:'Без излаз на море. Има две столици: Сукре е конституционната, а в Ла Пас е седалището на правителството. Освен испански има и официални местни езици.'},
+ {id:'CL',n:'Чили',cap:'Сантяго',lk:'es',grp:'andes',sea:1,lab:[-77.5,-37],tgt:[-72.3,-36.5],anch:'end',small:1,note:'Дълга и тясна страна по тихоокеанския бряг. Парламентът заседава във Валпараисо.'},
+ {id:'GY',n:'Гаяна',cap:'Джорджтаун',lk:'en',grp:'plain',sea:1,lab:[-59.8,9.9],small:1,note:'Единствената страна на континента с официален английски език.'},
+ {id:'SR',n:'Суринам',cap:'Парамарибо',lk:'nl',grp:'plain',sea:1,lab:[-55.6,8.6],small:1,note:'Официален език е холандският.'},
+ {id:'GF',n:'Френска Гвиана',cap:'Кайен',terr:1,owner:'Франция',lk:'fr',grp:'plain',sea:1,lab:[-50.8,6.9],anch:'start',small:1,note:'Територия: чуждо владение на Франция, не е независима държава. Кайен е главният ѝ град.'},
+ {id:'BR',n:'Бразилия',cap:'Бразилия',lk:'pt',grp:'plain',sea:1,lab:[-53,-10.5],note:'Най-голямата по площ и по население. Единствената с официален португалски. Столицата е Бразилия, не Рио де Жанейро.'},
+ {id:'PY',n:'Парагвай',cap:'Асунсион',lk:'es',grp:'plain',sea:0,lab:[-58.4,-23.3],note:'Без излаз на море. Освен испански официален език е и гуарани.'},
+ {id:'UY',n:'Уругвай',cap:'Монтевидео',lk:'es',grp:'plain',sea:1,lab:[-50.6,-35.6],anch:'start',small:1,note:'Малка страна на брега на Атлантическия океан.'},
+ {id:'AR',n:'Аржентина',cap:'Буенос Айрес',lk:'es',grp:'plain',sea:1,lab:[-66,-37.5],note:'Втора по площ и трета по население. Родина на тангото.'},
+ {id:'FK',n:'Фолклендски острови',cap:'Стенли',terr:1,owner:'Великобритания',lk:'en',grp:'plain',sea:0,island:1,lab:[-59.3,-50],small:1,note:'Територия: чуждо владение на Великобритания. Остров в Атлантическия океан.'}
+];
+function cById(id){return COUNTRIES.filter(function(c){return c.id===id})[0]}
+var HATCH=[[[-74,-3],[-70,-1],[-66,1.5],[-62,2.5],[-57,2],[-54,0],[-55,-4],[-58,-8],[-64,-9.5],[-70,-10],[-74,-8]],[[-76,-10],[-72,-14],[-69,-17],[-66,-21],[-66,-18],[-68,-14],[-72,-10]],[[-60,-20],[-56,-21],[-55,-26],[-58,-27],[-61,-24]]];
+
+/* ================= ПОЛИТИЧЕСКА КАРТА ================= */
+var polMode='group',polSel=null;
+function fillOf(c){return polMode==='group'?GRPC[c.grp]:LNGC[c.lk]}
+function drawPol(){
+  var s='<rect width="390" height="560" fill="#CFE6EE"/><defs><clipPath id="landClipP"><path d="'+ALLD+'"/></clipPath><pattern id="hatchP" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="6" height="6" fill="rgba(122,72,30,.10)"/><rect width="2.4" height="6" fill="rgba(122,72,30,.70)"/></pattern></defs>';
+  COUNTRIES.forEach(function(c){s+='<path class="ctry'+(polSel===c.id?' sel':'')+'" data-c="'+c.id+'" d="'+CT[c.id].d+'" fill="'+fillOf(c)+'"/>'});
+  if(polMode==='lang'){s+='<g clip-path="url(#landClipP)" pointer-events="none">'+HATCH.map(function(p){return '<path d="'+polyPx(p)+'" fill="url(#hatchP)"/>'}).join('')+'</g>'}
+  /* етикети */
+  COUNTRIES.forEach(function(c){var p=PX(c.lab[0],c.lab[1]),a=c.anch||'middle';
+    if(c.small){var q=c.tgt?PX(c.tgt[0],c.tgt[1]):[CT[c.id].cx,CT[c.id].cy];s+='<line x1="'+q[0]+'" y1="'+q[1]+'" x2="'+p[0].toFixed(1)+'" y2="'+(p[1]).toFixed(1)+'" stroke="#1F2A30" stroke-width=".7" pointer-events="none"/>'}
+    s+='<text class="cl" x="'+p[0].toFixed(1)+'" y="'+p[1].toFixed(1)+'" text-anchor="'+a+'">'+(c.id==='FK'?'Фолкленд':c.n)+'</text>';
+    if(c.small){var rx=a==='end'?p[0]-62:a==='start'?p[0]-2:p[0]-31;s+='<rect class="chit" data-c="'+c.id+'" x="'+rx.toFixed(1)+'" y="'+(p[1]-13).toFixed(1)+'" width="64" height="20" fill="#000" opacity="0"/>'}});
+  /* хит-кръгове за малките */
+  COUNTRIES.forEach(function(c){if(c.small||c.id==='UY'){s+='<circle class="chit" data-c="'+c.id+'" cx="'+CT[c.id].cx+'" cy="'+CT[c.id].cy+'" r="'+(c.id==='FK'||c.id==='UY'?19:14)+'" fill="#000" opacity="0"/>'}});
+  $('#svgPol').innerHTML=s;
+  $$('#svgPol .ctry, #svgPol .chit').forEach(function(e){e.addEventListener('click',function(){showCountry(e.getAttribute('data-c'))})});
+  /* легенда */
+  var L=polMode==='group'?Object.keys(GRPC).map(function(k){return '<span><i class="sq" style="background:'+GRPC[k]+'"></i>'+GRPN[k]+'</span>'}):Object.keys(LNGC).map(function(k){return '<span><i class="sq" style="background:'+LNGC[k]+'"></i>'+LNGN[k]+'</span>'}).concat(['<span><i class="sq hatch"></i>местни езици (приблизително)</span>']);
+  $('#polLegend').innerHTML=L.join('');
+  $$('#polChips .chip i').forEach(function(i){var c=cById(i.parentNode.getAttribute('data-c'));i.style.background=fillOf(c)});
+}
+function showCountry(id){
+  var c=cById(id);polSel=id;
+  $$('#svgPol .ctry').forEach(function(e){e.classList.toggle('sel',e.getAttribute('data-c')===id)});
+  var sel=$('#svgPol .ctry[data-c="'+id+'"]');if(sel&&sel.parentNode)sel.parentNode.appendChild(sel);
+  $$('#polChips .chip').forEach(function(e){e.classList.toggle('active',e.getAttribute('data-c')===id)});
+  var capTxt=c.cap2?c.cap+' (конституционна) и '+c.cap2+' (седалище на правителството)':c.cap;
+  var seaTxt=c.island?'остров — заобиколен от океана':c.sea?'да':'<b>не</b>';
+  $('#polInfo').innerHTML='<h3>'+c.n+(c.terr?' <small style="font-weight:400;color:var(--muted)">територия · '+c.owner+'</small>':'')+'</h3>'+
+   '<p style="margin:0 0 6px"><b>'+(c.terr?'Главен град':'Столица')+':</b> '+capTxt+'<br><b>Официален език:</b> '+LNGN[c.lk]+'<br><b>Група:</b> '+GRPN[c.grp]+'<br><b>Излаз на море:</b> '+seaTxt+'</p><p style="margin:0">'+c.note+'</p>';
+  S.x.pol=S.x.pol||{};
+  if(!S.x.pol[id]){S.x.pol[id]=1;save();$$('#polChips .chip[data-c="'+id+'"]').forEach(function(e){e.classList.add('seen')});addXP(3);
+    if(COUNTRIES.every(function(k){return S.x.pol[k.id]})){award('cart');setTimeout(function(){giveClue(2)},400)}}
+}
+function initPol(){
+  $('#polChips').innerHTML=COUNTRIES.map(function(c){return '<button class="chip" data-c="'+c.id+'"><i></i>'+c.n+'</button>'}).join('');
+  $$('#polChips .chip').forEach(function(e){e.addEventListener('click',function(){showCountry(e.getAttribute('data-c'))})});
+  drawPol();
+  $$('#modeBtns button').forEach(function(b){b.addEventListener('click',function(){polMode=b.getAttribute('data-m');$$('#modeBtns button').forEach(function(x){x.classList.toggle('act',x===b)});drawPol();S.x.polLang=S.x.polLang||(polMode==='lang'?1:0);if(polMode==='lang'){S.x.polLang=1;save()}})});
+}
+
+/* ================= КАРТА НА ГЪСТОТАТА ================= */
+var DC={lo:'#FFF3B0',mid:'#F0C050',c25:'#E8803A',c50:'#C93C20',c100:'#7A1F6E',none:'#B9B6AE'};
+var DPLACES={
+ bogota:{n:'Богота',p:[-74.1,4.7],lab:'r',t:'Богота (Колумбия) е многомилионен град — с околностите над 10 млн. души. Намира се в Андите, на около 2600 m надморска височина.'},
+ lima:{n:'Лима',p:[-77,-12],lab:'l',t:'Лима (Перу) е на тихоокеанския бряг и е многомилионен град — с околностите над 10 млн. души. Около него е гъсто населено, но навътре в страната пустинята и Андите са рядко населени.'},
+ rio:{n:'Рио де Жанейро',p:[-43.2,-22.9],lab:'b',t:'Рио де Жанейро (Бразилия) е многомилионен град на атлантическия бряг. Известен е с карнавала и със самбата.'},
+ sp:{n:'Сао Пауло',p:[-46.6,-23.5],lab:'l',t:'Сао Пауло (Бразилия) е най-големият град в Южна Америка. Живеят над 10 млн. души (с околностите — много повече).'},
+ ba:{n:'Буенос Айрес',p:[-58.4,-34.6],lab:'l',t:'Буенос Айрес е столицата на Аржентина — многомилионен град на брега на река Ла Плата. Тук е родината на тангото.'},
+ amazon:{n:'Амазония',p:[-64,-4],t:'Амазония е рядко населена, защото гъстата влажна гора е трудно проходима, наводнява се често и има малко пътища. Много от жителите ѝ са индианци.'},
+ andes:{n:'Високите Анди',p:[-68.2,-22.5],t:'Високите части на Андите са рядко населени, защото там е студено, въздухът е рядък и склоновете са много стръмни.'},
+ patagonia:{n:'Патагония',p:[-69,-45],t:'Патагония е рядко населена, защото е суха, студена и много ветровита. Вали малко, а почвите не са плодородни.'}
+};
+var DLEG=[['над 100',DC.c100],['50–100',DC.c50],['25–50',DC.c25],['1–25',DC.mid],['под 1',DC.lo],['ненаселени',DC.none]];
+function drawDens(){
+  var s='<rect width="390" height="560" fill="#CFE6EE"/><defs><clipPath id="landClipD"><path d="'+ALLD+'"/></clipPath></defs><path d="'+ALLD+'" fill="'+DC.mid+'"/><g clip-path="url(#landClipD)">';
+  function P(pts,c){s+='<path d="'+polyPx(pts)+'" fill="'+c+'"/>'}
+  /* рядко населени */
+  P(HATCH[0],DC.lo);
+  P([[-72,-39],[-65,-39],[-62,-41],[-65,-46],[-67,-50],[-68,-53],[-72,-53],[-73,-47],[-72,-42]],DC.lo);
+  P([[-70,-17],[-66,-18],[-67,-23],[-69.5,-28],[-70.5,-23]],DC.lo);
+  P([[-70.2,-19],[-68.7,-19],[-67.6,-22.5],[-68.3,-27],[-70.2,-27],[-70.5,-22.5]],DC.none);
+  P([[-75.5,-46.5],[-73.2,-46],[-72.8,-49.5],[-74,-52],[-75.4,-50]],DC.none);
+  /* 25–50 */
+  [[-45,-22.5,5,2.6],[-59,-34,3.5,2.8],[-74,5,2.4,2.6],[-77,-12,1.8,1.6],[-37.5,-8,2.6,5],[-67,10.3,4,1.4],[-71,-34,1.2,3.5],[-56.1,-34.8,1.4,1.1],[-78.5,-1,1.5,2.2],[-75.5,6.2,1.4,1.6]].forEach(function(e){P(ell(e[0],e[1],e[2],e[3]),DC.c25)});
+  /* 50–100 */
+  [[-46.4,-23.3,2.2,1.4],[-58.5,-34.7,1.5,1.2],[-74.1,4.7,1,.9],[-77,-12,.9,.8],[-70.7,-33.5,.8,.7]].forEach(function(e){P(ell(e[0],e[1],e[2],e[3]),DC.c50)});
+  /* над 100 */
+  [[-46.6,-23.5,.7,.5],[-43.2,-22.9,.7,.5],[-58.4,-34.6,.6,.5],[-74.1,4.65,.4,.35],[-77,-12,.4,.35]].forEach(function(e){P(ell(e[0],e[1],e[2],e[3]),DC.c100)});
+  s+='</g><path d="'+ALLD+'" fill="none" stroke="#3A2E1A" stroke-width=".9" stroke-linejoin="round"/>';
+  /* хит-области на рядко населените */
+  s+='<g fill="#000" opacity="0">';
+  s+='<path class="dhit" data-d="amazon" d="'+polyPx(HATCH[0])+'"/>';
+  s+='<path class="dhit" data-d="patagonia" d="'+polyPx([[-72,-39],[-65,-39],[-62,-41],[-65,-46],[-67,-50],[-68,-53],[-72,-53],[-73,-47],[-72,-42]])+'"/>';
+  s+='<path class="dhit" data-d="andes" d="'+polyPx([[-70.4,-17],[-66,-18],[-66.5,-23],[-69.3,-29],[-70.6,-23]])+'"/></g>';
+  /* градове */
+  ['bogota','lima','rio','sp','ba'].forEach(function(k){var d=DPLACES[k],p=PX(d.p[0],d.p[1]),l=d.lab==='l'||d.lab==='b',dy=k==='sp'?-6:d.lab==='b'?17:3,dx=d.lab==='b'?4:(l?-6:6);
+    s+='<g class="dcity" data-d="'+k+'"><circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="3.4" fill="#1F2A30" stroke="#fff" stroke-width="1.2"/><text class="cl" x="'+(p[0]+dx).toFixed(1)+'" y="'+(p[1]+dy).toFixed(1)+'" text-anchor="'+(l?'end':'start')+'">'+d.n+'</text><circle class="dhit" data-d="'+k+'" cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="15" fill="#000" opacity="0"/></g>'});
+  /* етикети на рядко населените */
+  [['amazon','АМАЗОНИЯ'],['patagonia','ПАТАГОНИЯ']].forEach(function(a){var p=PX(DPLACES[a[0]].p[0],DPLACES[a[0]].p[1]);s+='<text x="'+p[0].toFixed(1)+'" y="'+p[1].toFixed(1)+'" text-anchor="middle" class="cl" style="font-size:8px;letter-spacing:.06em" pointer-events="none">'+a[1]+'</text>'});
+  var pa=PX(-68.2,-22.5);s+='<text x="'+(pa[0]+22).toFixed(1)+'" y="'+pa[1].toFixed(1)+'" class="cl" style="font-size:8px" pointer-events="none">Анди</text>';
+  $('#svgDens').innerHTML=s;
+  $$('#svgDens .dhit').forEach(function(e){e.addEventListener('click',function(ev){ev.stopPropagation();showDens(e.getAttribute('data-d'))})});
+  $('#densLegend').innerHTML='<b style="width:100%;font-weight:600">души на кв. км</b>'+DLEG.map(function(l){return '<span><i class="sq" style="background:'+l[1]+'"></i>'+l[0]+'</span>'}).join('');
+  $('#densChips').innerHTML=Object.keys(DPLACES).map(function(k){return '<button class="chip" data-d="'+k+'">'+(DPLACES[k].lab?'📍 ':'🌿 ')+DPLACES[k].n+'</button>'}).join('');
+  $$('#densChips .chip').forEach(function(e){e.addEventListener('click',function(){showDens(e.getAttribute('data-d'))})});
+}
+function showDens(k){
+  var d=DPLACES[k];
+  $$('#densChips .chip').forEach(function(e){e.classList.toggle('active',e.getAttribute('data-d')===k)});
+  $('#densInfo').innerHTML='<h3>'+d.n+'</h3><p style="margin:0">'+d.t+'</p>';
+  S.x.dens=S.x.dens||{};
+  if(!S.x.dens[k]){S.x.dens[k]=1;save();$$('#densChips .chip[data-d="'+k+'"]').forEach(function(e){e.classList.add('seen')});addXP(3);
+    if(Object.keys(DPLACES).every(function(x){return S.x.dens[x]}))award('demo')}
+}
+
+/* ================= ДИАГРАМИ С ЧОВЕЧЕТА ================= */
+function personSvg(i,fill){var x=i*33+16.5;return '<g class="pp" style="--d:'+(i*90)+'ms"><circle cx="'+x+'" cy="14" r="8" fill="'+fill+'"/><path d="M'+(x-11)+' 56 L'+(x-11)+' 34 Q'+(x-11)+' 26 '+(x-3)+' 26 L'+(x+3)+' 26 Q'+(x+11)+' 26 '+(x+11)+' 34 L'+(x+11)+' 56 Z" fill="'+fill+'"/></g>'}
+function drawPeople(id,n,part,on){
+  var s='<defs><linearGradient id="gp'+id+'"><stop offset="70%" stop-color="#1B6F75"/><stop offset="70%" stop-color="#D9D2C0"/></linearGradient></defs>';
+  for(var i=0;i<10;i++){var f='#D9D2C0';if(on){if(i<n)f='#1B6F75';else if(part&&i===n)f='url(#gp'+id+')'}s+=personSvg(i,f)}
+  $('#'+id).innerHTML=s;
+}
+function initCharts(){
+  drawPeople('peopleCoast',8,false,false);drawPeople('peopleCity',8,true,false);
+  var b=$('#chartBtn');
+  b.addEventListener('click',function(){
+    drawPeople('peopleCoast',8,false,true);drawPeople('peopleCity',8,true,true);
+    $$('.people').forEach(function(s){s.classList.remove('anim');void s.getBoundingClientRect();s.classList.add('anim')});
+    b.textContent='↻ Покажи пак';
+    if(!S.x.charts){S.x.charts=1;save();addXP(5)}
+  });
+  if(S.x.charts){drawPeople('peopleCoast',8,false,true);drawPeople('peopleCity',8,true,true);b.textContent='↻ Покажи пак'}
+}
+
+/* ================= ДОГОВОРЪТ ОТ 1494 Г. ================= */
+var TR={
+ 1:['Нови земи','През 1492 г. Колумб достига Америка. Двете големи морски държави в Европа — Испания и Португалия — искат да владеят новите земи.'],
+ 2:['Линията','През 1494 г. двете държави се договарят да поделят земите. Прекарват условна линия от север на юг през Атлантическия океан, на около 46° западна дължина. Земите на запад са за Испания, земите на изток — за Португалия.'],
+ 3:['Две владения','Източната „издутина“ на Южна Америка се оказва на изток от линията — при Португалия. Това е началото на Бразилия. Останалата част на континента е испанска. Затова днес в Бразилия се говори португалски, а в съседните ѝ страни — испански.']
+};
+function drawGlobe(step){
+  var s='<defs><clipPath id="gSph"><path d="'+GL.sphere+'"/></clipPath><clipPath id="gW"><path d="'+GL.west+'"/></clipPath><clipPath id="gE"><path d="'+GL.east+'"/></clipPath></defs>';
+  s+='<path d="'+GL.sphere+'" fill="#9CCBE0" stroke="#2C5D73" stroke-width="1.2"/><path d="'+GL.grat+'" fill="none" stroke="#fff" stroke-width=".5" opacity=".5"/>';
+  s+='<path d="'+GL.land+'" fill="#EADFC0" stroke="#7A6A45" stroke-width=".6"/>';
+  if(step>=3){s+='<g clip-path="url(#gW)"><path d="'+GL.land+'" fill="#6FAE5A" stroke="#3E6E31" stroke-width=".6"/></g><g clip-path="url(#gE)"><path d="'+GL.land+'" fill="#F08A24" stroke="#A45A10" stroke-width=".6"/></g>'}
+  var F='font-family="Rubik,system-ui,sans-serif" font-weight="700"';
+  var p=GL.pts;
+  s+='<text x="'+(p.europe[0]-12)+'" y="'+(p.europe[1]-22)+'" '+F+' font-size="9" fill="#5B4A25">ЕВРОПА</text>';
+  s+='<text x="'+(p.africa[0]-34)+'" y="'+p.africa[1]+'" '+F+' font-size="9" fill="#5B4A25">АФРИКА</text>';
+  s+='<text x="'+(p.sam[0]-28)+'" y="'+(p.sam[1]-8)+'" '+F+' font-size="9" fill="#1F2A30">ЮЖНА</text><text x="'+(p.sam[0]-28)+'" y="'+(p.sam[1]+2)+'" '+F+' font-size="9" fill="#1F2A30">АМЕРИКА</text>';
+  s+='<circle cx="'+p.port[0]+'" cy="'+p.port[1]+'" r="2.6" fill="#F08A24" stroke="#fff"/><circle cx="'+p.spain[0]+'" cy="'+p.spain[1]+'" r="2.6" fill="#6FAE5A" stroke="#fff"/>';
+  s+='<text x="'+(p.port[0]-4)+'" y="'+(p.port[1]+16)+'" text-anchor="end" '+F+' font-size="7.5" fill="#A45A10">Португалия</text><text x="'+(p.spain[0]+2)+'" y="'+(p.spain[1]+24)+'" '+F+' font-size="7.5" fill="#2F6B1F">Испания</text>';
+  if(step>=2){s+='<path class="tline" d="'+GL.line+'" fill="none" stroke="#C62828" stroke-width="2.6" stroke-dasharray="6 3" stroke-linecap="round"/><text x="'+(p.line1[0]-8)+'" y="'+(p.line1[1]-8)+'" text-anchor="end" '+F+' font-size="8" fill="#C62828" stroke="#fff" stroke-width="2.4" paint-order="stroke">линия 1494 г.</text>'}
+  if(step>=3){s+='<text x="'+(p.brazil[0]+6)+'" y="'+(p.brazil[1]+6)+'" '+F+' font-size="8" fill="#7A3A00" stroke="#fff" stroke-width="2.4" paint-order="stroke">Бразилия</text>'}
+  $('#svgGlobe').innerHTML=s;
+}
+function initTreaty(){
+  drawGlobe(0);
+  $$('#treatyBtns button').forEach(function(b){b.addEventListener('click',function(){
+    var st=+b.getAttribute('data-s');
+    $$('#treatyBtns button').forEach(function(x){x.classList.toggle('act',x===b)});
+    drawGlobe(st);
+    $('#treatyInfo').innerHTML='<h3>'+st+'. '+TR[st][0]+'</h3><p style="margin:0">'+TR[st][1]+'</p>';
+    S.x.tr=S.x.tr||{};
+    if(!S.x.tr[st]){S.x.tr[st]=1;save();b.classList.add('seen');addXP(3);
+      if(S.x.tr[1]&&S.x.tr[2]&&S.x.tr[3]){award('hist');setTimeout(function(){giveClue(3)},400)}}
+  })});
+}
+
+/* ================= ОБЩ ДВИЖОК ЗА ИГРИ ================= */
+function makeGame(box,cfg){
+  var G={list:[],i:0,ok:0};
+  function start(){G.list=shuffle(cfg.items).slice(0,cfg.n||cfg.items.length);G.i=0;G.ok=0;render()}
+  function render(){
+    if(G.i>=G.list.length){
+      box.innerHTML='<div style="text-align:center"><div style="font-size:2.2rem">'+cfg.icon+'</div><p class="qtext">'+cfg.end+' От първи опит: <b>'+G.ok+' от '+G.list.length+'</b></p><button class="btn amber" id="gAgain'+cfg.id+'">Играй пак</button></div>';
+      $('#gAgain'+cfg.id,box).addEventListener('click',start);cfg.onEnd(G);return}
+    var q=G.list[G.i],tried=false,opts=cfg.fixed?q.o.map(function(_,i){return i}):shuffle(q.o.map(function(_,i){return i}));
+    box.innerHTML='<div class="stepdots">'+G.list.map(function(_,i){return '<i class="'+(i<G.i?'ok':i===G.i?'cur':'')+'"></i>'}).join('')+'</div>'+
+     '<div class="qhead"><span>Въпрос '+(G.i+1)+' от '+G.list.length+'</span></div><div class="gcard">'+q.big+'<small>'+q.sub+'</small></div><div class="opts'+(cfg.fixed?'':'')+'">'+
+     opts.map(function(i){return '<button class="opt" data-i="'+i+'">'+q.o[i]+'</button>'}).join('')+'</div><div class="fb"></div>';
+    $$('.opt',box).forEach(function(b){b.addEventListener('click',function(){
+      var i=+b.getAttribute('data-i'),fb=$('.fb',box),good=q.ok.indexOf(i)>-1;
+      if(good){b.classList.add('right');$$('.opt',box).forEach(function(x){x.disabled=true});
+        fb.className='fb ok';fb.innerHTML='<b>Точно така!</b> '+q.e+'<div style="margin-top:10px"><button class="btn small done" id="gN'+cfg.id+'">Напред →</button></div>';
+        if(!tried){G.ok++;addXP(cfg.xp||3)}
+        $('#gN'+cfg.id,box).addEventListener('click',function(){G.i++;render()})}
+      else{tried=true;b.classList.add('wrong');b.disabled=true;fb.className='fb bad';fb.innerHTML='<b>Опитай пак.</b> '+(q.hint||'')}
+    })});
+  }
+  G.start=start;return G;
+}
+var ALLCAPS=['Каракас','Богота','Кито','Лима','Сукре','Сантяго','Джорджтаун','Парамарибо','Бразилия','Асунсион','Монтевидео','Буенос Айрес','Кайен','Стенли'];
+function capItems(){return COUNTRIES.map(function(c){
+  var okc=[c.cap].concat(c.cap2?[c.cap2]:[]),pool=shuffle(ALLCAPS.filter(function(x){return okc.indexOf(x)<0})),o;
+  if(c.cap2){o=[c.cap,c.cap2,'Санта Крус де ла Сиера'];return {big:c.n,sub:'Коя е столицата?',o:o,ok:[0,1],e:'И Сукре, и Ла Пас са верни: Сукре е конституционна столица, а Ла Пас е седалище на правителството.',hint:'Помисли — Боливия има две столици.'}}
+  o=[c.cap,pool[0],pool[1]];
+  return {big:c.n,sub:c.terr?'Кой е главният град на територията?':'Коя е столицата?',o:o,ok:[0],e:c.cap+' е '+(c.terr?'главният град':'столицата')+' на '+(c.id==='GF'?'Френска Гвиана':c.id==='FK'?'Фолклендските острови':c.n==='Бразилия'?'Бразилия (не Рио де Жанейро!)':c.n)+'.',hint:'Погледни досието на държавата на картата.'}})}
+var capG,whoG,seaG,andG;
+function initGames(){
+  capG=makeGame($('#capStage'),{id:'cap',items:capItems(),n:8,icon:'🏛️',end:'Браво, познаваш столиците!',onEnd:function(){if(!S.badges.cap)award('cap')}});
+  capG.start();
+  var WH=[['Потомци на европейци и индианци','метиси'],['Потомци на европейци и хора, преселени от Африка','мулати'],['Потомци на индианци и хора от африкански произход','самбо'],['Потомци на преселените европейци','креоли'],['Местното население на континента','индианци']];
+  var WN=['метиси','мулати','самбо','креоли','индианци'];
+  var items=WH.map(function(w){var oth=shuffle(WN.filter(function(x){return x!==w[1]})).slice(0,2);return {big:w[0],sub:'Как се нарича (историческо название)?',o:[w[1],oth[0],oth[1]],ok:[0],e:w[1].charAt(0).toUpperCase()+w[1].slice(1)+' — точно така.',hint:'Прочети пак досие №2.'}});
+  items.push({big:'Испански и португалски',sub:'От кой език произлизат двата?',o:['Латинския','Английския','Гръцкия'],ok:[0],e:'И двата произлизат от латинския. Затова се казва Латинска Америка.',hint:'Помисли защо се казва „Латинска“ Америка.'});
+  whoG=makeGame($('#whoStage'),{id:'who',items:items,icon:'🧬',end:'Знаеш кой е кой!',onEnd:function(){if(!S.badges.who)award('who')}});
+  whoG.start();
+  seaG=makeGame($('#seaStage'),{id:'sea',fixed:1,items:COUNTRIES.filter(function(c){return !c.terr&&!c.island}).map(function(c){return {big:c.n,sub:'Има ли излаз на море?',o:['С излаз на море','Без излаз на море'],ok:[c.sea?0:1],e:c.sea?c.n+' има излаз на море.':c.n+' няма излаз на море — заедно с '+(c.id==='BO'?'Парагвай':'Боливия')+' са единствените такива.',hint:'Само две страни нямат излаз на море.'}}),n:8,icon:'🌊',end:'Страхотен навигатор!',onEnd:function(){S.x.seaDone=1;save();if(S.x.seaDone&&S.x.andDone&&!S.badges.sea)award('sea')}});
+  andG=makeGame($('#seaStage'),{id:'and',fixed:1,items:COUNTRIES.map(function(c){return {big:c.n,sub:'В Андите ли е, или в равнинната и платовидната част?',o:['В Андите','В равнинната и платовидната част'],ok:[c.grp==='andes'?0:1],e:c.n+' е '+(c.grp==='andes'?'в Андите.':'в равнинната и платовидната част.'),hint:'В Андите са Венецуела, Колумбия, Еквадор, Перу, Боливия и Чили.'}}),n:8,icon:'⛰️',end:'Знаеш къде е всяка страна!',onEnd:function(){S.x.andDone=1;save();if(S.x.seaDone&&S.x.andDone&&!S.badges.sea)award('sea')}});
+  var cur='sea';seaG.start();
+  $$('#gameMode button').forEach(function(b){b.addEventListener('click',function(){cur=b.getAttribute('data-g');$$('#gameMode button').forEach(function(x){x.classList.toggle('act',x===b)});(cur==='sea'?seaG:andG).start()})});
+}
+
+/* ================= РЕПОРТЕР ================= */
+var REP={
+ ba:{n:'Буенос Айрес',h:'<b>Буенос Айрес</b> е столицата на Аржентина. Помисли: език — испански; многомилионен град; родина на тангото.',m:'Здравейте от Буенос Айрес, столицата на Аржентина! Тук се говори испански, а градът е многомилионен. Това е родината на тангото, което се танцува по улиците.'},
+ sp:{n:'Сао Пауло',h:'<b>Сао Пауло</b> е в Бразилия и е най-големият град на континента. Помисли: език — португалски; многомилионен град; самба и футбол.',m:'Здравейте от Сао Пауло в Бразилия! Тук се говори португалски и градът е най-големият в Южна Америка, с над 10 млн. жители. Бразилия е родината на самбата и е известна с футбола.'}
+};
+var repCity=null;
+function initRep(){
+  function chk(){$('#repDone').disabled=!($('#rep1').value.trim().length>=12&&$('#rep2').value.trim().length>=12&&$('#rep3').value.trim().length>=12)}
+  ['#rep1','#rep2','#rep3'].forEach(function(s){$(s).addEventListener('input',chk)});
+  $$('#repCity button').forEach(function(b){b.addEventListener('click',function(){
+    if(S.x.rep&&S.x.rep.done)return;
+    repCity=b.getAttribute('data-c');$$('#repCity button').forEach(function(x){x.classList.toggle('act',x===b)});
+    $('#repForm').style.display='block';$('#repHint').innerHTML='<h3>'+REP[repCity].n+'</h3><p style="margin:0">'+REP[repCity].h+'</p>';
+  })});
+  $('#repDone').addEventListener('click',function(){
+    if(!repCity)return;
+    S.x.rep={done:1,c:repCity,t:[$('#rep1').value,$('#rep2').value,$('#rep3').value]};save();lockRep();
+    addXP(15);if(!S.badges.rep)award('rep');
+  });
+}
+function lockRep(){
+  var r=S.x.rep;if(!r)return;
+  repCity=r.c;$('#repForm').style.display='block';
+  $$('#repCity button').forEach(function(x){x.classList.toggle('act',x.getAttribute('data-c')===r.c);x.disabled=true});
+  $('#repHint').innerHTML='<h3>'+REP[r.c].n+'</h3><p style="margin:0">'+REP[r.c].h+'</p>';
+  ['#rep1','#rep2','#rep3'].forEach(function(s,i){$(s).value=r.t[i]||'';$(s).readOnly=true});
+  $('#repDone').disabled=true;$('#repDone').textContent='✓ Изпратено';$('#repDone').classList.add('done');
+  var fb=$('#repFb');fb.className='fb ok';fb.innerHTML='<b>Репортажът е изпратен!</b> Сравни със примера: <i>'+REP[r.c].m+'</i>';
+}
+
+CFG.init=function(){initPol();drawDens();initCharts();initTreaty();initGames();initRep()};
+CFG.render=function(){
+  Object.keys(S.x.pol||{}).forEach(function(id){$$('#polChips .chip[data-c="'+id+'"]').forEach(function(e){e.classList.add('seen')})});
+  Object.keys(S.x.dens||{}).forEach(function(k){$$('#densChips .chip[data-d="'+k+'"]').forEach(function(e){e.classList.add('seen')})});
+  Object.keys(S.x.tr||{}).forEach(function(st){$$('#treatyBtns button[data-s="'+st+'"]').forEach(function(e){e.classList.add('seen')})});
+  if(S.x.charts){drawPeople('peopleCoast',8,false,true);drawPeople('peopleCity',8,true,true);$('#chartBtn').textContent='↻ Покажи пак'}
+  if(S.x.rep)lockRep();
+};
+
+/* ================= VOCAB ================= */
+var EN=CFG.EN, ES=CFG.ES;
+$('#vocabEn').innerHTML=EN.map(function(w,i){return '<div class="word"><span class="w">'+w[0]+'</span><span class="ex">'+w[1].replace(/\.$/,'')+'<br><i>'+w[2]+'</i></span><button data-en="'+i+'" aria-label="Чуй">🔊</button></div>'}).join('');
+$('#vocabEs').innerHTML=ES.map(function(w,i){return '<div class="word"><span class="w">'+w[0]+'</span><span class="ex">'+w[1]+'</span><button data-es="'+i+'" aria-label="Чуй">🔊</button></div>'}).join('');
+function heardOne(k){if(heard[k])return;heard[k]=1;save();addXP(1);if(Object.keys(heard).length>=5)award('polyglot')}
+$$('[data-en]').forEach(function(b){b.addEventListener('click',function(){var w=EN[+b.getAttribute('data-en')];speak(w[0]+'. '+w[2],'en-US',false);heardOne('en'+b.getAttribute('data-en'))})});
+$$('[data-es]').forEach(function(b){b.addEventListener('click',function(){var w=ES[+b.getAttribute('data-es')];speak(w[0],'es-ES',false);heardOne('es'+b.getAttribute('data-es'))})});
+
+/* ================= SELF-CHECK (open questions) ================= */
+var SC=CFG.SC;
+function marks(s){return s.replace(/\*\*(.+?)\*\*/g,'<mark>$1</mark>')}
+var GR={'1':{c:'g1',t:'✓ Вярно'},'0.5':{c:'g05',t:'≈ Частично'},'0':{c:'g0',t:'✗ Грешно'}};
+$('#scList').innerHTML=SC.map(function(q,i){return '<div class="q'+(i===0?' sc-first':'')+'" data-sc="'+i+'"><div class="qnum">Въпрос '+(i+1)+'</div><p class="qtext">'+q.q+'</p>'+
+  '<textarea class="ans" rows="2" placeholder="Напиши отговора си тук…" aria-label="Отговор"></textarea>'+
+  '<div class="row" style="margin-top:8px"><button class="btn small scdone" disabled>Готово</button></div>'+
+  '<div class="model"><div class="lbl">ПРИМЕРЕН ОТГОВОР</div><p>'+marks(q.a)+'</p>'+
+  '<div class="lbl">Как се справи? Сравни ключовите думи.</div>'+
+  '<div class="self"><button data-g="1">✓ Вярно<small>1 т.</small></button><button data-g="0.5">≈ Частично<small>0,5 т.</small></button><button data-g="0">✗ Грешно<small>0 т.</small></button></div>'+
+  '<p class="selfhint"></p></div></div>'}).join('');
+$$('[data-sc]').forEach(function(box){
+  var idx=box.getAttribute('data-sc'),ta=$('textarea',box),db=$('.scdone',box);
+  ta.addEventListener('input',function(){db.disabled=!ta.value.trim()});
+  db.addEventListener('click',function(){
+    if(!ta.value.trim())return;
+    ta.readOnly=true;db.disabled=true;db.textContent='✓ Изпратено';db.classList.add('done');
+    $('.model',box).classList.add('show');
+    S.sc[idx]={a:ta.value};save();
+    $('.model',box).scrollIntoView({behavior:'smooth',block:'nearest'});
+  });
+  $$('.self button',box).forEach(function(b){b.addEventListener('click',function(){
+    var g=+b.getAttribute('data-g');
+    $$('.self button',box).forEach(function(x){x.disabled=true;if(+x.getAttribute('data-g')===g)x.classList.add('pick',GR[String(g)].c)});
+    $('.selfhint',box).textContent='Оценката е записана: '+GR[String(g)].t+'.';
+    if(S.sc[idx])S.sc[idx].g=g;save();
+    if(g===1)addXP(10);else if(g===0.5)addXP(5);
+  })});
+});
+
+/* ================= QUIZ ================= */
+var LV=CFG.LV;
+var FB_OK=['Браво!','Точно!','Отлично, детективе!','Вярно!'],FB_BAD=['Почти…','Не съвсем.','Опа!'];
+var qState=null;
+function startLevel(l){
+  qState={l:l,queue:[0,1,2],pos:0,firstOk:0,missed:{},total:3};
+  $('#qArea').scrollIntoView({behavior:'smooth',block:'start'});renderQ();
+}
+function renderQ(){
+  var st=qState,area=$('#qArea');
+  if(!st.queue.length){finishLevel();return}
+  var qi=st.queue[0],Q=LV[st.l][qi],order=shuffle([0,1,2]);
+  area.innerHTML='<div class="stage"><div class="qhead"><span>Ниво '+(st.l+1)+'</span><button class="btn ghost small" id="qQuit">✕</button></div>'+
+   '<div class="qprog"><i style="width:'+Math.round((3-st.queue.length)/3*100)+'%"></i></div>'+
+   '<p class="qtext">'+Q.q+'</p><div class="opts">'+order.map(function(i){return '<button class="opt" data-i="'+i+'">'+Q.o[i]+'</button>'}).join('')+'</div><div class="fb" id="qfb"></div></div>';
+  $('#qQuit').addEventListener('click',function(){qState=null;area.innerHTML=''});
+  $$('.opt',area).forEach(function(b){b.addEventListener('click',function(){
+    var i=+b.getAttribute('data-i'),fb=$('#qfb');$$('.opt',area).forEach(function(x){x.disabled=true;if(+x.getAttribute('data-i')===Q.a)x.classList.add('right')});
+    if(i===Q.a){fb.className='fb ok';fb.innerHTML='<b>'+FB_OK[Math.floor(Math.random()*FB_OK.length)]+'</b> '+Q.e;
+      if(!st.missed[qi]){st.firstOk++;addXP(10)}st.queue.shift();}
+    else{b.classList.add('wrong');fb.className='fb bad';fb.innerHTML='<b>'+FB_BAD[Math.floor(Math.random()*FB_BAD.length)]+'</b> '+Q.e+' <i>Въпросът ще се върне по-късно.</i>';
+      st.missed[qi]=true;st.queue.push(st.queue.shift());}
+    fb.insertAdjacentHTML('beforeend','<div style="margin-top:10px"><button class="btn small '+(i===Q.a?'done':'')+'" id="qNext">Продължи →</button></div>');
+    $('#qNext').addEventListener('click',renderQ);
+  })});
+}
+function finishLevel(){
+  var st=qState,l=st.l,area=$('#qArea');
+  if(!S.quizDone[l]){S.quizDone[l]=true;S.quizFirst+=st.firstOk;save();}
+  var nodes=$$('.node');nodes[l].classList.add('done');if(nodes[l+1])nodes[l+1].disabled=false;
+  area.innerHTML='<div class="stage" style="text-align:center"><div style="font-size:2.4rem">⭐</div><p class="qtext">Ниво „'+CFG.levelNames[l]+'“ е преминато!</p><p>От първи опит: <b>'+st.firstOk+' от 3</b></p>'+
+   (l<2?'<button class="btn amber" id="qNextLvl">Към ниво '+(l+2)+' →</button>':'<p>Всички нива са готови! Сега отиди към <b>Разкриването</b> ↓</p>')+'</div>';
+  if(l<2)$('#qNextLvl').addEventListener('click',function(){startLevel(l+1)});
+  progress();
+  if(S.quizDone.every(Boolean)){if(S.quizFirst>=8)award('chief');checkReveal();}
+  qState=null;
+}
+$$('.node').forEach(function(n){n.addEventListener('click',function(){if(!n.disabled)startLevel(+n.getAttribute('data-lvl'))})});
+
+/* flashcards */
+var FC=CFG.FC;
+var fI=0,flash=$('#flash');
+function renderFC(){flash.classList.remove('flip');setTimeout(function(){$('#fFront').textContent=FC[fI][0];$('#fBack').textContent=FC[fI][1];$('#fNum').textContent=(fI+1)+' / '+FC.length},150)}
+flash.addEventListener('click',function(){flash.classList.toggle('flip')});
+$('#fPrev').addEventListener('click',function(){fI=(fI-1+FC.length)%FC.length;renderFC()});
+$('#fNext').addEventListener('click',function(){fI=(fI+1)%FC.length;renderFC()});
+renderFC();
+
+/* ================= REVEAL ================= */
+function checkReveal(){
+  var clues=Object.keys(S.clues).length===4;
+  if(clues){$('#revealLock').textContent=S.quizDone.every(Boolean)?'Уликите са събрани, изпитът е издържан. Време е да разкриеш тайната!':'Всички 4 улики са събрани! Можеш да разкриеш случая (а после да минеш и изпита).';$('#revealBody').style.display='block';}
+  else $('#revealLock').textContent='Събрани улики: '+Object.keys(S.clues).length+' от 4. Прочети досиетата, разгледай картата и разреза, и „Знаеш ли, че…“.';
+}
+var SUS=CFG.SUS;
+$('#suspects').innerHTML=shuffle(SUS.map(function(_,i){return i})).map(function(i){return '<button class="opt" data-s="'+i+'">'+SUS[i].t+'</button>'}).join('');
+function finalLine(){$('#finalXp').textContent='Общо събра '+S.xp+' XP и '+Object.keys(S.badges).length+' от '+BADGES.length+' значки.'}
+$$('[data-s]').forEach(function(b){b.addEventListener('click',function(){
+  var s=SUS[+b.getAttribute('data-s')],fb=$('#revealFb');
+  if(s.ok){b.classList.add('right');$$('[data-s]').forEach(function(x){x.disabled=true});fb.className='fb ok';fb.innerHTML='<b>Случаят е разкрит!</b> '+s.e;
+    $('#stamp').classList.add('show');if(!S.solved){S.solved=true;save();addXP(20,'Случаят е разкрит!');progress()}
+    finalLine();}
+  else{b.classList.add('wrong');b.disabled=true;fb.className='fb bad';fb.innerHTML='<b>Не е това.</b> '+s.e;}
+})});
+
+/* ================= SUMMARY TEXT ================= */
+var plain=CFG.plainTitle+'\n\nЗАПОМНИ:\n'+
+ $$('#sumList li').map(function(li,i){return (i+1)+'. '+li.innerText}).join('\n')+
+ '\n\nПонятия: '+CFG.plainTerms+'.';
+$('#plain').value=plain;
+$('#copyBtn').addEventListener('click',function(){
+  var ta=$('#plain');
+  function ok(){toast('Текстът е копиран ✓')}
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(plain).then(ok,function(){ta.select();document.execCommand('copy');ok()})}
+  else{ta.removeAttribute('readonly');ta.select();try{document.execCommand('copy');ok()}catch(e){toast('Маркирай текста и го копирай ръчно')}ta.setAttribute('readonly','')}
+});
+
+/* ================= IMAGES ================= */
+$$('figure img').forEach(function(img){img.addEventListener('click',function(){window.open(img.getAttribute('data-full')||img.src,'_blank','noopener')});
+  var cap=img.parentNode.querySelector('figcaption small');if(cap)cap.insertAdjacentHTML('beforeend','<span class="zoomhint"><br>🔍 Докосни снимката, за да я видиш в пълен размер.</span>');
+  img.addEventListener('error',function(){var d=document.createElement('div');d.className='noimg';d.textContent='📷 Снимката не се зареди.';img.replaceWith(d)})});
+
+/* ================= PAGE-SPECIFIC ================= */
+CFG.init();
+
+/* ================= RESTORE ================= */
+$('#resetBtn').addEventListener('click',function(){
+  if(confirm('Всичко в този урок ще започне отначало: XP, значките и решените нива. Продължаваме ли?'))resetAll();
+});
+(function restore(){
+  var d=load();if(!d){CFG.render();return}
+  S.xp=d.xp||0;S.done=d.done||{};S.badges=d.badges||{};S.clues=d.clues||{};
+  S.quizDone=d.quizDone||[false,false,false];S.quizFirst=d.quizFirst||0;S.solved=!!d.solved;S.sc=d.sc||{};S.x=d.x||{};
+  heard=d.heard||{};
+  $('#xp').textContent=S.xp;
+  $$('[data-done]').forEach(function(b){if(S.done[b.getAttribute('data-done')]){b.classList.add('done');b.disabled=true;b.textContent='✓ Готово'}});
+  Object.keys(S.clues).forEach(function(n){markClue(n)});
+  var nodes=$$('.node');S.quizDone.forEach(function(done,l){if(done){nodes[l].classList.add('done');if(nodes[l+1])nodes[l+1].disabled=false}});
+  Object.keys(S.sc).forEach(function(idx){
+    var rec=S.sc[idx],box=$('[data-sc="'+idx+'"]');if(!box)return;
+    var ta=$('textarea',box),db=$('.scdone',box);
+    ta.value=rec.a||'';ta.readOnly=true;db.disabled=true;db.textContent='✓ Изпратено';db.classList.add('done');
+    $('.model',box).classList.add('show');
+    if(rec.g!==undefined){
+      $$('.self button',box).forEach(function(x){x.disabled=true;if(+x.getAttribute('data-g')===rec.g)x.classList.add('pick',GR[String(rec.g)].c)});
+      $('.selfhint',box).textContent='Оценката е записана: '+GR[String(rec.g)].t+'.';
+    }
+  });
+  CFG.render();
+  if(S.solved){
+    $$('[data-s]').forEach(function(x){x.disabled=true;if(SUS[+x.getAttribute('data-s')].ok)x.classList.add('right')});
+    var fb=$('#revealFb');fb.className='fb ok';fb.innerHTML='<b>Случаят е разкрит!</b> '+SUS.filter(function(x){return x.ok})[0].e;
+    $('#stamp').classList.add('show');finalLine();
+  }
+  checkReveal();
+  toast('Напредъкът ти е запазен: '+S.xp+' XP');
+})();
+renderBadges();progress();
+
+$('#bTot').textContent=BADGES.length;
+})();
+</script>
+</body>
+</html>
